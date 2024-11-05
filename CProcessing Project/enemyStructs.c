@@ -3,7 +3,7 @@
 
 //Initializing E_Mage enemy object
 E_Mage E_Mage_Initialize(CP_Vector v) {
-	E_Mage new_e_mage = { 0 };
+	E_Mage new_e_mage;
 	new_e_mage.position = v;
 
 	return new_e_mage;

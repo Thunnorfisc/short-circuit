@@ -10,6 +10,20 @@ will be used in the game
 
 #define ENEMY_SIZE_SCALING 3
 
+// Data type is EnemyTypes
+// 3 different type of normal enemy: Wizard, Spawner, Vulture
+typedef enum { E_Wizard = 1, E_Spawner, E_Vulture } EnemyTypes;
+
+typedef struct Enemy {
+	EnemyTypes enemy_type;
+	int id;
+	int attack;
+	int weakness;
+	int healthbar;
+
+};
+
+
 //This is the struct that will be used to create the pieces for the magic circuit system
 typedef struct E_Mage {
 
