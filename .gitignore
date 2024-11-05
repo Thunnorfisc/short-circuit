@@ -1,0 +1,17 @@
+﻿# CProcessing
+*.ipch
+*.suo
+*.db
+*.pdb
+*.exe
+*.ilk
+.vs
+team_metal_detectors_f24/.vs
+.tmp
+*.tlog
+*.obj
+*.idb
+*.log
+*.exp
+*.iobj
+*.ipdb

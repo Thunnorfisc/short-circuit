@@ -1,0 +1,112 @@
+#include <math.h>
+#include <stdio.h>
+#include <float.h>
+
+#include "generalUtils.h"
+
+/*
+Description: These are the variables that were used repeatedly so they will be stored in the generalUtils.h to be used
+int the code for the different system.
+
+NOTE!!! Do not edit these names or values without consulting the team
+*/
+
+int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y)
+{
+	float half_width = area_width / 2;
+	float half_height = area_height / 2;
+
+	// If click x is larger than area_center_x - half_width and smaller than area_center_x + half_width
+	if (click_x >= (area_center_x - half_width) && \
+		click_x <= (area_center_x + half_width) && \
+		click_y >= (area_center_y - half_height) && \
+		click_y <= (area_center_y + half_height)) {
+		return 1;
+	}
+	else
+		return 0;
+}
+
+int IsCircleClicked(float circle_center_x, float circle_center_y, float diameter, float click_x, float click_y)
+{
+	float radius = diameter / 2;
+	// Find the distance between the click and the center of the circle
+	float distance = sqrtf((click_x - circle_center_x) * (click_x - circle_center_x) +
+		(click_y - circle_center_y) * (click_y - circle_center_y));
+	if (distance <= radius)
+		return 1;
+	else
+		return 0;
+}
+
+int AreCirclesIntersecting(float c1_x, float c1_y, float r1, float c2_x, float c2_y, float r2)
+{
+	double dx = c1_x - c2_x;
+	double dy = c1_y - c2_y;
+	double distance_squared = dx * dx + dy * dy;
+
+	double radii_sum = r1 + r2;
+
+	// Check for intersection
+	if (distance_squared <= radii_sum * radii_sum)
+		return 1;
+
+	return 0;
+}
+
+int Exist_In_Array(void* value_to_check,void* array, int type_of_array, int size_of_array) {
+	switch (type_of_array)
+	{
+	case(1):
+	{
+		//Write code to check if variables exist in int array
+		int* array_casted = (int*)array;
+		return 0;
+		break;
+	}
+	case(2): 
+	{
+		//Write code to check if variables exist in float array
+		float* array_casted = (float*)array;
+		return 0;
+		break;
+	}
+	case(3):
+	{
+		//Write code to check if variables exist in double array
+		double* array_casted = (double*)array;
+		return 0;
+		break;
+	}
+	case(4):	
+	{
+		//Write code to check if variables exist in CP_Vector array
+		CP_Vector* array_casted = (CP_Vector*)array;
+		CP_Vector* value_to_check_casted = (CP_Vector*)value_to_check;
+		for (int i = 0; i < size_of_array; ++i) {
+			if (value_to_check_casted->x == array_casted[i].x && value_to_check_casted->y == array_casted[i].y)
+			{
+				return 1;
+			}
+		}
+		return 0;
+		break;
+	}
+	case(5):	
+	{
+		//Write code to check if variables exist is CircuitPiece array
+		CircuitPiece* array_casted = (CircuitPiece*)array;
+		return 0;
+		break;
+	}
+	case(6):
+	{
+		//Write code to check if variables exist is E_Mage array
+		E_Mage* array_casted = (E_Mage*)array;
+		return 0;
+		break;
+	}
+	default:
+		break;
+	}
+}
