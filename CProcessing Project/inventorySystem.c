@@ -4,14 +4,11 @@
 #include "generalUtils.h"	
 #include "worldSystem.h"
 
-#define array_count(a) sizeof(a)/sizeof(a[0])
-#define COLOR_RED CP_Color_Create(255, 125, 125, 255)
-#define COLOR_BLACK CP_Color_Create(0, 0, 0, 255)
-
 CP_Font exo2;
 CP_Image logo;
-float centrex, centrey, sword_y, shield_y, empty_y;
 Inventory inventory = { 0 };
+char buffer[50] = { 0 };
+float centrex, centrey, swordb_y, shieldb_y, emptyb_y, button_width, button_height, inv_x;
 
 void Inventory_Init(void) {
 	// Loads "Assets/Exo2-Regular.ttf" into memory and gives back
@@ -29,6 +26,17 @@ void Inventory_Init(void) {
 	// Tells CProcessing that when drawing text in the future (via CP_Font_DrawText),
 	// We use size 72 font height.
 	CP_Settings_TextSize(72.f);
+
+	// Initialising variables
+	centrex = WINDOW_WIDTH_HALF;
+	centrey = WINDOW_HEIGHT_HALF;
+	emptyb_y = WINDOW_HEIGHT_HALF * 0.5;
+	swordb_y = WINDOW_HEIGHT_HALF;
+	shieldb_y = WINDOW_HEIGHT_HALF * 1.5;
+	button_width = WINDOW_WIDTH * 0.3;
+	button_height = WINDOW_HEIGHT * 0.1;
+	inv_x = WINDOW_WIDTH_HALF * 0.5;
+
 }
 
 void Inventory_Update(void) {
@@ -38,64 +46,52 @@ void Inventory_Update(void) {
 	}
 
     // clear the background to a grey color
-    CP_Graphics_ClearBackground(CP_Color_Create(100, 100, 100, 255));
-	centrex = CP_System_GetWindowWidth() / 2.0f;
-	centrey = CP_System_GetWindowHeight() / 2.0f;
-
-	// set the Y values for the 2 buttons
-	sword_y = centrey - 300.0f;
-	shield_y = centrey;
-	empty_y = shield_y + 300.0f;
-	
+    CP_Graphics_ClearBackground(COLOR_GREY);
 	// set the shape color to Red
 	CP_Settings_Fill(COLOR_RED);
 	// draw the two rectangles
-	CP_Graphics_DrawRect(centrex, shield_y, 300.0f, 200.0f);
-	CP_Graphics_DrawRect(centrex, sword_y, 300.0f, 200.0f);
-	CP_Graphics_DrawRect(centrex, empty_y, 300.0f, 200.0f);
-
+	CP_Graphics_DrawRect(centrex, shieldb_y, button_width, button_height);
+	CP_Graphics_DrawRect(centrex, swordb_y, button_width, button_height);
+	CP_Graphics_DrawRect(centrex, emptyb_y, button_width, button_height);
 	// sets the text color to Black
 	CP_Settings_Fill(COLOR_BLACK);
-
 	// aligns the text to the middle
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+	// draw the text where the buttons are
+	CP_Font_DrawText("Add Sword", centrex, swordb_y);
+	CP_Font_DrawText("Add Shield", centrex, shieldb_y);
+	CP_Font_DrawText("Empty", centrex, emptyb_y);
 
-	// draw the text where the rectangles are
-	CP_Font_DrawText("Add Sword", centrex, sword_y);
-	CP_Font_DrawText("Add Shield", centrex, shield_y);
-	CP_Font_DrawText("Empty", centrex, empty_y);
-
-	if (IsAreaClicked(centrex, empty_y, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
+	// functions to call when buttons are pressed
+	if (IsAreaClicked(centrex, emptyb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
 		inventory = Empty_Inventory_Slot(inventory, 0);
 		inventory = Empty_Inventory_Slot(inventory, 1);
 	}
-	if (IsAreaClicked(centrex, sword_y, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
+	if (IsAreaClicked(centrex, swordb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
 		inventory = Add_Sword_To_Inventory(inventory, 0, 10);
 
 	}
-	if (IsAreaClicked(centrex, shield_y, 300.0f, 200.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
+	if (IsAreaClicked(centrex, shieldb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
 		inventory = Add_Shield_To_Inventory(inventory, 1, 20);
 	}
 	
+	// display the inventory
     for (int i = 0; i < array_count(inventory.slots); ++i) {
-		
         switch (inventory.slots[i].type) {
         case InventoryTYPE_EMPTY:
-			CP_Font_DrawText("Empty", 300, 60);
+			CP_Font_DrawText("Empty", inv_x, 80);
             break;
-
-        case InventoryTYPE_SHIELD:
-			CP_Font_DrawText("Shield", 300, 180);
-			char buffer[50] = { 0 };
-			sprintf_s(buffer, 50, "Defence: %d", inventory.slots[i].shield.defense);
-			CP_Font_DrawText(buffer, 300, 220);
-            break;
-
-        case InventoryTYPE_SWORD:
-			CP_Font_DrawText("Sword", 300, 100);
+		case InventoryTYPE_SWORD:
+			CP_Font_DrawText("Sword", inv_x, 160);
 			sprintf_s(buffer, 50, "Attack: %d", inventory.slots[i].sword.attack);
-			CP_Font_DrawText(buffer, 300, 140);
+			CP_Font_DrawText(buffer, inv_x, 240);
+			break;
+        case InventoryTYPE_SHIELD:
+			CP_Font_DrawText("Shield", inv_x, 320);
+			sprintf_s(buffer, 50, "Defence: %d", inventory.slots[i].shield.defense);
+			CP_Font_DrawText(buffer, inv_x, 400);
             break;
+        
         }
     }
 }
