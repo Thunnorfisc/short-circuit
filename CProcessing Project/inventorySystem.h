@@ -11,6 +11,8 @@ void Inventory_Update(void);
 
 void Inventory_Exit(void);
 
+
+
 typedef struct Sword {
 	int attack;
 } Sword;
@@ -32,6 +34,9 @@ typedef struct Inventory_Slot {
 		Shield shield;
 	};
 } Inventory_Slot;
+
+
+
 
 typedef struct Inventory {
 	Inventory_Slot slots[INVENTORY_SIZE];

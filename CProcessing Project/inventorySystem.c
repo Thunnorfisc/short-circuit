@@ -5,12 +5,35 @@
 #include "worldSystem.h"
 
 CP_Font exo2;
-CP_Image logo;
 Inventory inventory = { 0 };
 char buffer[50] = { 0 };
-float centrex, centrey, swordb_y, shieldb_y, emptyb_y, button_width, button_height, inv_x;
+float centrex, centrey, swordb_y, shieldb_y, emptyb_y, button_width, button_height, inv_x, name_y, stat_y, pstat_x, font_size;
+
+typedef struct ps {
+	int attack_power;
+	int health_points;
+	int currency;
+} PlayerStats;
+PlayerStats ps = {
+	.attack_power = 0,
+	.health_points = 0 ,
+	.currency = 100
+};
 
 void Inventory_Init(void) {
+
+	// Initialising variables
+	centrex = WINDOW_WIDTH_HALF;
+	centrey = WINDOW_HEIGHT_HALF;
+	emptyb_y = WINDOW_HEIGHT_HALF * 0.5f;
+	swordb_y = WINDOW_HEIGHT_HALF;
+	shieldb_y = WINDOW_HEIGHT_HALF * 1.5f;
+	button_width = WINDOW_WIDTH * 0.3f;
+	button_height = WINDOW_HEIGHT * 0.1f;
+	inv_x = WINDOW_WIDTH_HALF * 0.5f;
+	pstat_x = WINDOW_WIDTH_HALF * 1.5f;
+	font_size = WINDOW_HEIGHT_HALF * 0.05f;
+
 	// Loads "Assets/Exo2-Regular.ttf" into memory and gives back
 	// a representation of the font to us (aka a 'handle' to the font).
 	exo2 = CP_Font_Load("Assets/Exo2-Regular.ttf");
@@ -25,18 +48,9 @@ void Inventory_Init(void) {
 
 	// Tells CProcessing that when drawing text in the future (via CP_Font_DrawText),
 	// We use size 72 font height.
-	CP_Settings_TextSize(72.f);
+	CP_Settings_TextSize(font_size);
 
-	// Initialising variables
-	centrex = WINDOW_WIDTH_HALF;
-	centrey = WINDOW_HEIGHT_HALF;
-	emptyb_y = WINDOW_HEIGHT_HALF * 0.5;
-	swordb_y = WINDOW_HEIGHT_HALF;
-	shieldb_y = WINDOW_HEIGHT_HALF * 1.5;
-	button_width = WINDOW_WIDTH * 0.3;
-	button_height = WINDOW_HEIGHT * 0.1;
-	inv_x = WINDOW_WIDTH_HALF * 0.5;
-
+	
 }
 
 void Inventory_Update(void) {
@@ -66,34 +80,42 @@ void Inventory_Update(void) {
 	if (IsAreaClicked(centrex, emptyb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
 		inventory = Empty_Inventory_Slot(inventory, 0);
 		inventory = Empty_Inventory_Slot(inventory, 1);
+		ps.attack_power = 0;
+		ps.health_points = 0;
+
 	}
 	if (IsAreaClicked(centrex, swordb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
 		inventory = Add_Sword_To_Inventory(inventory, 0, 10);
+		ps.attack_power = 10;
 
 	}
 	if (IsAreaClicked(centrex, shieldb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
 		inventory = Add_Shield_To_Inventory(inventory, 1, 20);
+		ps.health_points = 20;
 	}
-	
+
+	sprintf_s(buffer, 50, "Attack: %d", ps.attack_power);
+	CP_Font_DrawText(buffer, pstat_x, swordb_y);
+	sprintf_s(buffer, 50, "Health: %d", ps.health_points);
+	CP_Font_DrawText(buffer, pstat_x, shieldb_y);
 	// display the inventory
     for (int i = 0; i < array_count(inventory.slots); ++i) {
+		name_y = (i + 0.5) * 160;
+		stat_y = (i + 1) * 160;
         switch (inventory.slots[i].type) {
-        case InventoryTYPE_EMPTY:
-			CP_Font_DrawText("Empty", inv_x, 80);
-            break;
 		case InventoryTYPE_SWORD:
-			CP_Font_DrawText("Sword", inv_x, 160);
+			CP_Font_DrawText("Sword", inv_x, name_y);
 			sprintf_s(buffer, 50, "Attack: %d", inventory.slots[i].sword.attack);
-			CP_Font_DrawText(buffer, inv_x, 240);
+			CP_Font_DrawText(buffer, inv_x, stat_y);
 			break;
         case InventoryTYPE_SHIELD:
-			CP_Font_DrawText("Shield", inv_x, 320);
-			sprintf_s(buffer, 50, "Defence: %d", inventory.slots[i].shield.defense);
-			CP_Font_DrawText(buffer, inv_x, 400);
+			CP_Font_DrawText("Shield", inv_x, name_y);
+			sprintf_s(buffer, 50, "Health: %d", inventory.slots[i].shield.defense);
+			CP_Font_DrawText(buffer, inv_x, stat_y);
             break;
-        
         }
     }
+	
 }
 
 void Inventory_Exit(void) {
