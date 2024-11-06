@@ -1,5 +1,21 @@
 #pragma once
 
+// Structure definitions
+typedef struct {
+    int attack_power;
+    int health_points;
+    int currency;
+} PlayerStats;
+
+/*
+PlayerStats playerStats = {
+    .attack_power = 0,
+    .health_points = 0 ,
+    .currency = 100
+};*/
+
+extern PlayerStats playerStats;
+
 void Main_Menu_Init(void);
 void Main_Menu_Update(void);
 void Main_Menu_Exit(void);

@@ -10,12 +10,6 @@ int drawPlayerStatus = 0;
 
 // Structure definitions
 typedef struct {
-    int attack_power;
-    int health_points;
-    int currency;
-} PlayerStats;
-
-typedef struct {
     struct {
         float width;
         float height;
@@ -68,15 +62,15 @@ void Main_Menu_Update()
     .window.height = CP_System_GetWindowHeight()
     };
 
-	ui.title.x = ui.window.width * 0.5f;
-	ui.title.y = ui.window.height * 0.2f;
+    ui.title.x = ui.window.width * 0.5f;
+    ui.title.y = ui.window.height * 0.2f;
 
     ui.button.width = ui.window.width * 0.3f;
     ui.button.height = ui.window.height * 0.1f;
     ui.button.button_newgame.x = ui.window.width * 0.5f;
     ui.button.button_newgame.y = ui.window.height * 0.35f;
     ui.button.button_continue.x = ui.window.width * 0.5f;
-	ui.button.button_continue.y = ui.window.height * 0.5f;
+    ui.button.button_continue.y = ui.window.height * 0.5f;
     ui.button.button_exit.x = ui.window.width * 0.5f;
     ui.button.button_exit.y = ui.window.height * 0.65f;
 
@@ -111,9 +105,9 @@ void Main_Menu_Update()
         }
 
         /*
-		if (IsAreaClicked(ui.button.button_continue.x, ui.button.button_continue.y, ui.button.width, ui.button.height, click_x, click_y)) {
-			CP_Engine_SetNextGameState(Game_Init2, Game_Update2, Game_button_exit2);
-		}
+        if (IsAreaClicked(ui.button.button_continue.x, ui.button.button_continue.y, ui.button.width, ui.button.height, click_x, click_y)) {
+            CP_Engine_SetNextGameState(Game_Init2, Game_Update2, Game_button_exit2);
+        }
         */
         if (IsAreaClicked(ui.button.button_exit.x, ui.button.button_exit.y, ui.button.width, ui.button.height, click_x, click_y)) {
             CP_Engine_Terminate();
