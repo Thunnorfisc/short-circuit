@@ -84,6 +84,7 @@ int Exist_In_Array(void* value_to_check,void* array, int type_of_array, int size
 		CP_Vector* array_casted = (CP_Vector*)array;
 		CP_Vector* value_to_check_casted = (CP_Vector*)value_to_check;
 		for (int i = 0; i < size_of_array; ++i) {
+			printf("existing x:%f existing y:%f\n", value_to_check_casted->x, array_casted[i].x);
 			if (value_to_check_casted->x == array_casted[i].x && value_to_check_casted->y == array_casted[i].y)
 			{
 				return 1;

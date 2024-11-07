@@ -18,6 +18,7 @@ CircuitPiece circuit_pieces_s[2];
 //Circuit Piece Selected
 CircuitPiece circuit_selected_list[GRID_DIMENSIONS][GRID_DIMENSIONS] = { 0 };
 CircuitPiece circuit_piece_selected = { 0 };
+CP_Vector index_used[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
 int selected_circuit_piece = 0;
 
 //mouse vector that will be updated when mouse down is detected
@@ -81,7 +82,7 @@ void Battle_System_Update()
 	}
 	else if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
 		if (selected_circuit_piece) {
-			Grid_Cricuit_Drop(circuit_piece_selected, circuit_selected_list, grid_squares,mouse_position);
+			Grid_Cricuit_Drop(circuit_selected_list, grid_squares, circuit_piece_selected, index_used, mouse_position);
 			selected_circuit_piece = 0;
 		}
 	}

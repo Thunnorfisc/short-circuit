@@ -1,22 +1,9 @@
 #pragma once
 #include "magicSystemUtil.h"
 
-//Defined values specifically for magic system
-#define GRID_DIMENSIONS 5
-#define GRID_CELL_SIZE 128
-#define GRID_CELL_SIZE_OFFSET (float)GRID_CELL_SIZE/2.f
-#define CIRCUIT_UI_LIST_SIZE 4
-#define BUFFER 10.f
-#define ANGLE_OF_ROTATION 90.f
-#define CIRCUIT_L_ASSET_ADDR "Assets/magic_circuit_L.png"
-
 void Draw_L_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N);
 
 void Draw_SelectedCircuitPieces(CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Image circuit_image_l);
-
-int Circuit_PieceSelected(CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_position);
-
-int Grid_Cricuit_Drop(CircuitPiece c, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector mouse_position);
 
 void Grid_Display(CP_Vector const v[GRID_DIMENSIONS][GRID_DIMENSIONS]);
 
