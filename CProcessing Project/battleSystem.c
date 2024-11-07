@@ -3,58 +3,6 @@
 #include "battleSystem.h"
 #include "magicSystemUtil.h"
 
-/*
-float battlebutton_width;
-float battlebutton_height;
-float center_x;
-float center_y;
-float adjustwindowsize = 0.4f;
-
-CP_Font font_style = NULL;
-
-void Battle_System_Init()
-{
-	CP_Settings_RectMode(CP_POSITION_CENTER);
-	center_x = WINDOW_WIDTH_HALF;
-	center_y = WINDOW_HEIGHT_HALF;
-	battlebutton_width = center_x * adjustwindowsize;
-	battlebutton_height = center_y * adjustwindowsize;
-
-	font_style = CP_Font_Load(FONT_ASSET_ADDR);
-
-	CP_Font_Set(font_style);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_TextSize(30.0f);
-	
-}
-
-void Battle_System_Update()
-{
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
-		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}
-
-	// Set the background
-	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
-
-	// Color the button
-	CP_Settings_Fill(CP_Color_Create(102, 255, 255, 255));
-	// Draw To Battle System button
-	CP_Graphics_DrawRect(center_x, center_y, battlebutton_width, battlebutton_height);
-	//Colour of the font
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Font_DrawText("To Battle System", center_x, center_y);
-
-	if (CP_Input_MouseClicked() && IsAreaClicked(center_x, center_y, battlebutton_width, battlebutton_height, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		CP_Engine_SetNextGameState(Magic_System_Init, Magic_System_Update, Magic_System_Exit);
-	}
-}
-
-void Battle_System_Exit()
-{
-}
-*/
-
 //Intializing e_mage array
 int random_enemy_count = 0;
 CP_Image e_mage_image;
@@ -92,15 +40,15 @@ void Battle_System_Init()
 	e_mage_image = CP_Image_Load(E_MAGE_ASSET_ADDR);
 
 	/*------------Calculating the buffer for the display location of the UI for the circuits---------- */
-	float circuit_ui_buffer_top = (float)(GRID_DIMENSIONS * CIRCUIT_PIECE_SIZE + CIRCUIT_CENTER_OFFSET * 4);
-	float circuit_ui_buffer_left = (float)(WINDOW_WIDTH - (CIRCUIT_PIECE_SIZE * CIRCUIT_UI_LIST_SIZE + BUFFER * (CIRCUIT_UI_LIST_SIZE - 1))) / 2.f;
+	float circuit_ui_buffer_top = (float)(GRID_DIMENSIONS * GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET * 4);
+	float circuit_ui_buffer_left = (float)(WINDOW_WIDTH - (GRID_CELL_SIZE * CIRCUIT_UI_LIST_SIZE + BUFFER * (CIRCUIT_UI_LIST_SIZE - 1))) / 2.f;
 
 	//This loop will initialize the ciruits to be displayed on the UI for selection
 	for (int i = 0, j = i + 1; i < 4; ++i, j = j < 3 ? j + 1 : 0) {
 		circuit_list_l[i] = New_Circuit_Piece(
-			CP_Vector_Set(circuit_ui_buffer_left + (float)CIRCUIT_PIECE_SIZE / 2.f + CIRCUIT_PIECE_SIZE * i + BUFFER * i, circuit_ui_buffer_top)
+			CP_Vector_Set(circuit_ui_buffer_left + (float)GRID_CELL_SIZE / 2.f + GRID_CELL_SIZE * i + BUFFER * i, circuit_ui_buffer_top)
 			, i, j, i);
-		circuit_list_l[i].circuitSize = CIRCUIT_PIECE_SIZE;
+		circuit_list_l[i].circuitSize = GRID_CELL_SIZE;
 	}
 	/*------------------------------------------------------------------------------------------------ */
 

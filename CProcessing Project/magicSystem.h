@@ -3,16 +3,12 @@
 
 //Defined values specifically for magic system
 #define GRID_DIMENSIONS 5
-#define CIRCUIT_CENTER_OFFSET (float)CIRCUIT_PIECE_SIZE/2.f
+#define GRID_CELL_SIZE 128
+#define GRID_CELL_SIZE_OFFSET (float)GRID_CELL_SIZE/2.f
 #define CIRCUIT_UI_LIST_SIZE 4
 #define BUFFER 10.f
 #define ANGLE_OF_ROTATION 90.f
 #define CIRCUIT_L_ASSET_ADDR "Assets/magic_circuit_L.png"
-
-//void Magic_System_Init(void);
-//void Magic_System_Update(void);
-//void Magic_System_Exit(void);
-//void Display_Assets(void); 
 
 void Draw_L_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N);
 
