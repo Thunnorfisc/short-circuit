@@ -118,6 +118,7 @@ void Battle_System_Update()
 void Battle_System_Exit()
 {
 	memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
+	memset(index_used, 0, sizeof(index_used));
 	CP_Image_Free(circuit_image_l);
 	CP_Image_Free(e_mage_image);
 }

@@ -44,8 +44,6 @@ int Get_Size_Of_Selected(CircuitPiece const selectedPieces[GRID_DIMENSIONS][GRID
 
 int Circuit_PieceSelected(CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_position);
 
-int Grid_Cricuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS],
-	CircuitPiece selectedPiece, CP_Vector index_used[GRID_DIMENSIONS * 2], CP_Vector mouse_position);
 /*
 Function: Available_Circuit_Positions
 
@@ -54,6 +52,7 @@ Parameters: CircuitPiece *piece, CircuitPiece selectedPieces[], CP_Vector grid[G
 Usage: This will be used to check if the player is currently holding down mouse button 1 on the CircuitPiece object from the original list
 of Circuit pieces
 */
-int Available_Circuit_Positions(CircuitPiece* piece, CircuitPiece selectedPieces[], CP_Vector grid[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector mouse_position);
 
 void Add_To_Index_Array(CP_Vector index_list[], CP_Vector vector_to_add, int size);
+
+int Check_Placement(CP_Vector index_used[], CP_Vector index_to_use, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CircuitPiece selectedPiece);

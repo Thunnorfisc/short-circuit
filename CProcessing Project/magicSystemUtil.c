@@ -81,23 +81,32 @@ int Grid_Cricuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS]
 
 	CP_Vector index_to_use;
 
+	int allowed_placement = 0;
+
 	for (int row = 1; row <= GRID_DIMENSIONS; ++row) {
 		for (int col = 1; col <= GRID_DIMENSIONS; ++col) {
 
-			index_to_use = CP_Vector_Set(row, col);
+			index_to_use = CP_Vector_Set(col, row);
 
-			if (!CP_Vector_Length(circuit_pos[row - 1][col - 1].centerPosition) && CP_Vector_Distance(mouse_position, grid[row - 1][col - 1]) < GRID_CELL_SIZE_OFFSET) {
+			if (!CP_Vector_Length(circuit_pos[col - 1][row - 1].centerPosition) && CP_Vector_Distance(mouse_position, grid[col - 1][row - 1]) < GRID_CELL_SIZE_OFFSET) {
 
-				circuit_pos[row - 1][col - 1] = New_Circuit_Piece(
-					CP_Vector_Set(grid[row - 1][col - 1].x, grid[row - 1][col - 1].y),
-					selectedPiece.IO_1, selectedPiece.IO_2, selectedPiece.rot
-				);
-				Add_To_Index_Array(index_used, index_to_use, GRID_DIMENSIONS * GRID_DIMENSIONS);
-				circuit_pos[row - 1][col - 1].circuitSize = GRID_CELL_SIZE;
+				//Check if the current placement is allowed on the board based on the current pieces on the board
+				allowed_placement = Check_Placement(index_used, index_to_use, circuit_pos, selectedPiece);
 
-				return 1;
+				if (allowed_placement) {
+					circuit_pos[col - 1][row - 1] = New_Circuit_Piece(
+						CP_Vector_Set(grid[col - 1][row - 1].x, grid[col - 1][row - 1].y),
+						selectedPiece.IO_1, selectedPiece.IO_2, selectedPiece.rot
+					);
+
+					//Add to array to track the current used row and column
+					Add_To_Index_Array(index_used, index_to_use, GRID_DIMENSIONS * GRID_DIMENSIONS);
+
+					circuit_pos[col - 1][row - 1].circuitSize = GRID_CELL_SIZE;
+
+					return 1;
+				}
 			}
-
 		}
 	}
 	return 0;
@@ -108,18 +117,46 @@ Description:
 Used in Grid_Circuit_Drop to see if the area can be dropped
 
 Parameters:
-CircuitPiece c, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS]
-CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector mouse_position
+CP_Vector index_used[], CP_Vector index_to_use
 */
-int Available_Circuit_Positions(CircuitPiece* piece, CircuitPiece selectedPieces[], CP_Vector grid[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector mouse_position) {
+int Check_Placement(CP_Vector index_used[], CP_Vector index_to_use, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CircuitPiece selectedPiece) {
 
-	//Check if the selectedPiece array is empty
-	if (selectedPieces[0].circuitSize == 0) return 1;
+	/* Check if adjacent and return the start and end of the circuits */
+	if (CP_Vector_Length(index_used[0]) == 0) return 1;
+	
+	else {
+		//Check if the new position for placement is right beside horizontally or vertically
+		for (int i = 0; CP_Vector_Length(index_used[i]); ++i) { //Checks until the last initialized index
+			if (CP_Vector_Distance(index_to_use, index_used[i]) == 1) {
 
-	//Check if the position of the drop is right beside horizontally/vertically to the exisiting pieces
-	//for (int i = 0; i < ) {
+				//Check if the placement is also within the possible IO = 0
+				if (circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 0 ||
+					circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 0) {
+					if ((selectedPiece.IO_1 == 2 || selectedPiece.IO_2 == 2) && index_used[i].y - index_to_use.y == 1) return 1;
+				}
 
-	//}
+				//Check if the placement is also within the possible IO = 1
+				if (circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 1 ||
+						 circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 1) {
+					if ((selectedPiece.IO_1 == 3 || selectedPiece.IO_2 == 3) && index_used[i].x - index_to_use.x == 1) return 1;
+				}
+
+				//Check if the placement is also within the possible IO = 2
+				if (circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 2 ||
+						 circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 2) {
+					if ((selectedPiece.IO_1 == 0 || selectedPiece.IO_2 == 0) && index_to_use.y - index_used[i].y == 1) return 1;
+				}
+
+				//Check if the placement is also within the possible IO = 3
+				if(circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 3 ||
+					circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 3){
+					if ((selectedPiece.IO_1 == 1 || selectedPiece.IO_2 == 1) && index_to_use.x - index_used[i].x == 1) return 1;
+				}
+			}
+		}
+	}
+	/* End of check if adjacent */
+	return 0;
 }
 
 void Add_To_Index_Array(CP_Vector index_list[], CP_Vector vector_to_add, int size) {
