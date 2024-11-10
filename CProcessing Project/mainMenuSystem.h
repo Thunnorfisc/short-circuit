@@ -31,3 +31,6 @@ void HandlePlayerStats(void);
 void SaveGameState(void);
 
 void LoadGameState(void);
+void Draw_Splash_Screen(void);
+void Draw_Main_Menu(void);
+void Draw_Copyright();
