@@ -25,6 +25,7 @@ void Handle_Pause_Menu(int* menu_open);
 
 void Handle_Fullscreen(int* fullscreen);
 
+
 //DEBUG CODE
 void HandlePlayerStats(void);
 

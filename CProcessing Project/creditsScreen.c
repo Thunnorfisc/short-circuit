@@ -10,11 +10,6 @@
 #define CREDITS_START_Y         0.2f
 #define CREDITS_LINE_SPACE      0.045f
 #define CREDITS_HALF_SPACE      0.025f
-#define CREDITS_DOUBLE_SPACE    0.1f
-
-
-
-
 
 void Credits_Init(void) {}
 
@@ -102,6 +97,6 @@ void PrintCredit(const CreditCategory* category, float windowWidth, float* curre
         *currentY += windowHeight * CREDITS_HALF_SPACE;
     }
 
-    // Add space after category
+    // Add space between end of names and start of next category
     *currentY += windowHeight * CREDITS_LINE_SPACE;
 }

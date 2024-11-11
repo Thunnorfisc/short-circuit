@@ -96,7 +96,7 @@ PlayerStats playerStats = {
 };
 
 
-void Main_Menu_Init()
+void Main_Menu_Init(void)
 {
     logo = CP_Image_Load("Assets/DigiPen_Singapore_WEB_RED.png"); //image logo
     CP_Settings_ImageMode(CP_POSITION_CENTER);
@@ -114,7 +114,7 @@ void Main_Menu_Init()
     LoadGameState();
 }
 
-void Main_Menu_Update()
+void Main_Menu_Update(void)
 {
     switch (currentMenuState) {
     case SPLASH_SCREEN:
@@ -127,10 +127,14 @@ void Main_Menu_Update()
     }
 }
 
-void Main_Menu_Exit()
+void Main_Menu_Exit(void)
 {
     CP_Image_Free(&logo);
 }
+
+static int CurrentCurrency() {
+    return playerStats.currency;
+}// to call in mainmenu
 
 void Display_Currency() {
     //Test Value for current currency
@@ -140,8 +144,8 @@ void Display_Currency() {
     char text[64];
     sprintf_s(text, sizeof(text), "Currency: %d", currency);
     CP_Font_DrawText(text,
-        1600.0 * 0.1f,
-        800.0 * 0.1f);
+        1600.0f * 0.1f,
+        800.0f * 0.1f);
 }
 
 
@@ -160,12 +164,12 @@ void Handle_Pause_Menu(int* MenuOpen)
 
         // Draw "PAUSED" title
         CP_Font_DrawText("PAUSED",
-            WINDOW_WIDTH * 0.5f,
+            WINDOW_WIDTH * UI_CENTER_X,
             WINDOW_HEIGHT * PAUSE_TITLE_Y);
 
         // Draw buttons
         if (Draw_Button("Main Menu",
-            WINDOW_WIDTH * 0.5f,
+            WINDOW_WIDTH * UI_CENTER_X,
             WINDOW_HEIGHT * PAUSE_MAINMENU_Y,
             WINDOW_WIDTH * PAUSE_BUTTON_W,
             WINDOW_HEIGHT * PAUSE_BUTTON_H)) {
@@ -176,7 +180,7 @@ void Handle_Pause_Menu(int* MenuOpen)
         }
 
         if (Draw_Button("Save Game",
-            WINDOW_WIDTH * 0.5f,
+            WINDOW_WIDTH * UI_CENTER_X,
             WINDOW_HEIGHT * PAUSE_SAVE_Y,
             WINDOW_WIDTH * PAUSE_BUTTON_W,
             WINDOW_HEIGHT * PAUSE_BUTTON_H)) {
@@ -185,7 +189,7 @@ void Handle_Pause_Menu(int* MenuOpen)
         }
 
         if (Draw_Button("Quit Game",
-            WINDOW_WIDTH * 0.5f,
+            WINDOW_WIDTH * UI_CENTER_X,
             WINDOW_HEIGHT * PAUSE_QUIT_Y,
             WINDOW_WIDTH * PAUSE_BUTTON_W,
             WINDOW_HEIGHT * PAUSE_BUTTON_H)) {
@@ -206,15 +210,15 @@ void HandlePlayerStats() {
             char text[64];
             sprintf_s(text, sizeof(text), "Attack Power: %d", playerStats.attack_power);
             CP_Font_DrawText(text,
-                WINDOW_WIDTH * 0.5f,
+                WINDOW_WIDTH * UI_CENTER_X,
                 WINDOW_HEIGHT * 0.4f);
             sprintf_s(text, sizeof(text), "Health Points: %d", playerStats.health_points);
             CP_Font_DrawText(text,
-                WINDOW_WIDTH * 0.5f,
-                WINDOW_HEIGHT * 0.5f);
+                WINDOW_WIDTH * UI_CENTER_X,
+                WINDOW_HEIGHT * UI_CENTER_Y);
             sprintf_s(text, sizeof(text), "Currency: %d", playerStats.currency);
             CP_Font_DrawText(text,
-                WINDOW_WIDTH * 0.5f,
+                WINDOW_WIDTH * UI_CENTER_X,
                 WINDOW_HEIGHT * 0.6f);
         }
         else return;
@@ -234,9 +238,7 @@ void Handle_Fullscreen(int* fullscreen) {
     }
 }
 
-int CurrentCurrency() {
-    return playerStats.currency;
-}// to call in mainmenu
+
 
 void SaveGameState() {
     FILE* file = fopen("save.txt", "wb");
@@ -300,12 +302,12 @@ void Draw_Main_Menu()
 
     UI ui = {
         .window = {
-            .width = CP_System_GetWindowWidth(),
-            .height = CP_System_GetWindowHeight()
+            .width = (float)CP_System_GetWindowWidth(),
+            .height = (float)CP_System_GetWindowHeight()
         },
         .title = {
-            .x = CP_System_GetWindowWidth() * UI_CENTER_X,
-            .y = CP_System_GetWindowHeight() * UI_TITLE_Y
+            .x = (float)CP_System_GetWindowWidth() * UI_CENTER_X,
+            .y = (float)CP_System_GetWindowHeight() * UI_TITLE_Y
         },
     };
 
