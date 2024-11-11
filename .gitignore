@@ -6,7 +6,11 @@
 *.exe
 *.ilk
 .vs
-team_metal_detectors_f24/.vs
+<<<<<<< HEAD
+bin/Debug-x64/Assets/Event_Chains/Generated/
+=======
+bin/Debug-x64/Assets/Event_Chains/Generated
+>>>>>>> b970cd2ffc80c3f40dbe539578eccb924065fae3
 .tmp
 *.tlog
 *.obj
