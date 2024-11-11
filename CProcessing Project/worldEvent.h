@@ -1,6 +1,7 @@
 #pragma once
 #include "cprocessing.h"
 #include "linkedlist.h"
+
 // The type of event, it gives the event node the type of event that should occur when activated
 typedef enum EventType {
 	START, // This is the starter for event types, it is not an event type.
@@ -10,10 +11,11 @@ typedef enum EventType {
 	ITEM,
 	SHOP,
 	NON_SPECIAL_TYPE_END, // This is a non-special type ender, it is not an event type and
-	//-----------------// // is used to count the numbe of non-special events
+	//-----------------// // is used to count the number of non-special events
 	// Special events
 	MIDBOSS_BATTLE = 11,
-	BOSS_BATTLE
+	BOSS_BATTLE,
+	STARTING_NODE
 } EventType;
 
 // The node for events
@@ -25,6 +27,8 @@ typedef struct EventNode {
 	LinkedList next_nodes;
 } EventNode;
 
+// Event Type Map
+// Maps a number of events based on the event type
 typedef struct EventTypeMap {
 	EventType type;
 	int number;

@@ -6,11 +6,11 @@
 
 typedef struct World {
 	int id;
+	int is_generated;
 	EventNode event_list[EVENT_NUMBER];
 } World;
 
-typedef struct GameMaster {
-	int seed;
+typedef struct WorldMaster {
 	int current_world;
 	int current_event;
 } GameMaster;
@@ -22,6 +22,8 @@ void World_Update(void);
 void World_Exit(void);
 
 void Generate_World(int);
+
+World World_Generate_Dynamic(int);
 
 World Read_World(int);
 

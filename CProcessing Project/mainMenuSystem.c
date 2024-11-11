@@ -105,7 +105,6 @@ void Main_Menu_Update()
         float click_y = CP_Input_GetMouseY();
 
         if (IsAreaClicked(ui.button.button_newgame.x, ui.button.button_newgame.y, ui.button.width, ui.button.height, click_x, click_y)) {
-            Generate_World(1);
             //Going to the Map System
             CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
         }
