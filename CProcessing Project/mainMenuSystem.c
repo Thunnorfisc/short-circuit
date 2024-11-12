@@ -290,8 +290,8 @@ void Draw_Splash_Screen()
         currentMenuState = MAIN_MENU;
     }
 
-    // Optional: Allow skipping with any key or mouse click
-    if (CP_Input_KeyTriggered(KEY_ESCAPE) || CP_Input_MouseTriggered(MOUSE_BUTTON_1)) {
+    // Allow skipping with Escape key
+    if (CP_Input_KeyTriggered(KEY_ESCAPE)) {
         currentMenuState = MAIN_MENU;
     }
 }
