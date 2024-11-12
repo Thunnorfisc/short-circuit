@@ -33,3 +33,5 @@ typedef struct EventTypeMap {
 	EventType type;
 	int number;
 } EventTypeMap;
+
+EventNode Event_Initialize(int id, EventType type, float location_x, float location_y, float bound_x, float bound_y);

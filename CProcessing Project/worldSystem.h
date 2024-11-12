@@ -23,6 +23,8 @@ void World_Exit(void);
 
 void Generate_World(int);
 
+void World_Reset();
+
 World World_Generate_Dynamic(int);
 
 World Read_World(int);

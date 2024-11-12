@@ -60,10 +60,7 @@ void World_SwitchScene(EventType type);
 /* ============= GAME SCENE FUNCTIONS ============= */
 void World_Init(void)
 {
-	if (!world.is_generated) {
-		player_node = 0;
-		world = World_Generate_Dynamic(world_id);
-	}
+	if (!world.is_generated) world = World_Generate_Dynamic(world_id);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
 
@@ -393,6 +390,14 @@ World Read_World(int world_number)
 	return world;
 }
 
+void World_Reset() {
+	for (int i = 0; i < EVENT_NUMBER; ++i) {
+		if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
+	}
+	player_node = 0;
+	world.is_generated = 0;
+}
+
 CP_Color Event_Type_Colour(EventType type)
 {
 	CP_Color color = CP_Color_Create(255, 255, 255, 255);
@@ -433,10 +438,7 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
 		break;
 	case BOSS_BATTLE:
-		for (int i = 0; i < EVENT_NUMBER; ++i) {
-			if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
-		}
-		world.is_generated = 0;
+		World_Reset();
 		++world_id;
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
 		break;
