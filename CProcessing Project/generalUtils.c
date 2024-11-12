@@ -101,8 +101,7 @@ int Exist_In_Array(void* value_to_check,void* array, int type_of_array, int size
 	}
 	case(6):
 	{
-		//Write code to check if variables exist is E_Mage array
-		E_Mage* array_casted = (E_Mage*)array;
+		// Might need to write code to check if variables exist in enemy array in the future? 12/11/2024
 		return 0;
 		break;
 	}
