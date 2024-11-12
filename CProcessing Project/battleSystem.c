@@ -29,6 +29,7 @@ CircuitPiece circuit_pieces_s[2];
 //Circuit Piece Selected
 CircuitPiece circuit_selected_list[GRID_DIMENSIONS][GRID_DIMENSIONS] = { 0 };
 CircuitPiece circuit_piece_selected = { 0 };
+CP_Vector index_used[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
 int selected_circuit_piece = 0;
 
 //mouse vector that will be updated when mouse down is detected
@@ -57,15 +58,15 @@ void Battle_System_Init()
 
 
 	/*------------Calculating the buffer for the display location of the UI for the circuits---------- */
-	float circuit_ui_buffer_top = (float)(GRID_DIMENSIONS * CIRCUIT_PIECE_SIZE + CIRCUIT_CENTER_OFFSET * 4);
-	float circuit_ui_buffer_left = (float)(WINDOW_WIDTH - (CIRCUIT_PIECE_SIZE * CIRCUIT_UI_LIST_SIZE + BUFFER * (CIRCUIT_UI_LIST_SIZE - 1))) / 2.f;
+	float circuit_ui_buffer_top = (float)(GRID_DIMENSIONS * GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET * 4);
+	float circuit_ui_buffer_left = (float)(WINDOW_WIDTH - (GRID_CELL_SIZE * CIRCUIT_UI_LIST_SIZE + BUFFER * (CIRCUIT_UI_LIST_SIZE - 1))) / 2.f;
 
 	//This loop will initialize the ciruits to be displayed on the UI for selection
 	for (int i = 0, j = i + 1; i < 4; ++i, j = j < 3 ? j + 1 : 0) {
 		circuit_list_l[i] = New_Circuit_Piece(
-			CP_Vector_Set(circuit_ui_buffer_left + (float)CIRCUIT_PIECE_SIZE / 2.f + CIRCUIT_PIECE_SIZE * i + BUFFER * i, circuit_ui_buffer_top)
+			CP_Vector_Set(circuit_ui_buffer_left + (float)GRID_CELL_SIZE / 2.f + GRID_CELL_SIZE * i + BUFFER * i, circuit_ui_buffer_top)
 			, i, j, i);
-		circuit_list_l[i].circuitSize = CIRCUIT_PIECE_SIZE;
+		circuit_list_l[i].circuitSize = GRID_CELL_SIZE;
 	}
 	/*------------------------------------------------------------------------------------------------ */
 
@@ -101,7 +102,7 @@ void Battle_System_Update()
 	}
 	else if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
 		if (selected_circuit_piece) {
-			Grid_Cricuit_Drop(circuit_piece_selected, circuit_selected_list, grid_squares,mouse_position);
+			Grid_Cricuit_Drop(circuit_selected_list, grid_squares, circuit_piece_selected, index_used, mouse_position);
 			selected_circuit_piece = 0;
 		}
 	}
@@ -151,6 +152,7 @@ void Battle_System_Update()
 void Battle_System_Exit()
 {
 	memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
+	memset(index_used, 0, sizeof(index_used));
 	CP_Image_Free(circuit_image_l);
 	CP_Image_Free(e_wizard_image);
 	CP_Image_Free(e_plant_image);

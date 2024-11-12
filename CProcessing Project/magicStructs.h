@@ -15,7 +15,7 @@ typedef struct CircuitPiece {
 	CP_Vector centerPosition;
 
 	//These are the directions that will be set in the struct
-	//Directions will be represented by int 1 - 4
+	//Directions will be represented by int 0 - 3
 	// 0: left, 1: up, 2: right, 3: down 
 	int IO_1;
 	int IO_2;
