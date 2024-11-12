@@ -9,13 +9,13 @@ Inventory inventory = { 0 };
 char buffer[50] = { 0 };
 float centrex, centrey, swordb_y, shieldb_y, emptyb_y, sword2b_y, shield2b_y, button_width, button_height, inv_x, name_y, stat_y, pstat_x, font_size;
 
-typedef struct ps {
+typedef struct pst {
 	int attack_power;
 	int health_points;
 	int currency;
-} PlayerStats;
+} pst;
 
-PlayerStats ps = {
+pst ps = {
 	.attack_power = 0,
 	.health_points = 0 ,
 	.currency = 100
