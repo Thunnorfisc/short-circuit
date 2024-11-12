@@ -54,13 +54,20 @@ int AreCirclesIntersecting(float c1_x, float c1_y, float r1, float c2_x, float c
 	return 0;
 }
 
-int Exist_In_Array(void* value_to_check,void* array, int type_of_array, int size_of_array) {
+int Exist_In_Array(void* value_to_check,void* array, TYPES_OF_ARRAYS type_of_array, int size_of_array) {
 	switch (type_of_array)
 	{
 	case(1):
 	{
 		//Write code to check if variables exist in int array
 		int* array_casted = (int*)array;
+		int* value_to_check_casted = (int*)value_to_check;
+		for (int i = 0; i < size_of_array; ++i) {
+			if (value_to_check_casted == array_casted[i])
+			{
+				return 1;
+			}
+		}
 		return 0;
 		break;
 	}
