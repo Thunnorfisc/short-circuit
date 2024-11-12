@@ -2,64 +2,23 @@
 #include "worldSystem.h"
 #include "battleSystem.h"
 #include "magicSystemUtil.h"
+#include "enemyStructs.h"
 
-/*
-float battlebutton_width;
-float battlebutton_height;
-float center_x;
-float center_y;
-float adjustwindowsize = 0.4f;
-
-CP_Font font_style = NULL;
-
-void Battle_System_Init()
-{
-	CP_Settings_RectMode(CP_POSITION_CENTER);
-	center_x = WINDOW_WIDTH_HALF;
-	center_y = WINDOW_HEIGHT_HALF;
-	battlebutton_width = center_x * adjustwindowsize;
-	battlebutton_height = center_y * adjustwindowsize;
-
-	font_style = CP_Font_Load(FONT_ASSET_ADDR);
-
-	CP_Font_Set(font_style);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_TextSize(30.0f);
-	
-}
-
-void Battle_System_Update()
-{
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
-		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}
-
-	// Set the background
-	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
-
-	// Color the button
-	CP_Settings_Fill(CP_Color_Create(102, 255, 255, 255));
-	// Draw To Battle System button
-	CP_Graphics_DrawRect(center_x, center_y, battlebutton_width, battlebutton_height);
-	//Colour of the font
-	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-	CP_Font_DrawText("To Battle System", center_x, center_y);
-
-	if (CP_Input_MouseClicked() && IsAreaClicked(center_x, center_y, battlebutton_width, battlebutton_height, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-		CP_Engine_SetNextGameState(Magic_System_Init, Magic_System_Update, Magic_System_Exit);
-	}
-}
-
-void Battle_System_Exit()
-{
-}
-*/
-
-//Intializing e_mage array
 int random_enemy_count = 0;
-CP_Image e_mage_image;
-E_Mage e_mage_arr[ENEMY_COUNT];
+CP_Image enemy_image;
 
+
+// Define images for each enemy type
+CP_Image e_wizard_image;
+CP_Image e_plant_image;
+CP_Image e_vulture_image;
+
+// an array of Enemy structures called enemies with a size of ENEMY_COUNT
+Enemy enemies[ENEMY_COUNT];
+
+
+
+/* Circuits--------------------------------------------------------------------------------------------------------------*/
 //Image of the circuit pieces
 CP_Image circuit_image_l;
 
@@ -75,6 +34,8 @@ int selected_circuit_piece = 0;
 //mouse vector that will be updated when mouse down is detected
 CP_Vector mouse_position = { 0 };
 
+/*-------------------------------------------------------------------------------------------------------------------------*/
+
 //Grids that will be used to display the enemy
 CP_Vector grid_squares[GRID_DIMENSIONS][GRID_DIMENSIONS];
 
@@ -88,8 +49,12 @@ void Battle_System_Init()
 	//Loading the image for the Magic Circuit's L Piece
 	circuit_image_l = CP_Image_Load(CIRCUIT_L_ASSET_ADDR);
 
-	//Setting the image for the enemy
-	e_mage_image = CP_Image_Load(E_MAGE_ASSET_ADDR);
+
+	// Load each enemy image
+	e_wizard_image = CP_Image_Load(E_WIZARD_ASSET_ADDR);
+	e_plant_image = CP_Image_Load(E_PLANT_ASSET_ADDR);
+	e_vulture_image = CP_Image_Load(E_VULTURE_ASSET_ADDR);
+
 
 	/*------------Calculating the buffer for the display location of the UI for the circuits---------- */
 	float circuit_ui_buffer_top = (float)(GRID_DIMENSIONS * CIRCUIT_PIECE_SIZE + CIRCUIT_CENTER_OFFSET * 4);
@@ -111,8 +76,11 @@ void Battle_System_Init()
 	random_enemy_count = CP_Random_RangeInt(1, 3);
 	printf("Number of enemies to be generated: %d\n", random_enemy_count);
 
-	// Randomly generate unique enemy mage positions
-	E_Mage_Initialize_Array(e_mage_arr, grid_squares, random_enemy_count);
+	Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count);
+
+	// Randomly generate unique enemy positions
+	void Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count);
+
 }
 
 void Battle_System_Update()
@@ -148,9 +116,23 @@ void Battle_System_Update()
 	//Draw grid
 	Grid_Display(grid_squares);
 
-	// Draw the enemies
+	// Draw each enemy based on its type
 	for (int i = 0; i < random_enemy_count; i++) {
-		CP_Image_Draw(e_mage_image,e_mage_arr[i].position.x, e_mage_arr[i].position.y, 128, 128, 255);
+		
+		switch (enemies[i].enemy_type) {
+		case E_Wizard:
+			enemy_image = e_wizard_image;
+			break;
+		case E_Plant:
+			enemy_image = e_plant_image;
+			break;
+		case E_Vulture:
+			enemy_image = e_vulture_image;
+			break;
+		default:
+			continue;
+		}
+		CP_Image_Draw(enemy_image, enemies[i].position.x, enemies[i].position.y, 128, 128, 255);
 	}
 
 	//Draw Circuit UI
@@ -170,6 +152,8 @@ void Battle_System_Exit()
 {
 	memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
 	CP_Image_Free(circuit_image_l);
-	CP_Image_Free(e_mage_image);
+	CP_Image_Free(e_wizard_image);
+	CP_Image_Free(e_plant_image);
+	CP_Image_Free(e_vulture_image);
 }
 
