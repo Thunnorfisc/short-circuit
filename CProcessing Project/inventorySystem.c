@@ -47,22 +47,18 @@ void Inventory_Update(void) {
 	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 	}
-    // Clear the background to a grey color
+    // Clear the background
     CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 	// Draw the buttons
 	CP_Settings_Fill(COLOR_RED);
+	CP_Graphics_DrawRect(centrex, emptyb_y, button_width, button_height);
 	CP_Graphics_DrawRect(centrex, shieldb_y, button_width, button_height);
 	CP_Graphics_DrawRect(centrex, swordb_y, button_width, button_height);
-	CP_Graphics_DrawRect(centrex, emptyb_y, button_width, button_height);
-	CP_Graphics_DrawRect(centrex, shield2b_y, button_width, button_height);
-	CP_Graphics_DrawRect(centrex, sword2b_y, button_width, button_height);
 	CP_Settings_Fill(COLOR_BLACK);
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+	CP_Font_DrawText("Empty", centrex, emptyb_y);
 	CP_Font_DrawText("Add Sword", centrex, swordb_y);
 	CP_Font_DrawText("Add Shield", centrex, shieldb_y);
-	CP_Font_DrawText("Add Sword2", centrex, sword2b_y);
-	CP_Font_DrawText("Add Shield2", centrex, shield2b_y);
-	CP_Font_DrawText("Empty", centrex, emptyb_y);
 	// Button actions
 	if (IsAreaClicked(centrex, emptyb_y, button_width, button_height, MOUSEX, MOUSEY) && CLICKED) {
 		for (int i = 0; i < array_count(inventory.slots); ++i) {
@@ -82,17 +78,10 @@ void Inventory_Update(void) {
 		inventory = Add_Shield_To_Inventory(inventory, 1);
 		ps.health_points += inventory.slots->shield.hp;
 	}
-	if (IsAreaClicked(centrex, sword2b_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
-		inventory = Add_Sword_To_Inventory(inventory, 0);
-		ps.attack_power += inventory.slots->sword.attack;
-
-	}
-	if (IsAreaClicked(centrex, shield2b_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
-		inventory = Add_Shield_To_Inventory(inventory, 1);
-		ps.health_points += inventory.slots->shield.hp;
-	}
+	
 	// Display player stats
 	CP_Settings_Fill(COLOR_RED);
+	CP_Font_DrawText("Player Stats:", pstat_x, emptyb_y);
 	sprintf_s(buffer, 50, "Attack: %d", ps.attack_power);
 	CP_Font_DrawText(buffer, pstat_x, swordb_y);
 	sprintf_s(buffer, 50, "Health: %d", ps.health_points);
