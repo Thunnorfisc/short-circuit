@@ -93,6 +93,9 @@
     <ClCompile Include="enemyStructs.c">
       <Filter>Source Files\BattleSystem</Filter>
     </ClCompile>
+    <ClCompile Include="creditsScreen.c">
+      <Filter>Source Files\MenuSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png">
@@ -143,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="enemyStructs.h">
       <Filter>Header Files\BattleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="creditScreen.h">
+      <Filter>Header Files\MenuSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

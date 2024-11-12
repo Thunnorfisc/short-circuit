@@ -10,25 +10,43 @@ will be used in the game
 
 #define ENEMY_SIZE_SCALING 3
 
-//This is the struct that will be used to create the pieces for the magic circuit system
-typedef struct E_Mage {
+// Data type is EnemyTypes
+// Enum for different enemy types
+typedef enum EnemyTypes {
+	E_Wizard, 
+	E_Plant, 
+	E_Vulture 
+} EnemyTypes;
 
-	//This will be used to set the position of the E_Mage
+
+// Enum for the enemy elemental weaknesses
+typedef enum ElementType {
+	Element_Fire,
+	Element_Grass,
+	Element_Water
+} ElementType;
+
+// Struct for enemy
+typedef struct Enemy {
+	EnemyTypes enemy_type;
+	int attack;
+	ElementType weakness;
+	int healthbar;
+	ElementType resistance;
+	int criticaldmg;
+	int is_boss;
 	CP_Vector position;
-	//Set Damage here
+} Enemy;
 
-	
-} E_Mage;
+
 
 /*
 Here onwards will be functions used to initialize/get/set the values for the above structs
 */
 
-/*
-Function: E_Mage_Initialize
-Parameters: CP_Vector v
-Usage: This will be used to initialize a new e_mage object
-*/
-E_Mage E_Mage_Initialize(CP_Vector v); //To be edited to fit the struct
 
-void E_Mage_Initialize_Array(E_Mage e_mage_arr[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int const num_to_generate);
+Enemy initializeEnemy(EnemyTypes type, CP_Vector v);
+
+
+void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate);
+

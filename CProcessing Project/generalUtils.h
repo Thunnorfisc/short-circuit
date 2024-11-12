@@ -52,6 +52,9 @@ typedef enum TYPES_OF_ARRAYS
 
 }TYPES_OF_ARRAYS;
 
+//Used to draw buttons
+int Draw_Button(const char* text, float x, float y, float width, float height);
+
 /*
 Description: These are the functions that were used repeatedly so they will be stored in the generalUtils.h to be used
 in the code for the different system.

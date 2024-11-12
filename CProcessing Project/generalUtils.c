@@ -102,12 +102,28 @@ int Exist_In_Array(void* value_to_check,void* array, int type_of_array, int size
 	}
 	case(6):
 	{
-		//Write code to check if variables exist is E_Mage array
-		E_Mage* array_casted = (E_Mage*)array;
+		// Might need to write code to check if variables exist in enemy array in the future? 12/11/2024
 		return 0;
 		break;
 	}
 	default:
 		break;
+	}
+}
+
+//this function is used to draw a button - yande
+int Draw_Button(const char* text, float x, float y, float width, float height)
+{
+	CP_Settings_Fill(CP_Color_Create(200, 200, 200, 255));
+	CP_Graphics_DrawRect(x, y, width, height);
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Font_DrawText(text, x, y);
+
+	float click_x = CP_Input_GetMouseX();
+	float click_y = CP_Input_GetMouseY();
+
+	if (IsAreaClicked(x, y, width, height, click_x, click_y) && CP_Input_MouseClicked()) {
+		CP_Graphics_DrawRect(x, y, width - 10, height - 10);
+		return 1;
 	}
 }
