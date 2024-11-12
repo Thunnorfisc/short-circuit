@@ -17,7 +17,7 @@ Usage: This will be used to initialize a new circuit piece game object
 CircuitPiece New_Circuit_Piece(CP_Vector v, int io_1, int io_2, int rot) {
 	CircuitPiece newPiece;
 	newPiece.centerPosition = v;
-	newPiece.circuitSize = CIRCUIT_PIECE_SIZE;
+	newPiece.circuitSize = GRID_CELL_SIZE;
 	newPiece.IO_1 = io_1;
 	newPiece.IO_2 = io_2;
 	newPiece.rot = rot;

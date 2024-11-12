@@ -4,6 +4,8 @@
 #include "magicSystemUtil.h"
 #include "enemyStructs.h"
 
+//#define GRID_CELL_SIZE Calculate_Cell_Size()
+
 int random_enemy_count = 0;
 CP_Image enemy_image;
 
@@ -133,7 +135,7 @@ void Battle_System_Update()
 		default:
 			continue;
 		}
-		CP_Image_Draw(enemy_image, enemies[i].position.x, enemies[i].position.y, 128, 128, 255);
+		CP_Image_Draw(enemy_image, enemies[i].position.x, enemies[i].position.y, GRID_CELL_SIZE, GRID_CELL_SIZE, 255);
 	}
 
 	//Draw Circuit UI

@@ -168,3 +168,10 @@ void Add_To_Index_Array(CP_Vector index_list[], CP_Vector vector_to_add, int siz
 		}
 	}
 }
+
+float Calculate_Cell_Size() {
+	float original_resolution = 1080;
+	float original_cell_size = 128;
+
+	return ((float)CP_System_GetWindowHeight() / original_resolution * original_cell_size);
+}
