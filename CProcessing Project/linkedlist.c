@@ -154,7 +154,7 @@ int List_GetAtIndex(LinkedList list, int index)
 		printf("Error: Invalid index\n");
 		return -1;
 	}
-
+	if (list.length == 0) return -1;
 	Node* current = list.head;
 	for (int i = 0; i < index; ++i)
 	{
