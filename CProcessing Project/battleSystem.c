@@ -16,6 +16,8 @@ CP_Image e_vulture_image;
 
 // an array of Enemy structures called enemies with a size of ENEMY_COUNT
 Enemy enemies[ENEMY_COUNT];
+Enemy enemy_attacked[ENEMY_COUNT];
+int enemy_hit = 0;
 
 /* Circuits--------------------------------------------------------------------------------------------------------------*/
 //Image of the circuit pieces
@@ -201,6 +203,7 @@ void Battle_System_Update()
 	//Display button for submiting magic system
 	if (Draw_Button("Submit", button_submit.position.x, button_submit.position.y, button_submit.width * WINDOW_RATIO, button_submit.height * WINDOW_RATIO)) {
 		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
+			enemy_hit = Check_Enemy_Hit(enemy_attacked,enemies,index_used,circuit_selected_list);
 			printf("Closed Circuit\n");
 		}
 		else {

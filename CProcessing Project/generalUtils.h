@@ -79,4 +79,4 @@ if(IsAreaClicked){ ... }
 */
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y);
 
-int Exist_In_Array(void* value_to_check, void* array, int type_of_array, int size_of_array);
+int Exist_In_Array(void* value_to_check, void* array, TYPES_OF_ARRAYS type_of_array, int size_of_array);
