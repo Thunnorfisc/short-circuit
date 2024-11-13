@@ -31,6 +31,9 @@ NOTE!!! Do not edit these names or values without consulting the team
 //Use to get the half the width of the window
 #define WINDOW_WIDTH_HALF (float)WINDOW_WIDTH / 2.f
 
+//Use to get the ratio of the asset display
+#define WINDOW_RATIO (float)WINDOW_HEIGHT / 1080.f
+
 //Used to get the delta time of the program
 #define DELTA_TIME CP_System_GetDt()
 /*
@@ -51,6 +54,12 @@ typedef enum TYPES_OF_ARRAYS
 	A_E_MAGE = 6
 
 }TYPES_OF_ARRAYS;
+
+typedef struct Button {
+	CP_Vector position;
+	float width;
+	float height;
+}Button;
 
 //Used to draw buttons
 int Draw_Button(const char* text, float x, float y, float width, float height);

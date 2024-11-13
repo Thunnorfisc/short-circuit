@@ -1,4 +1,4 @@
-#include <stdio.h>circuit_list
+#include <stdio.h>
 #include "worldSystem.h"
 #include "battleSystem.h"
 #include "magicSystemUtil.h"
@@ -44,11 +44,16 @@ int total_s_pieces;
 */
 CP_Image elemental_circuit_images[3];
 
+//bool to check if the elemental pipes have been shuffled for the current turn
 int load_elements = 1;
 /*-------------------------------------------------------------------------------------------------------------------------*/
 
 //Grids that will be used to display the enemy
 CP_Vector grid_squares[GRID_DIMENSIONS][GRID_DIMENSIONS];
+
+//Button Variables
+Button button_submit;
+
 
 void Battle_System_Init()
 {
@@ -65,14 +70,15 @@ void Battle_System_Init()
 	elemental_circuit_images[0] = CP_Image_Load(CIRCUIT_LG_ASSET_ADDR);
 	elemental_circuit_images[1] = CP_Image_Load(CIRCUIT_LW_ASSET_ADDR);
 	elemental_circuit_images[2] = CP_Image_Load(CIRCUIT_LF_ASSET_ADDR);
+
 	// Load each enemy image
 	e_wizard_image = CP_Image_Load(E_WIZARD_ASSET_ADDR);
 	e_plant_image = CP_Image_Load(E_PLANT_ASSET_ADDR);
 	e_vulture_image = CP_Image_Load(E_VULTURE_ASSET_ADDR);
 
-	float cellsize = GRID_CELL_SIZE;
 	/*------------Calculating the buffer for the display location of the UI for the circuits---------- */
-	float circuit_ui_corner_buffer_top = (float)(GRID_DIMENSIONS * GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET * 4);
+	float grid_size = GRID_DIMENSIONS * GRID_CELL_SIZE;
+	float circuit_ui_corner_buffer_top = (float)(grid_size + GRID_CELL_SIZE_OFFSET * 4);
 	float circuit_ui_corner_buffer_left = (float)(WINDOW_WIDTH - (GRID_CELL_SIZE * NUM_OF_L_PIECE + BUFFER * (NUM_OF_L_PIECE - 1))) / 2.f;
 
 	//This loop will initialize the corner pieces to be displayed on the UI for selection
@@ -94,6 +100,12 @@ void Battle_System_Init()
 	}
 
 	total_s_pieces = 2;
+
+	//Initialize the button for submit
+	button_submit.width = 128 * 2;
+	button_submit.height = 64;
+
+	button_submit.position = CP_Vector_Set((float)(WINDOW_WIDTH - grid_size) * 0.75f + grid_size, (float)WINDOW_HEIGHT - (float)(WINDOW_HEIGHT - grid_size) / 2.f + button_submit.height / 2.f);
 	/*------------------------------------------------------------------------------------------------ */
 
 	//Initialize the grids for testing
@@ -125,6 +137,7 @@ void Battle_System_Update()
 	}
 
 	/* --------------- This Section will be to check for the functions that can run when mouse is interacted -------------*/
+	//Check where the mouse clicked and what piece was selected
 	if (CP_Input_MouseDown(MOUSE_BUTTON_1)) {
 		mouse_position = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
@@ -133,6 +146,7 @@ void Battle_System_Update()
 			selected_circuit_piece = Circuit_Piece_Selected(&circuit_piece_selected, circuit_list, mouse_position, total_s_pieces);
 
 	}
+	//Check when the mouse is released if the location for release is allowed for the piece
 	else if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
 		if (selected_circuit_piece) {
 			if (Grid_Circuit_Drop(circuit_selected_list, grid_squares, circuit_piece_selected, index_used, mouse_position)) {
@@ -177,22 +191,38 @@ void Battle_System_Update()
 	//Draw Selected Circuit Pieces
 	Draw_SelectedCircuitPieces(circuit_selected_list);
 
+	//Display Selected Circuit Piece while the player is dragging the piece
 	if (selected_circuit_piece) {
 		CP_Image_DrawAdvanced(
 			circuit_piece_selected.image, mouse_position.x, mouse_position.y,
 			(float)circuit_piece_selected.circuit_size, (float)circuit_piece_selected.circuit_size, 255, (float)circuit_piece_selected.rot * ANGLE_OF_ROTATION);
 	}
+
+	//Display button for submiting magic system
+	if (Draw_Button("Submit", button_submit.position.x, button_submit.position.y, button_submit.width * WINDOW_RATIO, button_submit.height * WINDOW_RATIO)) {
+		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
+			printf("Closed Circuit\n");
+		}
+		else {
+			printf("Opened Circuit\n");
+		}
+	}
 }
 
 void Battle_System_Exit()
 {
+	//Reset the arrays when exiting the battle system
 	memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
 	memset(index_used, 0, sizeof(index_used));
+
+	//Free the images that were loaded
 	CP_Image_Free(circuit_image_corner);
 	CP_Image_Free(circuit_image_straight);
 	CP_Image_Free(e_wizard_image);
 	CP_Image_Free(e_plant_image);
 	CP_Image_Free(e_vulture_image);
+
+	//Change back to true to make sure the pipe elements are shuffled upon re-entering battle-system
 	load_elements = 1;
 }
 
