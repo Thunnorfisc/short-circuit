@@ -38,7 +38,6 @@ void ItemEvent_Update(void)
 		CP_Graphics_DrawRect((WINDOW_WIDTH_HALF * (0.5f + i * 0.5f)), WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f);
 		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
 		CP_Font_DrawText(random_items[i].name, WINDOW_WIDTH_HALF * (0.5f + i * 0.5f), WINDOW_HEIGHT_HALF);
-		// printf("%s\n", random_items[i].name);
 	}
 
 	if (CP_Input_MouseClicked()) {

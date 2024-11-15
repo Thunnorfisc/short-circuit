@@ -96,11 +96,19 @@
     <ClCompile Include="creditsScreen.c">
       <Filter>Source Files\MenuSystem</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="worldHelper.c">
       <Filter>Source Files\WorldSystem</Filter>
     </ClCompile>
     <ClCompile Include="itemSystem.c">
       <Filter>Source Files\ItemSystem</Filter>
+=======
+    <ClCompile Include="TEST_playerStruct.c">
+      <Filter>Source Files\PlayerSystems</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST_playerUtil.c">
+      <Filter>Source Files\PlayerSystems</Filter>
+>>>>>>> origin/magic-system
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -156,11 +164,19 @@
     <ClInclude Include="creditScreen.h">
       <Filter>Header Files\MenuSystem</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="worldHelper.h">
       <Filter>Header Files\WorldSystem</Filter>
     </ClInclude>
     <ClInclude Include="itemSystem.h">
       <Filter>Header Files\ItemSystem</Filter>
+=======
+    <ClInclude Include="TEST_playerStruct.h">
+      <Filter>Header Files\PlayerSystems</Filter>
+    </ClInclude>
+    <ClInclude Include="TEST_playerUtil.h">
+      <Filter>Header Files\PlayerSystems</Filter>
+>>>>>>> origin/magic-system
     </ClInclude>
   </ItemGroup>
 </Project>

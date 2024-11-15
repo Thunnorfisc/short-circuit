@@ -1,12 +1,22 @@
+/*
+File: magicSystem.c
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Description:
+This file will contain definition of the display and initialize functions that will be used for the Magic System:
+void Draw_UI_CircuitPiece
+void Draw_SelectedCircuitPieces
+void Grid_Display
+void Grid_Initialize
+*/
+
 #include <stdio.h>
 #include "generalUtils.h"
 
 /*
-Description:
-Used to display the UI of Circuit Pieces the player will click and drag from.
-
-Parameters:
-CircuitPiece list_of_circuit_pieces[], int size_of_array
+Function   : Draw_UI_CircuitPiece
+Description: Used to display the UI of Circuit Pieces the player will click and drag from.
+Parameters : CircuitPiece list_of_circuit_pieces[], int size_of_array
+Return	   : void
 */
 void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N) {
 	for (int i = 0; i < N; ++i) {
@@ -18,11 +28,10 @@ void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N) {
 }
 
 /*
-Description:
-Used to display the Circuit pieces the payer chose to drop into the grid
-
-Parameters:
-CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Image circuit_image_l
+Function   : Draw_SelectedCircuitPieces
+Description: Used to display the Circuit pieces the payer chose to drop into the grid
+Parameters : CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Image circuit_image_l
+Return	   : void
 */
 void Draw_SelectedCircuitPieces(CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	for (int row = 0; row < GRID_DIMENSIONS; ++row) {
@@ -37,12 +46,11 @@ void Draw_SelectedCircuitPieces(CircuitPiece selected[GRID_DIMENSIONS][GRID_DIME
 }
 
 /*
-Description:
-Used to display the grid that the circuit pieces can be dropped into.
-This function calls the function Grid_Display
-
-Parameters:
-CP_Vector const array_of_vectors_for_grid[], int size_of_array
+Function   : Grid_Display
+Description: Used to display the grid that the circuit pieces can be dropped into.
+			 This function calls the function Grid_Display
+Parameters : CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS]
+Return	   : void
 */
 void Grid_Display(CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	for (int row = 0; row < GRID_DIMENSIONS; ++row) {
@@ -53,19 +61,18 @@ void Grid_Display(CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 }
 
 /*
-Description:
-Used to initialize the list of vectors that will be used to generate the
-grid.
-
-Parameters:
-CP_Vector const array_of_vectors_for_grid[], int size_of_the_grid
+Function   : Grid_Initialize
+Description: Used to initialize the list of vectors that will be used to generate the
+			 grid.
+Parameters : CP_Vector grid[GRID_DIMENSIONS][GRID_DIMENSIONS]
+Return	   : void
 */
 void Grid_Initialize(CP_Vector grid[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	//Calculate the buffer for spawn of grids
-	int total_size_of_grid = GRID_DIMENSIONS * GRID_CELL_SIZE;
+	float total_size_of_grid = (float)GRID_DIMENSIONS * GRID_CELL_SIZE;
 
 	//Calculating the left-most buffer
-	float left_buffer = (float)(WINDOW_WIDTH - total_size_of_grid) / 2.f + GRID_CELL_SIZE_OFFSET;
+	float left_buffer = ((float)WINDOW_WIDTH - total_size_of_grid) / 2.f + GRID_CELL_SIZE_OFFSET;
 	//Calculating the top buffer
 	float top_buffer = (float)GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET;
 

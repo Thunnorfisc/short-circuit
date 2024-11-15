@@ -8,6 +8,12 @@
 #include "battleSystem.h"
 #include "worldHelper.h"
 
+#define MIN_EXTRA_BOUND_EVENTS 0
+#define MAX_EXTRA_BOUND_EVENTS 1
+
+#define EVENT_BOUND_X 10
+#define EVENT_BOUND_Y 5
+
 #define OFFSET_X WINDOW_WIDTH/EVENT_BOUND_X
 #define OFFSET_Y WINDOW_HEIGHT/EVENT_BOUND_Y
 
@@ -35,6 +41,10 @@ Player const base_player = {
 int fullscreen = 0;
 int menu_open = 0;
 
+//Variables for the player
+Player player = { 0 };
+Item current_inventory[] = { 0 };
+
 /* ============= PRIVATE FUNCTIONS DECLARATIONS ============= */
 /*
 	Switches Scene from world based on the event type
@@ -44,6 +54,15 @@ void World_SwitchScene(EventType type);
 /* ============= GAME SCENE FUNCTIONS ============= */
 void World_Init(void)
 {
+	//Test Player Data
+	player.health = 10;
+	player.mana = 2;
+	player.attack = 10;
+	player.defense = 10;
+	player.fire_crit = 1.2;
+	player.water_crit = 1.2;
+	player.grass_crit = 1.2;
+
 	if (!world.is_generated) world = World_Generate_Dynamic(world_id);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
@@ -93,6 +112,7 @@ void World_Update(void)
 						if (List_GetAtIndex(world.event_list[player_node].next_nodes, j) == i + 1) {
 							player_node = i;
 							// Go to battle system
+							PlayerStats_Calculate(current_inventory, player);
 							World_SwitchScene(world.event_list[i].type);
 						}
 					}
