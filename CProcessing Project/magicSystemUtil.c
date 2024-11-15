@@ -18,8 +18,8 @@ CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_positio
 */
 int Get_Circuit_Piece_Clicked(CircuitPiece c, CP_Vector *initial_position, int mouse_x, int mouse_y) {
 	CP_Vector mouse_vector = CP_Vector_Set((float)mouse_x, (float)mouse_y);
-	if (CP_Vector_Distance(c.centerPosition, mouse_vector) < c.circuitSize/2) {
-		initial_position = &c.centerPosition;
+	if (CP_Vector_Distance(c.position, mouse_vector) < c.circuit_size/2) {
+		initial_position = &c.position;
 		return 1;
 	}
 	return 0;
@@ -30,15 +30,15 @@ Description:
 Check for the array length of the selectedCircuit array
 
 Parameters:
-CircuitPiece selectedPieces[]
+CircuitPiece selected_pieces[]
 */
-int Get_Size_Of_Selected(CircuitPiece const selectedPieces[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
+int Get_Size_Of_Selected(CircuitPiece const selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	int count = 0;
 
 	for (int row = 0; row < GRID_DIMENSIONS; ++row) {
 		for (int col = 0; col < GRID_DIMENSIONS; ++col) {
 			//Check by using the size to see if there is a circuit in the current address
-			if (selectedPieces[row][col].circuitSize) count++;
+			if (selected_pieces[row][col].circuit_size) count++;
 		}
 	}
 
@@ -53,9 +53,13 @@ Returns 1 when it finds that a piece was selected
 Parameters:
 CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_position
 */
-int Circuit_PieceSelected(CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_position) {
+int Circuit_Piece_Selected(CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_position, int* total_s_pieces) {
 	for (int i = 0; i < CIRCUIT_UI_LIST_SIZE; ++i) {
-		if (CP_Vector_Distance(mouse_position, list_of_circuits[i].centerPosition) < GRID_CELL_SIZE_OFFSET) {
+		if (CP_Vector_Distance(mouse_position, list_of_circuits[i].position) < GRID_CELL_SIZE_OFFSET) {
+			if (total_s_pieces == 0 && list_of_circuits[i].type == S_Type) {
+				return 0;
+			}
+
 			*selected = list_of_circuits[i];
 
 			return 1;
@@ -74,8 +78,8 @@ Parameters:
 CircuitPiece c, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS]
 CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector mouse_position
 */
-int Grid_Cricuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS],
-	CircuitPiece selectedPiece, CP_Vector index_used[GRID_DIMENSIONS * GRID_DIMENSIONS], CP_Vector mouse_position) {
+int Grid_Circuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS],
+	CircuitPiece selected_piece, CP_Vector index_used[GRID_DIMENSIONS * GRID_DIMENSIONS], CP_Vector mouse_position) {
 
 	int test_size = Get_Size_Of_Selected(circuit_pos);
 
@@ -88,21 +92,22 @@ int Grid_Cricuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS]
 
 			index_to_use = CP_Vector_Set(col, row);
 
-			if (!CP_Vector_Length(circuit_pos[col - 1][row - 1].centerPosition) && CP_Vector_Distance(mouse_position, grid[col - 1][row - 1]) < GRID_CELL_SIZE_OFFSET) {
+			if (!CP_Vector_Length(circuit_pos[col - 1][row - 1].position) && CP_Vector_Distance(mouse_position, grid[col - 1][row - 1]) < GRID_CELL_SIZE_OFFSET) {
 
 				//Check if the current placement is allowed on the board based on the current pieces on the board
-				allowed_placement = Check_Placement(index_used, index_to_use, circuit_pos, selectedPiece);
+				allowed_placement = Check_Placement(index_used, index_to_use, circuit_pos, selected_piece);
 
 				if (allowed_placement) {
 					circuit_pos[col - 1][row - 1] = New_Circuit_Piece(
 						CP_Vector_Set(grid[col - 1][row - 1].x, grid[col - 1][row - 1].y),
-						selectedPiece.IO_1, selectedPiece.IO_2, selectedPiece.rot
+						selected_piece.image,
+						selected_piece.IO_1, selected_piece.IO_2, selected_piece.rot,selected_piece.circuit_size,selected_piece.type
 					);
 
 					//Add to array to track the current used row and column
 					Add_To_Index_Array(index_used, index_to_use, GRID_DIMENSIONS * GRID_DIMENSIONS);
 
-					circuit_pos[col - 1][row - 1].circuitSize = GRID_CELL_SIZE;
+					circuit_pos[col - 1][row - 1].circuit_size = GRID_CELL_SIZE;
 
 					return 1;
 				}
@@ -119,7 +124,7 @@ Used in Grid_Circuit_Drop to see if the area can be dropped
 Parameters:
 CP_Vector index_used[], CP_Vector index_to_use
 */
-int Check_Placement(CP_Vector index_used[], CP_Vector index_to_use, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CircuitPiece selectedPiece) {
+int Check_Placement(CP_Vector index_used[], CP_Vector index_to_use, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CircuitPiece selected_piece) {
 
 	/* Check if adjacent and return the start and end of the circuits */
 	if (CP_Vector_Length(index_used[0]) == 0) return 1;
@@ -132,25 +137,25 @@ int Check_Placement(CP_Vector index_used[], CP_Vector index_to_use, CircuitPiece
 				//Check if the placement is also within the possible IO = 0
 				if (circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 0 ||
 					circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 0) {
-					if ((selectedPiece.IO_1 == 2 || selectedPiece.IO_2 == 2) && index_used[i].y - index_to_use.y == 1) return 1;
+					if ((selected_piece.IO_1 == 2 || selected_piece.IO_2 == 2) && index_used[i].y - index_to_use.y == 1) return 1;
 				}
 
 				//Check if the placement is also within the possible IO = 1
 				if (circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 1 ||
 						 circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 1) {
-					if ((selectedPiece.IO_1 == 3 || selectedPiece.IO_2 == 3) && index_used[i].x - index_to_use.x == 1) return 1;
+					if ((selected_piece.IO_1 == 3 || selected_piece.IO_2 == 3) && index_used[i].x - index_to_use.x == 1) return 1;
 				}
 
 				//Check if the placement is also within the possible IO = 2
 				if (circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 2 ||
 						 circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 2) {
-					if ((selectedPiece.IO_1 == 0 || selectedPiece.IO_2 == 0) && index_to_use.y - index_used[i].y == 1) return 1;
+					if ((selected_piece.IO_1 == 0 || selected_piece.IO_2 == 0) && index_to_use.y - index_used[i].y == 1) return 1;
 				}
 
 				//Check if the placement is also within the possible IO = 3
 				if(circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_1 == 3 ||
 					circuit_pos[(int)index_used[i].x - 1][(int)index_used[i].y - 1].IO_2 == 3){
-					if ((selectedPiece.IO_1 == 1 || selectedPiece.IO_2 == 1) && index_to_use.x - index_used[i].x == 1) return 1;
+					if ((selected_piece.IO_1 == 1 || selected_piece.IO_2 == 1) && index_to_use.x - index_used[i].x == 1) return 1;
 				}
 			}
 		}
@@ -174,4 +179,38 @@ float Calculate_Cell_Size() {
 	float original_cell_size = 128;
 
 	return ((float)CP_System_GetWindowHeight() / original_resolution * original_cell_size);
+}
+
+void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[3]) {
+	srand(time(NULL));
+	int random_index, random_element;
+	int random_index_arr[3];
+
+	//Choosing which circuit piece to change the element
+	for (int i = 0; i < 3;) {
+		random_index = CP_Random_RangeInt(0, NUM_OF_L_PIECE - 1);
+		if (!Exist_In_Array(random_index, random_index_arr, A_INT, NUM_OF_L_PIECE)) {
+			random_index_arr[i] = random_index;
+			++i;
+		}
+	}
+
+	CircuitElement elements[] = { Grass,Water,Fire };
+	int random_element_arr[3];
+
+	for (int i = 0; i < NUM_OF_L_PIECE;){
+		random_element = CP_Random_RangeInt(0, 2);
+		if (i < 3) {
+			if (!Exist_In_Array(random_element, random_element_arr, A_INT, 3)) {
+				Set_Circuit_Element(&(pieces_ui[random_index_arr[i]]), elements[random_element], elemental_image_list[random_element]);
+				random_element_arr[i] = random_element;
+				++i;
+			}
+		}
+		else {
+			pieces_ui[i].type = None;
+			++i;
+		}
+	}
+
 }

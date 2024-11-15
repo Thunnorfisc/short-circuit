@@ -1,14 +1,13 @@
-#include <stdio.h>
+#include <stdio.h>circuit_list
 #include "worldSystem.h"
 #include "battleSystem.h"
 #include "magicSystemUtil.h"
 #include "enemyStructs.h"
 
-//#define GRID_CELL_SIZE Calculate_Cell_Size()
 
+//Variables to generate enemies
 int random_enemy_count = 0;
 CP_Image enemy_image;
-
 
 // Define images for each enemy type
 CP_Image e_wizard_image;
@@ -18,15 +17,12 @@ CP_Image e_vulture_image;
 // an array of Enemy structures called enemies with a size of ENEMY_COUNT
 Enemy enemies[ENEMY_COUNT];
 
-
-
 /* Circuits--------------------------------------------------------------------------------------------------------------*/
 //Image of the circuit pieces
-CP_Image circuit_image_l;
+CP_Image circuit_image_corner, circuit_image_straight;
 
 //List of all the circuit pieces the player can use
-CircuitPiece circuit_list_l[CIRCUIT_UI_LIST_SIZE];
-CircuitPiece circuit_pieces_s[2];
+CircuitPiece circuit_list[CIRCUIT_UI_LIST_SIZE];
 
 //Circuit Piece Selected
 CircuitPiece circuit_selected_list[GRID_DIMENSIONS][GRID_DIMENSIONS] = { 0 };
@@ -37,6 +33,18 @@ int selected_circuit_piece = 0;
 //mouse vector that will be updated when mouse down is detected
 CP_Vector mouse_position = { 0 };
 
+//Straight Circuit Pieces System
+int total_s_pieces;
+
+//Elemental Circuit System Variables
+/*
+0 : Grass
+1 : Water
+2 : Fire
+*/
+CP_Image elemental_circuit_images[3];
+
+int load_elements = 1;
 /*-------------------------------------------------------------------------------------------------------------------------*/
 
 //Grids that will be used to display the enemy
@@ -50,26 +58,42 @@ void Battle_System_Init()
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 
 	//Loading the image for the Magic Circuit's L Piece
-	circuit_image_l = CP_Image_Load(CIRCUIT_L_ASSET_ADDR);
+	circuit_image_corner = CP_Image_Load(CIRCUIT_L_ASSET_ADDR);
+	circuit_image_straight = CP_Image_Load(CIRCUIT_S_ASSET_ADDR);
 
-
+	//Loading images for the elemental circuits
+	elemental_circuit_images[0] = CP_Image_Load(CIRCUIT_LG_ASSET_ADDR);
+	elemental_circuit_images[1] = CP_Image_Load(CIRCUIT_LW_ASSET_ADDR);
+	elemental_circuit_images[2] = CP_Image_Load(CIRCUIT_LF_ASSET_ADDR);
 	// Load each enemy image
 	e_wizard_image = CP_Image_Load(E_WIZARD_ASSET_ADDR);
 	e_plant_image = CP_Image_Load(E_PLANT_ASSET_ADDR);
 	e_vulture_image = CP_Image_Load(E_VULTURE_ASSET_ADDR);
 
-
+	float cellsize = GRID_CELL_SIZE;
 	/*------------Calculating the buffer for the display location of the UI for the circuits---------- */
-	float circuit_ui_buffer_top = (float)(GRID_DIMENSIONS * GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET * 4);
-	float circuit_ui_buffer_left = (float)(WINDOW_WIDTH - (GRID_CELL_SIZE * CIRCUIT_UI_LIST_SIZE + BUFFER * (CIRCUIT_UI_LIST_SIZE - 1))) / 2.f;
+	float circuit_ui_corner_buffer_top = (float)(GRID_DIMENSIONS * GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET * 4);
+	float circuit_ui_corner_buffer_left = (float)(WINDOW_WIDTH - (GRID_CELL_SIZE * NUM_OF_L_PIECE + BUFFER * (NUM_OF_L_PIECE - 1))) / 2.f;
 
-	//This loop will initialize the ciruits to be displayed on the UI for selection
-	for (int i = 0, j = i + 1; i < 4; ++i, j = j < 3 ? j + 1 : 0) {
-		circuit_list_l[i] = New_Circuit_Piece(
-			CP_Vector_Set(circuit_ui_buffer_left + (float)GRID_CELL_SIZE / 2.f + GRID_CELL_SIZE * i + BUFFER * i, circuit_ui_buffer_top)
-			, i, j, i);
-		circuit_list_l[i].circuitSize = GRID_CELL_SIZE;
+	//This loop will initialize the corner pieces to be displayed on the UI for selection
+	for (int i = 0, j = i + 1; i < NUM_OF_L_PIECE; ++i, j = j < 3 ? j + 1 : 0) {
+		circuit_list[i] = New_Circuit_Piece(
+			CP_Vector_Set(circuit_ui_corner_buffer_left + GRID_CELL_SIZE_OFFSET + GRID_CELL_SIZE * i + BUFFER * i, circuit_ui_corner_buffer_top),
+			circuit_image_corner,
+			i, j, i, GRID_CELL_SIZE, L_Type);
 	}
+
+	float circuit_ui_straight_buffer_top = ((float)WINDOW_HEIGHT - (GRID_CELL_SIZE * NUM_OF_S_PIECE + BUFFER)) / 2.f;
+	float circuit_ui_straight_buffer_left = circuit_ui_corner_buffer_left / 2.f;
+	//This loop will initialize the straight pieces to be displayed on the UI for selection
+	for (int i = 0, j = i + 2; i < NUM_OF_S_PIECE; ++i,++j) {
+		circuit_list[NUM_OF_L_PIECE + i] = New_Circuit_Piece(
+			CP_Vector_Set(circuit_ui_straight_buffer_left, circuit_ui_straight_buffer_top + (float)GRID_CELL_SIZE / 2.f + GRID_CELL_SIZE * i + BUFFER * i),
+			circuit_image_straight,
+			i, j, i, GRID_CELL_SIZE, S_Type);
+	}
+
+	total_s_pieces = 2;
 	/*------------------------------------------------------------------------------------------------ */
 
 	//Initialize the grids for testing
@@ -88,9 +112,16 @@ void Battle_System_Init()
 
 void Battle_System_Update()
 {
+
 	//DEBUG: Go Back to Map System
 	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+	}
+
+	//Load Elemental Circuits
+	if (load_elements) {
+		Set_Elemental_Circuits(circuit_list, elemental_circuit_images);
+		load_elements = 0;
 	}
 
 	/* --------------- This Section will be to check for the functions that can run when mouse is interacted -------------*/
@@ -99,12 +130,14 @@ void Battle_System_Update()
 
 		//Function to check which circuit piece is selected
 		if (!selected_circuit_piece)
-			selected_circuit_piece = Circuit_PieceSelected(&circuit_piece_selected, circuit_list_l,mouse_position);
+			selected_circuit_piece = Circuit_Piece_Selected(&circuit_piece_selected, circuit_list, mouse_position, total_s_pieces);
 
 	}
 	else if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
 		if (selected_circuit_piece) {
-			Grid_Cricuit_Drop(circuit_selected_list, grid_squares, circuit_piece_selected, index_used, mouse_position);
+			if (Grid_Circuit_Drop(circuit_selected_list, grid_squares, circuit_piece_selected, index_used, mouse_position)) {
+				total_s_pieces -= circuit_piece_selected.type == S_Type ? 1 : 0;
+			}
 			selected_circuit_piece = 0;
 		}
 	}
@@ -139,15 +172,15 @@ void Battle_System_Update()
 	}
 
 	//Draw Circuit UI
-	Draw_L_CircuitPiece(circuit_list_l,circuit_image_l, CIRCUIT_UI_LIST_SIZE);
+	Draw_UI_CircuitPiece(circuit_list, circuit_image_corner, CIRCUIT_UI_LIST_SIZE);
 
 	//Draw Selected Circuit Pieces
-	Draw_SelectedCircuitPieces(circuit_selected_list,circuit_image_l);
+	Draw_SelectedCircuitPieces(circuit_selected_list);
 
 	if (selected_circuit_piece) {
 		CP_Image_DrawAdvanced(
-			circuit_image_l, mouse_position.x, mouse_position.y,
-			(float)circuit_piece_selected.circuitSize, (float)circuit_piece_selected.circuitSize, 255, (float)circuit_piece_selected.rot * ANGLE_OF_ROTATION);
+			circuit_piece_selected.image, mouse_position.x, mouse_position.y,
+			(float)circuit_piece_selected.circuit_size, (float)circuit_piece_selected.circuit_size, 255, (float)circuit_piece_selected.rot * ANGLE_OF_ROTATION);
 	}
 }
 
@@ -155,9 +188,11 @@ void Battle_System_Exit()
 {
 	memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
 	memset(index_used, 0, sizeof(index_used));
-	CP_Image_Free(circuit_image_l);
+	CP_Image_Free(circuit_image_corner);
+	CP_Image_Free(circuit_image_straight);
 	CP_Image_Free(e_wizard_image);
 	CP_Image_Free(e_plant_image);
 	CP_Image_Free(e_vulture_image);
+	load_elements = 1;
 }
 

@@ -8,11 +8,11 @@ Used to display the UI of Circuit Pieces the player will click and drag from.
 Parameters:
 CircuitPiece list_of_circuit_pieces[], int size_of_array
 */
-void Draw_L_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N) {
+void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N) {
 	for (int i = 0; i < N; ++i) {
 		CP_Image_DrawAdvanced(
-			circuit_image_l, c[i].centerPosition.x, c[i].centerPosition.y,
-			(float)c[i].circuitSize, (float)c[i].circuitSize, 255, (float)c[i].rot * 90.0f);
+			c[i].image, c[i].position.x, c[i].position.y,
+			(float)c[i].circuit_size, (float)c[i].circuit_size, 255, (float)c[i].rot * 90.0f);
 	}
 	
 }
@@ -24,13 +24,13 @@ Used to display the Circuit pieces the payer chose to drop into the grid
 Parameters:
 CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Image circuit_image_l
 */
-void Draw_SelectedCircuitPieces(CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS], CP_Image circuit_image_l) {
+void Draw_SelectedCircuitPieces(CircuitPiece selected[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	for (int row = 0; row < GRID_DIMENSIONS; ++row) {
 		for (int col = 0; col < GRID_DIMENSIONS; ++col) {
-			if (selected[row][col].circuitSize > 0) {
+			if (selected[row][col].circuit_size > 0) {
 				CP_Image_DrawAdvanced(
-					circuit_image_l, selected[row][col].centerPosition.x, selected[row][col].centerPosition.y,
-					(float)selected[row][col].circuitSize, (float)selected[row][col].circuitSize, 255, (float)selected[row][col].rot * 90.0f);
+					selected[row][col].image, selected[row][col].position.x, selected[row][col].position.y,
+					(float)selected[row][col].circuit_size, (float)selected[row][col].circuit_size, 255, (float)selected[row][col].rot * 90.0f);
 			}
 		}
 	}
