@@ -96,6 +96,12 @@
     <ClCompile Include="creditsScreen.c">
       <Filter>Source Files\MenuSystem</Filter>
     </ClCompile>
+    <ClCompile Include="worldHelper.c">
+      <Filter>Source Files\WorldSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="itemSystem.c">
+      <Filter>Source Files\ItemSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png">
@@ -149,6 +155,12 @@
     </ClInclude>
     <ClInclude Include="creditScreen.h">
       <Filter>Header Files\MenuSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="worldHelper.h">
+      <Filter>Header Files\WorldSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="itemSystem.h">
+      <Filter>Header Files\ItemSystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
