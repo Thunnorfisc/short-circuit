@@ -69,10 +69,10 @@ Return	   : void
 */
 void Grid_Initialize(CP_Vector grid[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	//Calculate the buffer for spawn of grids
-	int total_size_of_grid = GRID_DIMENSIONS * GRID_CELL_SIZE;
+	float total_size_of_grid = (float)GRID_DIMENSIONS * GRID_CELL_SIZE;
 
 	//Calculating the left-most buffer
-	float left_buffer = (float)(WINDOW_WIDTH - total_size_of_grid) / 2.f + GRID_CELL_SIZE_OFFSET;
+	float left_buffer = ((float)WINDOW_WIDTH - total_size_of_grid) / 2.f + GRID_CELL_SIZE_OFFSET;
 	//Calculating the top buffer
 	float top_buffer = (float)GRID_CELL_SIZE + GRID_CELL_SIZE_OFFSET;
 

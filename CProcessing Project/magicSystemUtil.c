@@ -17,6 +17,8 @@ void Add_To_Index_Array
 #include "generalUtils.h"
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 /*
 Function   : Get_Circuit_Piece_Clicked
@@ -97,7 +99,7 @@ int Grid_Circuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS]
 	for (int row = 1; row <= GRID_DIMENSIONS; ++row) {
 		for (int col = 1; col <= GRID_DIMENSIONS; ++col) {
 
-			index_to_use = CP_Vector_Set(col, row);
+			index_to_use = CP_Vector_Set((float)col, (float)row);
 
 			if (!CP_Vector_Length(circuit_pos[col - 1][row - 1].position) && CP_Vector_Distance(mouse_position, grid[col - 1][row - 1]) < GRID_CELL_SIZE_OFFSET) {
 
@@ -110,7 +112,7 @@ int Grid_Circuit_Drop(CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS]
 						selected_piece.image,
 						selected_piece.IO_1, selected_piece.IO_2, selected_piece.rot,selected_piece.circuit_size,selected_piece.type
 					);
-
+					Set_Circuit_Element(&(circuit_pos[col - 1][row - 1]), selected_piece.element, selected_piece.image);
 					//Add to array to track the current used row and column
 					Add_To_Index_Array(index_used, index_to_use, GRID_DIMENSIONS * GRID_DIMENSIONS);
 
@@ -244,34 +246,35 @@ Description: Loops through the CircuitPiece Array that is used to display the UI
 Parameters : CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[3]
 Return	   : void
 */
-void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[3]) {
-	srand(time(NULL));
+void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[4]) {
+	srand((unsigned int)time(NULL));
 	int random_index, random_element;
-	int random_index_arr[3];
+	int random_index_arr[4];
 
 	//Choosing which circuit piece to change the element
-	for (int i = 0; i < 3;) {
+	for (int i = 0; i < 4;) {
 		random_index = CP_Random_RangeInt(0, NUM_OF_L_PIECE - 1);
-		if (!Exist_In_Array(random_index, random_index_arr, A_INT, NUM_OF_L_PIECE)) {
+		if (!Exist_In_Array(&random_index, random_index_arr, A_INT, NUM_OF_L_PIECE)) {
 			random_index_arr[i] = random_index;
 			++i;
 		}
 	}
 
-	CircuitElement elements[] = { Grass,Water,Fire };
+	ElementType elements[] = { Element_Grass,Element_Water,Element_Fire};
 	int random_element_arr[3];
 
 	for (int i = 0; i < NUM_OF_L_PIECE;) {
 		random_element = CP_Random_RangeInt(0, 2);
 		if (i < 3) {
-			if (!Exist_In_Array(random_element, random_element_arr, A_INT, 3)) {
+			if (!Exist_In_Array(&random_element, random_element_arr, A_INT, 3)) {
 				Set_Circuit_Element(&(pieces_ui[random_index_arr[i]]), elements[random_element], elemental_image_list[random_element]);
 				random_element_arr[i] = random_element;
 				++i;
 			}
 		}
 		else {
-			pieces_ui[i].type = None;
+			pieces_ui[random_index_arr[i]].type = Element_None;
+			pieces_ui[random_index_arr[i]].image = elemental_image_list[i];
 			++i;
 		}
 	}

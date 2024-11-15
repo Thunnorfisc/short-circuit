@@ -102,7 +102,7 @@ Description: Loops through the CircuitPiece Array that is used to display the UI
 Parameters : CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[3]
 Return	   : void
 */
-void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[3]);
+void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[4]);
 
 /*
 Function   : Add_To_Index_Array

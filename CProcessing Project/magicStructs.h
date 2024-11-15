@@ -28,7 +28,7 @@ typedef enum CircuitType{
 } CircuitType;
 
 /*
-enum       : CircuitElement
+enum       : ElementType
 Description: This is the enum that will be used to set elements in CircuitPiece
 Parameters : 
 - Grass : 0;
@@ -36,12 +36,13 @@ Parameters :
 - Fire  : 2;
 - None  : -1;
 */
-typedef enum CircuitElement {
-	Grass,
-	Water,
-	Fire,
-	None=-1,
-}CircuitElement;
+// Enum for the enemy elemental weaknesses
+typedef enum ElementType {
+	Element_Grass,
+	Element_Water,
+	Element_Fire,
+	Element_None,
+} ElementType;
 
 /*
 Struct     : CircuitPiece
@@ -69,10 +70,10 @@ typedef struct CircuitPiece {
 	int rot;
 
 	//Size of the CircuitPiece
-	int circuit_size;
+	float circuit_size;
 
 	//Element of the CircuitPiece
-	CircuitElement element;
+	ElementType element;
 
 } CircuitPiece;
 
@@ -86,7 +87,7 @@ Description: This will be used to initialize a new circuit piece game object
 Parameters : CP_Vector v,CP_Image piece_image, int io_1, int io_2, int rot, int size, CircuitType type
 Return	   : CircuitPiece new_circuit_piece
 */
-CircuitPiece New_Circuit_Piece(CP_Vector position, CP_Image image, int io_1, int io_2, int rot, int size, CircuitType type);
+CircuitPiece New_Circuit_Piece(CP_Vector position, CP_Image image, int io_1, int io_2, int rot, float size, CircuitType type);
 
 /*
 Function   : Set_Circuit_Element
@@ -94,4 +95,4 @@ Description: This will be used to change the element of the Circuit Object
 Parameters : CircuitPiece* circuit_piece, CircuitElement element, CP_Image elemental_image
 Return	   : void
 */
-void Set_Circuit_Element(CircuitPiece* circuit_piece, CircuitElement element, CP_Image elemental_image);
+void Set_Circuit_Element(CircuitPiece* circuit_piece, ElementType element, CP_Image elemental_image);

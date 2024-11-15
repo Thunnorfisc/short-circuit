@@ -3,7 +3,7 @@
 #include "battleSystem.h"
 #include "magicSystemUtil.h"
 #include "enemyStructs.h"
-
+#include "TEST_playerUtil.h"
 
 //Variables to generate enemies
 int random_enemy_count = 0;
@@ -16,8 +16,11 @@ CP_Image e_vulture_image;
 
 // an array of Enemy structures called enemies with a size of ENEMY_COUNT
 Enemy enemies[ENEMY_COUNT];
-Enemy enemy_attacked[ENEMY_COUNT];
-int enemy_hit = 0;
+int check_if_enemy_died = 0;
+
+//Player object to calculate the damage to be done. Damage taken from a temp file
+int initialize_player = 1;
+Player player;
 
 /* Circuits--------------------------------------------------------------------------------------------------------------*/
 //Image of the circuit pieces
@@ -44,7 +47,7 @@ int total_s_pieces;
 1 : Water
 2 : Fire
 */
-CP_Image elemental_circuit_images[3];
+CP_Image elemental_circuit_images[4];
 
 //bool to check if the elemental pipes have been shuffled for the current turn
 int load_elements = 1;
@@ -72,6 +75,7 @@ void Battle_System_Init()
 	elemental_circuit_images[0] = CP_Image_Load(CIRCUIT_LG_ASSET_ADDR);
 	elemental_circuit_images[1] = CP_Image_Load(CIRCUIT_LW_ASSET_ADDR);
 	elemental_circuit_images[2] = CP_Image_Load(CIRCUIT_LF_ASSET_ADDR);
+	elemental_circuit_images[3] = circuit_image_corner;
 
 	// Load each enemy image
 	e_wizard_image = CP_Image_Load(E_WIZARD_ASSET_ADDR);
@@ -117,11 +121,13 @@ void Battle_System_Init()
 	random_enemy_count = CP_Random_RangeInt(1, 3);
 	printf("Number of enemies to be generated: %d\n", random_enemy_count);
 
-	Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count);
-
 	// Randomly generate unique enemy positions
-	void Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count);
+	Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count,1);
 
+	if (initialize_player) {
+		PlayerStats_ReadFile(&player);
+		initialize_player = 0;
+	}
 }
 
 void Battle_System_Update()
@@ -130,6 +136,41 @@ void Battle_System_Update()
 	//DEBUG: Go Back to Map System
 	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+	}
+
+	//Check if the enemies died
+	if (check_if_enemy_died) {
+		Enemy alive_enemies[ENEMY_COUNT] = { 0 };
+		int count_dead = 0;
+		int index_to_remove[ENEMY_COUNT] = { 0 };
+
+		for (int i = 0, j = i; i < random_enemy_count; ++i) {
+			if (enemies[i].healthbar < 0) {
+				count_dead++;
+				index_to_remove[j++] = i + 1;
+			}
+		}
+		if (count_dead != 0) {
+			for (int i = 1,j = 0; i <= random_enemy_count; ++i) {
+				if (!Exist_In_Array(&i,index_to_remove,A_INT,3)) {
+					alive_enemies[j++] = enemies[i-1];
+				}
+			}
+			memset(enemies, 0, sizeof(enemies));
+			random_enemy_count -= count_dead;
+			for (int i = 0; i < random_enemy_count; ++i) {
+				enemies[i] = alive_enemies[i];
+			}
+		}
+
+		if (!random_enemy_count) CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+
+		check_if_enemy_died = 0;
+	}
+	//Load Player Stats
+	if (initialize_player) {
+		PlayerStats_ReadFile(&player);
+		initialize_player = 0;
 	}
 
 	//Load Elemental Circuits
@@ -145,7 +186,7 @@ void Battle_System_Update()
 
 		//Function to check which circuit piece is selected
 		if (!selected_circuit_piece)
-			selected_circuit_piece = Circuit_Piece_Selected(&circuit_piece_selected, circuit_list, mouse_position, total_s_pieces);
+			selected_circuit_piece = Circuit_Piece_Selected(&circuit_piece_selected, circuit_list, mouse_position, &total_s_pieces);
 
 	}
 	//Check when the mouse is released if the location for release is allowed for the piece
@@ -203,7 +244,14 @@ void Battle_System_Update()
 	//Display button for submiting magic system
 	if (Draw_Button("Submit", button_submit.position.x, button_submit.position.y, button_submit.width * WINDOW_RATIO, button_submit.height * WINDOW_RATIO)) {
 		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
-			enemy_hit = Check_Enemy_Hit(enemy_attacked,enemies,index_used,circuit_selected_list);
+			Check_Enemy_Hit(enemies,index_used,circuit_selected_list,player);
+			check_if_enemy_died = 1;
+
+			//Delete all circuits chosen and reload elements
+			load_elements = 1;
+			memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
+			memset(index_used, 0, sizeof(index_used));
+			Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
 			printf("Closed Circuit\n");
 		}
 		else {
@@ -219,13 +267,14 @@ void Battle_System_Exit()
 	memset(index_used, 0, sizeof(index_used));
 
 	//Free the images that were loaded
-	CP_Image_Free(circuit_image_corner);
-	CP_Image_Free(circuit_image_straight);
-	CP_Image_Free(e_wizard_image);
-	CP_Image_Free(e_plant_image);
-	CP_Image_Free(e_vulture_image);
+	CP_Image_Free(&circuit_image_corner);
+	CP_Image_Free(&circuit_image_straight);
+	CP_Image_Free(&e_wizard_image);
+	CP_Image_Free(&e_plant_image);
+	CP_Image_Free(&e_vulture_image);
 
 	//Change back to true to make sure the pipe elements are shuffled upon re-entering battle-system
 	load_elements = 1;
+	initialize_player = 1;
 }
 

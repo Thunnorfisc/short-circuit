@@ -11,7 +11,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.weakness = Element_Water;
         enemy.healthbar = 100;
         enemy.resistance = Element_Fire;
-        enemy.criticaldmg = 15;
+        enemy.resist_multiplier = 0.5;
         break;
 
     case E_Plant:
@@ -19,7 +19,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.weakness = Element_Fire;
         enemy.healthbar = 80;
         enemy.resistance = Element_Grass;
-        enemy.criticaldmg = 12;
+        enemy.resist_multiplier = 0.5;
         break;
 
     case E_Vulture:
@@ -27,7 +27,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.weakness = Element_Grass;
         enemy.healthbar = 90;
         enemy.resistance = Element_Water;
-        enemy.criticaldmg = 18;
+        enemy.resist_multiplier = 0.5;
         break;
 
     default:
@@ -38,7 +38,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
 }
 
 
-void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate) {
+void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemies) {
     
     CP_Vector generated_vectors[3] = { 0 };  // Array to store positions that are already generated
     CP_Vector new_vector = { 0 };
@@ -46,7 +46,7 @@ void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENS
 
     for (int i = 0; i < num_to_generate;) {
         // Generating new positions of the enemies using Grid System
-        srand(time(NULL));
+        srand((unsigned int)time(NULL));
         generated_i = CP_Random_RangeInt(0, GRID_DIMENSIONS - 1);  // Random index for grid
         generated_j = CP_Random_RangeInt(0, GRID_DIMENSIONS - 1);
         new_vector = gridLocation[generated_i][generated_j];  // Get the position from grid
@@ -55,50 +55,125 @@ void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENS
             // Store the enemies in an array
             EnemyTypes enemy_type_arr[3] = { E_Wizard, E_Plant, E_Vulture };
             // Randomise the different type of enemies that will appear
-            enemies[i] = initializeEnemy(enemy_type_arr[CP_Random_RangeInt(0, 2)],new_vector );
+            if (do_randomise_enemies) enemies[i] = initializeEnemy(enemy_type_arr[CP_Random_RangeInt(0, 2)], new_vector);
+            else enemies[i].position = new_vector;
             generated_vectors[i] = new_vector;
             ++i;    		
         }
     }
 }
+
+
+Enemy Enemy_Delete() {
+    Enemy newEnemy = { 0 };
+    return newEnemy;
+}
+
 /*
 Function   : Check_Enemy_Hit
 Description: Used to check which enemy was attacked
-Parameters : Enemy enemy_attacked[3] (May not be needed), Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS]
-Return	   : int number of attacked enemies
+Parameters : Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player
+Return	   : void
 */
-int Check_Enemy_Hit(Enemy enemy_attacked[3], Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
+void Check_Enemy_Hit(Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player) {
     int i = 0;
     int attack_count = 0;
+    //Check which enemy was hit
+    Enemy enemy_hit_arr[3] = { 0 };
+    //CircuitPieces that hit
+    CircuitPiece circuit_pieces_hit[3] = { 0 };
+    int total_num_of_pieces = 0;
 
-    //Check to see which enemy was attacked. By right here also can do damage. If Damage to be done here, then remove the first array parameter
-    while (CP_Vector_Length(index_used[i++])) {
-        for (int j = 0; j < 3; j++) {   
+    //Count how many enemies were hit, how many pieces were used and which pieces hit
+    while (CP_Vector_Length(index_used[i])) {
+        for (int j = 0; j < 3; j++) {  
             if (CP_Vector_Distance(enemy_arr[j].position, selected_pieces[(int)index_used[i].x - 1][(int)index_used[i].y - 1].position) == 0) {
-                enemy_attacked[attack_count++] = enemy_arr[j];
+                //Calculate the damage on the enemies
+                circuit_pieces_hit[j] = selected_pieces[(int)index_used[i].x - 1][(int)index_used[i].y - 1];
+                enemy_hit_arr[attack_count] = enemy_arr[j];
+                attack_count++;
                 continue;
             }
         }
+        i++;
     }
-    return attack_count;
+    total_num_of_pieces = i;
+
+    //Calculate the damage
+    int index = 0;
+    while (CP_Vector_Length(enemy_hit_arr[index].position)){
+        Enemy_Calculate_Damage(&(enemy_arr[index]), player, circuit_pieces_hit[index], total_num_of_pieces, attack_count);
+        index++;
+    }
 }
 
+/*
+Function   : Enemy_Calculate_Damage
+Description: Used to calculate the amount of damage that is dealt to the enemy
+Parameters : Enemy* enemy, Player const player, CircuitPiece piece_that_hit, int number_of_pipes, int num_of_enemies_hit
+Return	   : void
+*/
+void Enemy_Calculate_Damage(Enemy* enemy, Player const player, CircuitPiece piece_that_hit, int number_of_pipes, int num_of_enemies_hit) {
+    //Varibales to calculate damage
+    double damage_dealt = 0;
+    double damage_multiplier = 1;
+
+    //Check if the piece is a damage_multiplier hit
+    if (enemy->weakness == piece_that_hit.element) {
+        switch (piece_that_hit.element)
+        {
+        case Element_Fire:
+            damage_multiplier *= player.fire_crit;
+            break;
+        case Element_Grass:
+            damage_multiplier *= player.grass_crit;
+            break;
+        case Element_Water:
+            damage_multiplier *= player.water_crit;
+            break;
+        default:
+            damage_multiplier = 1;
+            break;
+        }
+    }
+    //Check if there is resistance
+    else if(enemy->resistance == piece_that_hit.element) {
+        switch (piece_that_hit.element)
+        {
+        case Element_Fire:
+        case Element_Grass:
+        case Element_Water:
+            damage_multiplier = enemy->resist_multiplier;
+            break;
+        default:
+            damage_multiplier = 1;
+            break;
+        }
+    }
+
+    damage_dealt = (double)player.attack * (double)number_of_pipes/ (double)num_of_enemies_hit * damage_multiplier;
+
+    enemy->healthbar -= (int)damage_dealt;
+}
+
+
+/* ---------------------- TEST CODE FOR BOSS ----------------------*/
 /*
 Function   : BossParts_Initialize
 Description: Used to initialize the bodypart array in the Boss Struct
 Parameters : BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts
 Return	   : void
 */
-void BossParts_Initialize(BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts) {
-    for (int i = 0; i < number_of_parts; ++i) {
-        bp[i].initiative = initiative;
-        bp[i].healthbar = healthbar;
-        bp[i].image = image;
-        bp[i].pos = pos;
-        bp[i].weakness = weakness;
-        bp[i].resistance = resistance;
-    }
-}
+//void BossParts_Initialize(BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts) {
+//    for (int i = 0; i < number_of_parts; ++i) {
+//        bp[i].initiative = initiative;
+//        bp[i].healthbar = healthbar;
+//        bp[i].image = image;
+//        bp[i].pos = pos;
+//        bp[i].weakness = weakness;
+//        bp[i].resistance = resistance;
+//    }
+//}
 
 /*
 Function   : Boss_Initialize
