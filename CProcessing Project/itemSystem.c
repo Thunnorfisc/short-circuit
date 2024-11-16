@@ -12,9 +12,13 @@ int total_items = 0;
 Item random_items[NO_OF_ITEMS] = { 0 };
 int list_generated = 0;
 CP_Font exo2;
+float nameSize = 0.0f;
 char const* item_addr = "Assets/Item_List.txt";
+
+/* FUNCTION DECLARATION */
 int Item_ListCount();
 
+/* FUNCTION DEFINITION */
 void ItemEvent_Init(void)
 {
 	if (!list_generated) {
@@ -24,20 +28,27 @@ void ItemEvent_Init(void)
 	ItemEvent_ItemGenerator();
 	exo2 = CP_Font_Load("Assets/Exo2-Regular.ttf");
 	CP_Font_Set(exo2);
-	float textSize = 30.0f; // text size
-	CP_Settings_TextSize(textSize); //text size
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+	nameSize = (float)(WINDOW_HEIGHT / 24); // text size
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
 
 void ItemEvent_Update(void)
 {
-	CP_Graphics_ClearBackground(BACKGROUND_COLOR);;
+	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
-		if (Draw_Textbox(random_items[i].name, 30.0f, (WINDOW_WIDTH_HALF * (0.5f + i * 0.5f)),
+		CP_Settings_RectMode(CP_POSITION_CENTER);
+		if (Draw_Textbox(random_items[i].name, nameSize, (WINDOW_WIDTH_HALF * (0.5f + i * 0.5f)),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
-			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255))) {
-			CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CENTER)) {
+			if (CP_Input_MouseClicked()) {
+				World_UpdateInventory(random_items[i]);
+				CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+			}
+			CP_Settings_RectMode(CP_POSITION_CORNER);
+			Draw_Textbox(random_items[i].name, nameSize, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
+				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 		}
 	}
 }
@@ -84,13 +95,14 @@ int Item_ListCount() {
 }
 
 int Draw_Textbox(const char* text, float textSize, float x, float y, 
-	float w, float h, CP_Color box_color, CP_Color text_color) {
+	float w, float h, CP_Color box_color, CP_Color text_color, CP_POSITION_MODE mode) {
 	CP_Settings_Fill(box_color);
 	CP_Graphics_DrawRect(x, y, w, h);
 	CP_Settings_TextSize(textSize);
 	CP_Settings_Fill(text_color);
-	CP_Font_DrawTextBox(text, x - (w / 2), y, w);
-	if (CP_Input_MouseClicked() && IsAreaClicked(x, y, w, h, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+	if (mode == CP_POSITION_CENTER)  CP_Font_DrawTextBox(text, x - (w / 2), y, w);
+	else CP_Font_DrawTextBox(text, x, y + (h/2), w);
+	if (IsAreaClicked(x, y, w, h, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		return 1;
 	}
 	return 0;

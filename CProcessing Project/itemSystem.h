@@ -27,4 +27,4 @@ void ItemEvent_ItemGenerator(void);
 void Item_Generate_List(void);
 
 int Draw_Textbox(const char* text, float textSize, float x, float y,
-	float w, float h, CP_Color box_color, CP_Color text_color);
+	float w, float h, CP_Color box_color, CP_Color text_color, CP_POSITION_MODE mode);
