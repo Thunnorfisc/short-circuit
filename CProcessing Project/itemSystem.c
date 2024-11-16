@@ -34,19 +34,10 @@ void ItemEvent_Update(void)
 {
 	CP_Graphics_ClearBackground(BACKGROUND_COLOR);;
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
-		CP_Settings_Fill(CP_Color_Create(200, 200, 200, 255));
-		CP_Graphics_DrawRect((WINDOW_WIDTH_HALF * (0.5f + i * 0.5f)), WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f);
-		CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
-		CP_Font_DrawText(random_items[i].name, WINDOW_WIDTH_HALF * (0.5f + i * 0.5f), WINDOW_HEIGHT_HALF);
-	}
-
-	if (CP_Input_MouseClicked()) {
-		for (int i = 0; i < NO_OF_ITEMS; ++i) {
-			if (IsAreaClicked(WINDOW_WIDTH_HALF * (0.5f + i * 0.5f), WINDOW_HEIGHT_HALF,
-				WINDOW_WIDTH * 0.3f, WINDOW_HEIGHT * 0.3f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
-				World_UpdateInventory(random_items[i]);
-				CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-			}
+		if (Draw_Textbox(random_items[i].name, 30.0f, (WINDOW_WIDTH_HALF * (0.5f + i * 0.5f)),
+			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
+			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255))) {
+			CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 		}
 	}
 }
@@ -90,4 +81,17 @@ int Item_ListCount() {
 	int count = 0;
 	for (int i = 0; items[i].id != 0; ++i) ++count;
 	return count;
+}
+
+int Draw_Textbox(const char* text, float textSize, float x, float y, 
+	float w, float h, CP_Color box_color, CP_Color text_color) {
+	CP_Settings_Fill(box_color);
+	CP_Graphics_DrawRect(x, y, w, h);
+	CP_Settings_TextSize(textSize);
+	CP_Settings_Fill(text_color);
+	CP_Font_DrawTextBox(text, x - (w / 2), y, w);
+	if (CP_Input_MouseClicked() && IsAreaClicked(x, y, w, h, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+		return 1;
+	}
+	return 0;
 }

@@ -33,4 +33,4 @@ typedef struct Player {
 	double water_crit;
 	double grass_crit;
 
-}Player;
+} Player;
