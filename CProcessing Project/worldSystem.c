@@ -6,6 +6,7 @@
 #include "inventorySystem.h"
 #include "itemSystem.h"
 #include "battleSystem.h"
+#include "bossSystem.h"
 #include "worldHelper.h"
 
 #define MIN_EXTRA_BOUND_EVENTS 0
@@ -155,6 +156,7 @@ CP_Color Event_Type_Colour(EventType type)
 		color = CP_Color_Create(255, 0, 255, 255);
 		break;
 	case MIDBOSS_BATTLE:
+
 		color = CP_Color_Create(255, 255, 0, 255);
 		break;
 	case BOSS_BATTLE:
@@ -178,7 +180,7 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
 		break;
 	case MIDBOSS_BATTLE:
-		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
+		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	case BOSS_BATTLE:
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
