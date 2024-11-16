@@ -4,6 +4,10 @@
 #include "creditScreen.h"
 
 #define UI_CENTER_X         0.5f    // Centered horizontally
+#define FONT_SIZE_LARGE     0.05f
+#define FONT_SIZE_MEDIUM    0.035f
+#define FONT_SIZE_SMALL     0.025f
+#define FONT_SIZE_TINY      0.02f
 
 // Define positions for credits text
 #define CREDITS_TITLE_Y         0.1f
@@ -58,7 +62,7 @@ void Credits_Update(void) {
     CP_Settings_Save();
 
     // Draw title
-    CP_Settings_TextSize(50.0f);
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_LARGE);
     CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
     CP_Font_DrawText("CREDITS", windowWidth * UI_CENTER_X, windowHeight * CREDITS_TITLE_Y);
 
@@ -68,7 +72,7 @@ void Credits_Update(void) {
     }
 
     // Draw return instruction
-    CP_Settings_TextSize(20.0f);
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_TINY);
     CP_Font_DrawText("Press ESC to return to Main Menu",
         windowWidth * UI_CENTER_X,
         windowHeight * 0.9f);
@@ -86,12 +90,12 @@ void PrintCredit(const CreditCategory* category, float windowWidth, float* curre
     float windowHeight = (float)CP_System_GetWindowHeight();
 
     // Print category name
-    CP_Settings_TextSize(30.0f);
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_MEDIUM);
     CP_Font_DrawText(category->category, windowWidth * UI_CENTER_X, *currentY);
     *currentY += windowHeight * CREDITS_LINE_SPACE;
 
     // Print all names in category
-    CP_Settings_TextSize(25.0f);
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_SMALL);
     for (int i = 0; i < category->nameCount; i++) {
         CP_Font_DrawText(category->names[i], windowWidth * UI_CENTER_X, *currentY);
         *currentY += windowHeight * CREDITS_HALF_SPACE;
