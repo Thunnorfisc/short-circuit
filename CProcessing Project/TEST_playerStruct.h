@@ -1,5 +1,4 @@
 #pragma once
-#define NAME_LENGTH 30 + 1 // Plus 1 for null terminator
 
 /*
 int health; health will be used to calculate how much damage the player can take
@@ -17,10 +16,10 @@ double grass_crit;
 */
 typedef struct Player {
 	//health will be used to calculate how much damage the player can take
-	int health;
+	float health;
 
 	//mana will be used to calculate how many straight pipes can be used
-	int mana;
+	int s_mana;
 
 	//attack will be used as a base damage in damage calculation along with the crits
 	int attack;

@@ -98,6 +98,7 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="battleSystem.c" />
+    <ClCompile Include="battleSystemUI.c" />
     <ClCompile Include="bossSystem.c" />
     <ClCompile Include="bossUtils.c" />
     <ClCompile Include="creditsScreen.c" />
@@ -128,6 +129,7 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="battleSystem.h" />
+    <ClInclude Include="battleSystemUI.h" />
     <ClInclude Include="bossStruct.h" />
     <ClInclude Include="bossSystem.h" />
     <ClInclude Include="bossUtils.h" />

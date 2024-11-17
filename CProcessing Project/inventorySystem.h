@@ -1,6 +1,6 @@
 #pragma once
 
-#define INVENTORY_SIZE 10
+#define INVENTORY_SIZE 30
 #define array_count(a) sizeof(a)/sizeof(a[INVENTORY_SIZE])
 #define COLOR_RED CP_Color_Create(255, 125, 125, 255)
 #define MOUSEX CP_Input_GetMouseX()

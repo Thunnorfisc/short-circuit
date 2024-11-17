@@ -12,32 +12,40 @@ void PlayerStats_Calculate(Item inventory[], Player player) {
 	int index = 0;
 
 	while (inventory[index].id != 0) {
-		switch (inventory[index++].type)
+		switch (inventory[index].type)
 		{
 		case HEALTH:
 			//calculate new player health stat
+			player.health += (int)inventory[index].modifier;
 			break;
 		case MANA:
-			//calculate new player Mana stat
+			//calculate new player s_mana stat
+			player.s_mana += (int)inventory[index].modifier;
 			break;
 		case ATTACK:
 			//calculate new player Attack stat
+			player.attack += (int)inventory[index].modifier;
 			break;
 		case DEFENSE:
 			//calculate new player Defense stat
+			player.defense += inventory[index].modifier;
 			break;
 		case FIRE:
 			//calculate new player Fire stat
+			player.fire_crit += inventory[index].modifier;
 			break;
 		case WATER:
 			//calculate new player Water stat
+			player.water_crit += inventory[index].modifier;
 			break;
 		case GRASS:
 			//calculate new player Grass stat
+			player.grass_crit += inventory[index].modifier;
 			break;
 		default:
 			break;
 		}
+		index++;
 	}
 
 	//Plug calculated player stats into function to write to temp file
@@ -60,12 +68,12 @@ int PlayerStats_Create_Temp(Player modified_player) {
 	}
 
 	//check if data was read properly
-	if (fprintf(temp_player_stats_path, "%d,%d,%d,%lf,%lf,%lf,%lf",
-		modified_player.health, modified_player.mana, modified_player.attack, modified_player.defense, modified_player.fire_crit, modified_player.water_crit, modified_player.grass_crit) < 0) {
+	if (fprintf(temp_player_stats_path, "%f,%d,%d,%lf,%lf,%lf,%lf",
+		modified_player.health, modified_player.s_mana, modified_player.attack, modified_player.defense, modified_player.fire_crit, modified_player.water_crit, modified_player.grass_crit) < 0) {
 		return 0;
 	}
 	//Test print
-	printf("Player Stats: %d, %d, %d, %lf, %lf, %lf, %lf", modified_player.health, modified_player.mana, modified_player.attack, modified_player.defense, modified_player.fire_crit, modified_player.water_crit, modified_player.grass_crit);
+	printf("Player Stats: %f, %d, %d, %lf, %lf, %lf, %lf", modified_player.health, modified_player.s_mana, modified_player.attack, modified_player.defense, modified_player.fire_crit, modified_player.water_crit, modified_player.grass_crit);
 	
 	fclose(temp_player_stats_path);
 	return 1;
@@ -86,14 +94,14 @@ int PlayerStats_ReadFile(Player* player) {
 	}
 
 	//Try to read the file containing the player stats. If fail, return 0 and inform developer
-	if (fscanf_s(temp_player_stats_path, "%d,%d,%d,%lf,%lf,%lf,%lf",
-		&(player->health), &(player->mana), &(player->attack), &(player->defense), &(player->fire_crit), &(player->water_crit), &(player->grass_crit)) != 7)
+	if (fscanf_s(temp_player_stats_path, "%f,%d,%d,%lf,%lf,%lf,%lf",
+		&(player->health), &(player->s_mana), &(player->attack), &(player->defense), &(player->fire_crit), &(player->water_crit), &(player->grass_crit)) != 7)
 	{
 		return 0;
 	}
 
 	//Test print
-	printf("Player Stats: %d, %d, %d, %lf, %lf, %lf, %lf", player->health, player->mana, player->attack, player->defense, player->fire_crit, player->water_crit, player->grass_crit);
+	printf("Player Stats: %f, %d, %d, %lf, %lf, %lf, %lf", player->health, player->s_mana, player->attack, player->defense, player->fire_crit, player->water_crit, player->grass_crit);
 
 	fclose(temp_player_stats_path);
 

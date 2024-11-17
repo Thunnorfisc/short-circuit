@@ -11,7 +11,7 @@ Description: Used to initialize the bodypart array in the Boss Struct
 Parameters : BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts
 Return	   : void
 */
-void BossParts_Initialize(BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts);
+void BossParts_Initialize(BossPart bp[], int initiative, float healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts);
 
 /*
 Function   : Boss_Initialize

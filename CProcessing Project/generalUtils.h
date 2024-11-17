@@ -34,6 +34,8 @@ NOTE!!! Do not edit these names or values without consulting the team
 //Use to get the ratio of the asset display
 #define WINDOW_RATIO (float)WINDOW_HEIGHT / 1080.f
 
+#define DEFAULT_ALPHA 255
+
 //Used to get the delta time of the program
 #define DELTA_TIME CP_System_GetDt()
 /*

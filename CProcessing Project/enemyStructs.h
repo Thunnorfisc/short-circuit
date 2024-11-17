@@ -10,7 +10,8 @@ will be used in the game
 #include "TEST_playerStruct.h"
 #include <stdio.h>
 
-#define ENEMY_SIZE_SCALING 3
+//Total number of different enemy types
+#define ENEMY_COUNT 3
 
 // Data type is EnemyTypes
 // Enum for different enemy types
@@ -22,25 +23,25 @@ typedef enum EnemyTypes {
 
 // Struct for enemy
 typedef struct Enemy {
-	EnemyTypes enemy_type;
 	int attack;
-	ElementType weakness;
-	int healthbar;
-	ElementType resistance;
-	double resist_multiplier;
-	int is_boss;
-	CP_Vector position;
 	int initiative;
+	float healthbar;
+	float resist_multiplier;
+	CP_Vector position;
+	EnemyTypes enemy_type;
+	ElementType weakness;
+	ElementType resistance;
+	
+	
 } Enemy;
 
 /*
 Here onwards will be functions used to initialize/get/set the values for the above structs
 */
 
+Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v);
 
-Enemy initializeEnemy(EnemyTypes type, CP_Vector v);
-
-void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemy);
+void Enemy_Initialize_Array(Enemy enemies[ENEMY_COUNT], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemy);
 
 /*
 Function   : Check_Enemy_Hit
@@ -64,4 +65,4 @@ Description: Used to calculate the amount of damage the enemy will do
 Parameters : Enemy enemy, Player* player
 Return	   : void
 */
-void Enemy_Damage_Player(Enemy enemy, Player* player);
+void Enemy_Damage_Player(Enemy enemy[ENEMY_COUNT], Player* player);
