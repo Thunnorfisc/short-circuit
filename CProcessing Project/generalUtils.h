@@ -36,6 +36,8 @@ NOTE!!! Do not edit these names or values without consulting the team
 
 #define DEFAULT_ALPHA 255
 
+#define TEXT_SIZE 60.0f
+
 //Used to get the delta time of the program
 #define DELTA_TIME CP_System_GetDt()
 /*

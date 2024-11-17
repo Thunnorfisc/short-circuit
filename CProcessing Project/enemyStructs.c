@@ -14,7 +14,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 100;
         enemy.resistance = Element_Fire;
         enemy.resist_multiplier = 0.5;
-        
+        strcpy_s(enemy.name, sizeof(enemy.name), "Wizard");
         break;
 
     case E_Plant:
@@ -23,6 +23,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 80;
         enemy.resistance = Element_Grass;
         enemy.resist_multiplier = 0.5;
+        strcpy_s(enemy.name, sizeof(enemy.name), "Plant");
         break;
 
     case E_Vulture:
@@ -31,6 +32,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 90;
         enemy.resistance = Element_Water;
         enemy.resist_multiplier = 0.5;
+        strcpy_s(enemy.name, sizeof(enemy.name), "Vulture");
         break;
 
     default:

@@ -31,7 +31,7 @@ typedef struct Enemy {
 	EnemyTypes enemy_type;
 	ElementType weakness;
 	ElementType resistance;
-	
+	char name[20];
 	
 } Enemy;
 

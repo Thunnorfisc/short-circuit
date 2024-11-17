@@ -8,10 +8,11 @@
 
 // Variables for Battle System UI
 BattleUI battle_ui[UI_COUNT];
+CP_Image background;
 
 // Variables to generate enemies
 int random_enemy_count = 0;
-CP_Image enemy_image;
+CP_Image enemy_image = { 0 };
 
 // Define images for each enemy type
 CP_Image e_wizard_image;
@@ -20,6 +21,7 @@ CP_Image e_vulture_image;
 
 // an array of Enemy structures called enemies with a size of ENEMY_COUNT
 Enemy enemies[ENEMY_COUNT];
+Enemy original_enemy_arr[ENEMY_COUNT];
 int check_if_enemy_died = 0;
 
 // Player object to calculate the damage to be done. Damage taken from a temp file
@@ -73,6 +75,7 @@ void Battle_System_Init()
 
 	// Initialize UI
 	UI_Initialize(battle_ui);
+	background = CP_Image_Load("Assets/Door_Way.png");
 
 	// Loading the image for the Magic Circuit's L Piece
 	circuit_image_corner = CP_Image_Load(CIRCUIT_L_ASSET_ADDR);
@@ -131,6 +134,9 @@ void Battle_System_Init()
 	// Randomly generate unique enemy positions
 	Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 1);
 
+	for (int i = 0; i < ENEMY_COUNT; ++i) {
+		original_enemy_arr[i] = enemies[i];
+	}
 	if (initialize_player) {
 		PlayerStats_ReadFile(&player);
 		original_health = player.health;
@@ -140,6 +146,9 @@ void Battle_System_Init()
 
 void Battle_System_Update()
 {
+	//Set Mouse position
+	mouse_position = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
+
 	// DEBUG: Go Back to Map System
 	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
@@ -193,7 +202,6 @@ void Battle_System_Update()
 	/* --------------- This Section will be to check for the functions that can run when mouse is interacted -------------*/
 	// Check where the mouse clicked and what piece was selected
 	if (CP_Input_MouseDown(MOUSE_BUTTON_1)) {
-		mouse_position = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 		//Function to check which circuit piece is selected
 		if (!selected_circuit_piece)
@@ -209,17 +217,26 @@ void Battle_System_Update()
 			selected_circuit_piece = 0;
 		}
 	}
+	
 	/* ------------------------------------End of check for function when mouse is interacted ----------------------------*/
 
 	/*  ------------------------------------------- DISPLAY ASSETS --------------------------------------------------------*/
 	// Set the background with white
 	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 
+	//Set the background image
+	CP_Image_Draw(background, (float)CP_System_GetWindowWidth()/2.f, (float)CP_System_GetWindowHeight()/2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight(), DEFAULT_ALPHA);
+
+	// Set background dim
+	CP_Settings_Fill(CP_Color_Create(0,0,0,DEFAULT_ALPHA/1.5));
+	CP_Graphics_DrawRect((float)CP_System_GetWindowWidth() / 2.f, (float)CP_System_GetWindowHeight() / 2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight());
+	
 	// Set Grid color to black
 	CP_Settings_Fill(COLOR_BLACK);
 
 	// Draw UI
 	Display_UI(battle_ui, player, original_health);
+	Display_Enemy_Hover(enemies, original_enemy_arr, mouse_position, battle_ui[4]);
 
 	// Draw grid
 	Grid_Display(grid_squares);
@@ -228,18 +245,18 @@ void Battle_System_Update()
 	for (int i = 0; i < random_enemy_count; i++) {
 		switch (enemies[i].enemy_type) {
 		case E_Wizard:
-			enemy_image = e_wizard_image;
+			CP_Image_Draw(e_wizard_image, enemies[i].position.x, enemies[i].position.y, GRID_CELL_SIZE, GRID_CELL_SIZE, 255);
 			break;
 		case E_Plant:
-			enemy_image = e_plant_image;
+			CP_Image_Draw(e_plant_image, enemies[i].position.x, enemies[i].position.y, GRID_CELL_SIZE, GRID_CELL_SIZE, 255);
 			break;
 		case E_Vulture:
-			enemy_image = e_vulture_image;
+			CP_Image_Draw(e_vulture_image, enemies[i].position.x, enemies[i].position.y, GRID_CELL_SIZE, GRID_CELL_SIZE, 255);
 			break;
 		default:
 			continue;
 		}
-		CP_Image_Draw(enemy_image, enemies[i].position.x, enemies[i].position.y, GRID_CELL_SIZE, GRID_CELL_SIZE, 255);
+		
 	}
 
 	// Draw Circuit UI
@@ -256,17 +273,18 @@ void Battle_System_Update()
 	}
 
 	// Display button for submiting magic system
-	if (Draw_Button("Submit", button_submit.position.x, button_submit.position.y, button_submit.width * WINDOW_RATIO, button_submit.height * WINDOW_RATIO)) {
+	if ((IsAreaClicked(battle_ui[1].pos.x, battle_ui[1].pos.y, battle_ui[1].width, battle_ui[1].height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked())) {
 		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
 			Check_Enemy_Hit(enemies,index_used,circuit_selected_list,player);
-			check_if_enemy_died = 1;
-
-			//Delete all circuits chosen and reload elements
-			load_elements = 1;
+			
+			// Delete all circuits chosen and reload elements
 			memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
 			memset(index_used, 0, sizeof(index_used));
+			load_elements = 1;
+			// Randomisze enemy positions again
 			Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
 			printf("Closed Circuit\n");
+			check_if_enemy_died = 1;
 		}
 		else {
 			printf("Opened Circuit\n");

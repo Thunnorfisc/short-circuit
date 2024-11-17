@@ -34,7 +34,7 @@ int currency = 1000; // CHANGE THIS IN ACTUAL BUILD
 char currency_str[5] = { 0 };
 
 Player player = {
-	.health = 200,
+	.health = 1000,
 	.s_mana = 2,
 	.attack = 10,
 	.defense = 10.0,
