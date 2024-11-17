@@ -1,9 +1,11 @@
 #include "enemyStructs.h"
 #include <stdlib.h>
 #include <time.h>
+
+//Change this to read from file and add int initiative code
 Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
     Enemy enemy = {.enemy_type = type, .position = v };
-
+    
     switch (type) {
 
     case E_Wizard:
@@ -12,6 +14,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 100;
         enemy.resistance = Element_Fire;
         enemy.resist_multiplier = 0.5;
+        
         break;
 
     case E_Plant:
@@ -37,7 +40,6 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
     return enemy;
 }
 
-
 void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemies) {
     
     CP_Vector generated_vectors[3] = { 0 };  // Array to store positions that are already generated
@@ -61,12 +63,6 @@ void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENS
             ++i;    		
         }
     }
-}
-
-
-Enemy Enemy_Delete() {
-    Enemy newEnemy = { 0 };
-    return newEnemy;
 }
 
 /*
@@ -154,4 +150,15 @@ void Enemy_Calculate_Damage(Enemy* enemy, Player const player, CircuitPiece piec
     damage_dealt = (double)player.attack * (double)number_of_pipes/ (double)num_of_enemies_hit * damage_multiplier;
 
     enemy->healthbar -= (int)damage_dealt;
+}
+
+/*
+Function   : Enemy_Damage_Player
+Description: Used to calculate the amount of damage the enemy will do
+Parameters : Enemy enemy, Player* player
+Return	   : void
+*/
+void Enemy_Damage_Player(Enemy enemy, Player* player) {
+    int enemy_damage = CP_Random_RangeInt(enemy.attack - 5, enemy.attack);
+    player->health -= enemy_damage * player->defense;
 }

@@ -30,6 +30,7 @@ typedef struct Enemy {
 	double resist_multiplier;
 	int is_boss;
 	CP_Vector position;
+	int initiative;
 } Enemy;
 
 /*
@@ -38,8 +39,6 @@ Here onwards will be functions used to initialize/get/set the values for the abo
 
 
 Enemy initializeEnemy(EnemyTypes type, CP_Vector v);
-
-Enemy Enemy_Delete();
 
 void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemy);
 
@@ -58,3 +57,11 @@ Parameters : Enemy* enemy, Player const player, CircuitPiece piece_that_hit, int
 Return	   : void
 */
 void Enemy_Calculate_Damage(Enemy* enemy, Player const player, CircuitPiece piece_that_hit, int number_of_pipes, int num_of_enemies_hit);
+
+/*
+Function   : Enemy_Damage_Player
+Description: Used to calculate the amount of damage the enemy will do
+Parameters : Enemy enemy, Player* player
+Return	   : void
+*/
+void Enemy_Damage_Player(Enemy enemy, Player* player);
