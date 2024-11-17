@@ -6,6 +6,7 @@
 #include <string.h>
 
 #define NO_OF_ITEMS 3
+#define ADDR_LENGTH 51
 
 Item items[20] = { 0 };
 Item random_items[NO_OF_ITEMS] = { 0 };
@@ -13,8 +14,11 @@ int total_items = 0;
 int half_num = 0;
 int list_generated = 0;
 CP_Font exo2;
+CP_Image star_effects;
+int star_effects_rot = 0;
 float nameSize = 0.0f;
 char const* item_addr = "Assets/Item_List.txt";
+char art_addr[ADDR_LENGTH] = { 0 };
 
 /* FUNCTION DECLARATION */
 
@@ -23,7 +27,7 @@ char const* item_addr = "Assets/Item_List.txt";
 void ItemEvent_Init(void)
 {
 	if (!list_generated) list_generated = Item_Generate_List();
-
+	star_effects = CP_Image_Load("Assets/Item_Art/Star Effects.png");
 	Item_RandomItemGenerator(random_items,  NO_OF_ITEMS);
 	exo2 = CP_Font_Load("Assets/Exo2-Regular.ttf");
 	CP_Font_Set(exo2);
@@ -36,19 +40,26 @@ void ItemEvent_Update(void)
 {
 	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
-		if (Draw_Textbox(random_items[i].name, nameSize, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
+		/*if (Draw_Textbox(random_items[i].name, nameSize, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
-			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CENTER)) {
-			if (CP_Input_MouseClicked()) {
-				World_UpdateInventory(random_items[i]);
-				CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-			}
+			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CENTER))*/
+		CP_Image_Draw(random_items[i].image, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
+			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 255);
+		if (CP_Input_MouseClicked() && IsAreaClicked(WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
+			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
+			CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+			World_UpdateInventory(random_items[i]);
+			CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 		}
+		
 	}
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
 		if (IsAreaClicked(WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 
 			CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+			CP_Image_DrawAdvanced(star_effects, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
+				WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.3f, WINDOW_WIDTH * 0.3f, 255, star_effects_rot);
+			star_effects_rot -= 5;
 			Draw_Textbox(random_items[i].name, nameSize, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
@@ -62,7 +73,7 @@ void ItemEvent_Update(void)
 
 void ItemEvent_Exit(void)
 {
-	
+	CP_Image_Free(&star_effects);
 }
 
 void Item_RandomItemGenerator(Item *random_items, int num_items)
@@ -90,6 +101,8 @@ int Item_Generate_List()
 	while (fscanf_s(item_file, "%d, %[^,], %d, %lf, %[^|]| %d\n", &item.id,
 		item.name, (unsigned int)sizeof(item.name), &item.type, &item.modifier,
 		&item.description, (unsigned int)_countof(item.description), &item.price) == 6) {
+		snprintf(art_addr, (unsigned int)sizeof art_addr, "Assets/Item_Art/%s.png", item.name);
+		item.image = CP_Image_Load(art_addr);
 		printf("Items: %d,%s,%d,%lf,%d\n", item.id, item.name, item.type, item.modifier, item.price);
 		items[i] = item;
 		++i;

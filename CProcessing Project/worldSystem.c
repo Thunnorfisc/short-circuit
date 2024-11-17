@@ -31,6 +31,7 @@ Item item_list[INVENTORY_SIZE] = { 0 };
 int current_inventory_size = 0;
 int currency = 1000; // CHANGE THIS IN ACTUAL BUILD
 char currency_str[5] = { 0 };
+CP_Image currency_sprite;
 Player const base_player = {
 	.health = 10,
 	.mana = 2,
@@ -67,6 +68,7 @@ void World_Init(void)
 	player.water_crit = 1.2;
 	player.grass_crit = 1.2;
 	if (!world.is_generated) world = World_Generate_Dynamic(world_id);
+	currency_sprite = CP_Image_Load("Assets/Crystal.png");
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
 
@@ -224,13 +226,13 @@ void World_PlayerUI()
 	float name_size = WINDOW_HEIGHT / 24.0f;
 	CP_Settings_TextSize(name_size);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+	float imgSize = 128;
 	for (int i = 0; i < current_inventory_size; ++i) {
-		char id[2] = { item_list[i].id + '0', '\0' };
-		CP_Font_DrawText(id, (WINDOW_WIDTH / 128.0f) + (i * (WINDOW_WIDTH / 64.0f)), WINDOW_HEIGHT / 72.0f);
+		CP_Image_Draw(item_list[i].image, (WINDOW_WIDTH / 64.0f) + (i * (WINDOW_WIDTH / 32.0f)), WINDOW_HEIGHT / 48.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
 	}
 	for(int i = 0; i < current_inventory_size; ++i) {
-		if (IsAreaClicked((WINDOW_WIDTH / 128.0f) + (i * (WINDOW_WIDTH / 64.0f)),
-			WINDOW_HEIGHT / 72.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+		if (IsAreaClicked((WINDOW_WIDTH / 64.0f) + (i * (WINDOW_WIDTH / 32.0f)),
+			WINDOW_HEIGHT / 48.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 			Draw_Textbox(item_list[i].name, name_size, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
@@ -242,6 +244,8 @@ void World_PlayerUI()
 	CP_Settings_TextSize(name_size);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 	// Currency
+	CP_Image_Draw(currency_sprite, WINDOW_WIDTH - WINDOW_WIDTH / 48.0f - WINDOW_HEIGHT / 18.0f, WINDOW_HEIGHT / 48.0f,
+		WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
 	sprintf_s(currency_str, (unsigned int)sizeof currency_str, "%d", currency);
-	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 32.0f , WINDOW_HEIGHT / 72.0f);
+	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 48.0f , WINDOW_HEIGHT / 48.0f);
 }

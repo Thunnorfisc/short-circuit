@@ -21,6 +21,7 @@ typedef struct Item {
 	double modifier;
 	char description[DESC_LENGTH];
 	int price;
+	CP_Image image;
 } Item;
 
 void ItemEvent_Init(void);
