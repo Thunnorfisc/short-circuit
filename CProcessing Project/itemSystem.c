@@ -8,49 +8,56 @@
 #define NO_OF_ITEMS 3
 
 Item items[20] = { 0 };
-int total_items = 0;
 Item random_items[NO_OF_ITEMS] = { 0 };
+int total_items = 0;
+int half_num = 0;
 int list_generated = 0;
 CP_Font exo2;
 float nameSize = 0.0f;
 char const* item_addr = "Assets/Item_List.txt";
 
 /* FUNCTION DECLARATION */
-int Item_ListCount();
+
 
 /* FUNCTION DEFINITION */
 void ItemEvent_Init(void)
 {
-	if (!list_generated) {
-		Item_Generate_List();
-		total_items = Item_ListCount();
-	}
-	ItemEvent_ItemGenerator();
+	if (!list_generated) list_generated = Item_Generate_List();
+
+	Item_RandomItemGenerator(random_items,  NO_OF_ITEMS);
 	exo2 = CP_Font_Load("Assets/Exo2-Regular.ttf");
 	CP_Font_Set(exo2);
+	half_num = (NO_OF_ITEMS % 2 == 0) ? NO_OF_ITEMS / 2 : NO_OF_ITEMS / 2;
 	nameSize = (float)(WINDOW_HEIGHT / 24); // text size
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_RectMode(CP_POSITION_CENTER);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 }
 
 void ItemEvent_Update(void)
 {
 	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
-		CP_Settings_RectMode(CP_POSITION_CENTER);
-		if (Draw_Textbox(random_items[i].name, nameSize, (WINDOW_WIDTH_HALF * (0.5f + i * 0.5f)),
+		if (Draw_Textbox(random_items[i].name, nameSize, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
 			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CENTER)) {
 			if (CP_Input_MouseClicked()) {
 				World_UpdateInventory(random_items[i]);
 				CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 			}
-			CP_Settings_RectMode(CP_POSITION_CORNER);
+		}
+	}
+	for (int i = 0; i < NO_OF_ITEMS; ++i) {
+		if (IsAreaClicked(WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
+			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 
+			CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 			Draw_Textbox(random_items[i].name, nameSize, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+			Draw_Textbox(random_items[i].description, nameSize / 2, CP_Input_GetMouseX(), CP_Input_GetMouseY() + WINDOW_HEIGHT * 0.1f,
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
+				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 		}
 	}
+	World_PlayerUI();
 }
 
 void ItemEvent_Exit(void)
@@ -58,10 +65,11 @@ void ItemEvent_Exit(void)
 	
 }
 
-void ItemEvent_ItemGenerator(void)
+void Item_RandomItemGenerator(Item *random_items, int num_items)
 {
+	total_items = Item_ListCount();
 	int id = 0;
-	for (int i = 0; i < NO_OF_ITEMS; ++i) {
+	for (int i = 0; i < num_items; ++i) {
 		id = rand() % total_items + 1;
 		random_items[i] = items[id - 1];
 		printf("ID: %d\n", random_items[i].id);
@@ -69,23 +77,24 @@ void ItemEvent_ItemGenerator(void)
 	}
 }
 
-void Item_Generate_List(void)
+int Item_Generate_List()
 {
 	Item item = { 0 };
 	FILE* item_file;
 	if (fopen_s(&item_file, item_addr, "r") != 0) {
 		printf("Failed to open item file\n");
-		return;
+		return 0;
 	};
 	int i = 0;
 	
-	while (fscanf_s(item_file, "%d, %[^,], %d, %lf\n", &item.id,
-		item.name, (unsigned int)sizeof(item.name), &item.type, &item.modifier) == 4) {
-		printf("Items: %d,%s,%d,%lf\n", item.id, item.name, item.type, item.modifier);
+	while (fscanf_s(item_file, "%d, %[^,], %d, %lf, %[^|]| %d\n", &item.id,
+		item.name, (unsigned int)sizeof(item.name), &item.type, &item.modifier,
+		&item.description, (unsigned int)_countof(item.description), &item.price) == 6) {
+		printf("Items: %d,%s,%d,%lf,%d\n", item.id, item.name, item.type, item.modifier, item.price);
 		items[i] = item;
 		++i;
 	}
-	list_generated = 1;
+	return 1;
 }
 
 int Item_ListCount() {
@@ -95,7 +104,9 @@ int Item_ListCount() {
 }
 
 int Draw_Textbox(const char* text, float textSize, float x, float y, 
-	float w, float h, CP_Color box_color, CP_Color text_color, CP_POSITION_MODE mode) {
+	float w, float h, CP_Color box_color, CP_Color text_color, 
+	CP_POSITION_MODE mode) {
+	CP_Settings_RectMode(mode);
 	CP_Settings_Fill(box_color);
 	CP_Graphics_DrawRect(x, y, w, h);
 	CP_Settings_TextSize(textSize);
