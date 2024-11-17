@@ -1,6 +1,7 @@
 #include "enemyStructs.h"
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
     Enemy enemy = {.enemy_type = type, .position = v };
 

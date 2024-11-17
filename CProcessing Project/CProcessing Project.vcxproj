@@ -108,6 +108,7 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
     <ClCompile Include="magicSystemUtil.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mainMenuSystem.c" />
+    <ClCompile Include="shopSystem.c" />
     <ClCompile Include="TEST_playerStruct.c" />
     <ClCompile Include="TEST_playerUtil.c" />
     <ClCompile Include="worldEvent.c" />
@@ -134,6 +135,7 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
     <ClInclude Include="magicSystem.h" />
     <ClInclude Include="magicSystemUtil.h" />
     <ClInclude Include="mainMenuSystem.h" />
+    <ClInclude Include="shopSystem.h" />
     <ClInclude Include="TEST_playerStruct.h" />
     <ClInclude Include="TEST_playerUtil.h" />
     <ClInclude Include="worldEvent.h" />

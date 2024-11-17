@@ -173,7 +173,7 @@ void Handle_Pause_Menu(int* MenuOpen)
             WINDOW_HEIGHT * PAUSE_MAINMENU_Y,
             WINDOW_WIDTH * PAUSE_BUTTON_W,
             WINDOW_HEIGHT * PAUSE_BUTTON_H)) {
-
+            World_Reset();
             currentMenuState = MAIN_MENU;  // Set menu state
             CP_Engine_SetNextGameStateForced(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
             *MenuOpen = !*MenuOpen;

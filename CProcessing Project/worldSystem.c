@@ -7,6 +7,7 @@
 #include "itemSystem.h"
 #include "battleSystem.h"
 #include "worldHelper.h"
+#include "shopSystem.h"
 
 #define MIN_EXTRA_BOUND_EVENTS 0
 #define MAX_EXTRA_BOUND_EVENTS 1
@@ -27,6 +28,8 @@ int world_id = 1;
 int player_node = 0;
 Item item_list[INVENTORY_SIZE] = { 0 };
 int current_inventory_size = 0;
+int currency = 1000; // CHANGE THIS IN ACTUAL BUILD
+char currency_str[5] = { 0 };
 Player const base_player = {
 	.health = 10,
 	.mana = 2,
@@ -62,7 +65,6 @@ void World_Init(void)
 	player.fire_crit = 1.2;
 	player.water_crit = 1.2;
 	player.grass_crit = 1.2;
-
 	if (!world.is_generated) world = World_Generate_Dynamic(world_id);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
@@ -76,8 +78,8 @@ void World_Update(void)
 	Handle_Fullscreen(&fullscreen);
 
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
+	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Stroke(CP_Color_Create(255, 255, 255, 255));
-
 	if (!menu_open) {
 		// Render Nodes
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
@@ -112,7 +114,7 @@ void World_Update(void)
 						if (List_GetAtIndex(world.event_list[player_node].next_nodes, j) == i + 1) {
 							player_node = i;
 							// Go to battle system
-							PlayerStats_Calculate(current_inventory, player);
+							PlayerStats_Calculate(item_list, player);
 							World_SwitchScene(world.event_list[i].type);
 						}
 					}
@@ -122,8 +124,9 @@ void World_Update(void)
 
 		//Go to inventory system
 		if (CP_Input_KeyDown(KEY_TAB)) {
-			CP_Engine_SetNextGameState(Inventory_Init, Inventory_Update, Inventory_Exit);
+			// CP_Engine_SetNextGameState(Inventory_Init, Inventory_Update, Inventory_Exit);
 		}
+		World_PlayerUI();
 	}
 }
 
@@ -136,6 +139,8 @@ void World_Reset() {
 	for (int i = 0; i < EVENT_NUMBER; ++i) {
 		if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 	}
+	memset(item_list, 0, sizeof item_list);
+	current_inventory_size = 0;
 	player_node = 0;
 	world.is_generated = 0;
 	world_id = 0;
@@ -175,7 +180,7 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(ItemEvent_Init, ItemEvent_Update, ItemEvent_Exit);
 		break;
 	case SHOP:
-		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
+		CP_Engine_SetNextGameState(Shop_Init, Shop_Update, Shop_Exit);
 		break;
 	case MIDBOSS_BATTLE:
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
@@ -201,4 +206,40 @@ void World_UpdateInventory(Item item) {
 	}
 	item_list[current_inventory_size] = item;
 	++current_inventory_size;
+}
+
+void World_UpdateCurrency(int amt) {
+	currency += amt;
+}
+
+int World_GetCurrency() {
+	return currency;
+}
+
+void World_PlayerUI()
+{
+	// Items
+	float name_size = WINDOW_HEIGHT / 24.0f;
+	CP_Settings_TextSize(name_size);
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+	for (int i = 0; i < current_inventory_size; ++i) {
+		char id[2] = { item_list[i].id + '0', '\0' };
+		CP_Font_DrawText(id, (WINDOW_WIDTH / 128.0f) + (i * (WINDOW_WIDTH / 64.0f)), WINDOW_HEIGHT / 72.0f);
+	}
+	for(int i = 0; i < current_inventory_size; ++i) {
+		if (IsAreaClicked((WINDOW_WIDTH / 128.0f) + (i * (WINDOW_WIDTH / 64.0f)),
+			WINDOW_HEIGHT / 72.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+			Draw_Textbox(item_list[i].name, name_size, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
+				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+			Draw_Textbox(item_list[i].description, name_size / 2, CP_Input_GetMouseX(), CP_Input_GetMouseY() + WINDOW_HEIGHT * 0.1f,
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
+				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+		}
+	}
+	CP_Settings_TextSize(name_size);
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+	// Currency
+	sprintf_s(currency_str, (unsigned int)sizeof currency_str, "%d", currency);
+	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 32.0f , WINDOW_HEIGHT / 72.0f);
 }
