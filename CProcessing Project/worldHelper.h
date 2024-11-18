@@ -1,5 +1,6 @@
 #pragma once
 #include "worldEvent.h"
+#include "itemSystem.h"
 
 #define EVENT_NUMBER 20
 
@@ -18,10 +19,11 @@ typedef struct World {
 typedef struct WorldMaster {
 	int current_world;
 	int current_event;
+	int currency;
 } WorldMaster;
 
 void Generate_World(int);
 
 World World_Generate_Dynamic(int);
-
-World World_Load(int);
+void World_Save(World world, WorldMaster master, Item* item_list, int item_list_size);
+void World_Load(World* world, WorldMaster* master, Item* item_list, int* item_list_size);

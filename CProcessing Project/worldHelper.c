@@ -1,7 +1,12 @@
+/*
+* Author: William Wibisana Dumnanauw (williamwibisana.d)
+* Brief: The file contains functions necessary to the world system.
+*/
 #include "linkedlist.h"
 #include "generalUtils.h"
 #include "worldEvent.h"
 #include "worldHelper.h"
+#include "itemSystem.h"
 #include "cprocessing.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,7 +15,7 @@
 //File Addresses
 const char* map_addr = "Assets/Event_Chains/Preset/map-1.txt";
 const char* event_type_addr = "Assets/Event_Chains/event-types.txt";
-const char* world_addr = "Assets/Event_Chains/Generated/world-1.txt";
+const char* world_addr = "Assets/world.txt";
 
 /* ============= PRIVATE FUNCTIONS DECLARATIONS ============= */
 /*
@@ -280,41 +285,92 @@ void Generate_World(int world_number)
 	fclose(generated_file);
 }
 
-World World_Load(int world_number)
+void World_Save(World world, WorldMaster master, Item* item_list, int item_list_size) {
+	FILE* file;
+	// Write into file and crate if not existed
+	if (fopen_s(&file, world_addr, "w") != 0) {
+		printf("Failed to open world map file\n");
+		return;
+	};
+	// Put in general player information
+	fprintf_s(file, "World: %d, Node: %d, Money: %d\n", master.current_world, master.current_event, master.currency);
+	fprintf_s(file, "Items: {\n");
+	if (item_list_size != 0) {
+		for (int i = 0; i < item_list_size; ++i) {
+			fprintf_s(file, "%d, %s, %d, %lf, %s| %d\n", item_list[i].id,
+				item_list[i].name, item_list[i].type, item_list[i].modifier,
+				item_list[i].description, item_list[i].price);
+		}
+	}
+	else {
+		fprintf_s(file, "%d, %s, %d, %lf, %s| %d\n", 0, "NULL", 0, 0.0, "NULL", 0);
+	}
+	fprintf_s(file, "}\n");
+
+	// World Nodes
+	for (int i = 0; i < EVENT_NUMBER; ++i) {
+		fprintf_s(file, "ID: %d, Type: %d, [%d,%d], {", world.event_list[i].id, world.event_list[i].type,
+			(int)world.event_list[i].bound.x, (int)world.event_list[i].bound.y);
+		// Node Connections
+		if (world.event_list[i].next_nodes.length == 0) fprintf_s(file, "%d", 0);
+		for (int j = 0; j < world.event_list[i].next_nodes.length; ++j) {
+			if (j == world.event_list[i].next_nodes.length - 1)
+				fprintf_s(file, "%d", List_GetAtIndex(world.event_list[i].next_nodes, j));
+			else
+				fprintf_s(file, "%d,", List_GetAtIndex(world.event_list[i].next_nodes, j));
+		}
+		fprintf_s(file, "}\n");
+	}
+	fclose(file);
+}
+
+void World_Load(World* world, WorldMaster* master, Item* item_list, int *item_list_size)
 {
-	World world;
-	world.id = world_number;
 	char end = 0;
 	int node = 0;
+	Item item = { 0 };
+	char art_addr[51] = { 0 };
 	// Create the file for world to be generated
-	FILE* generated_file;
-	if (fopen_s(&generated_file, world_addr, "r") != 0) {
-		printf("Failed to open world map file\n");
-		return world;
+	FILE* file;
+	if (fopen_s(&file, world_addr, "r") != 0) {
+		printf("Failed to open world file\n");
+		return;
 	};
-
+	// Put in general player information
+	fscanf_s(file, " World: %d, Node: %d, Money: %d\n", &master->current_world, &master->current_event, &master->currency);
+	fscanf_s(file, "Items: {\n");
+	while (fscanf_s(file, " %d, %[^,], %d, %lf, %[^|]| %d\n", &item.id,
+		item.name, (unsigned int)sizeof(item.name), &item.type, &item.modifier,
+		&item.description, (unsigned int)_countof(item.description), &item.price) == 6) {
+		if (item.id == 0) continue;
+		snprintf(art_addr, (unsigned int)sizeof art_addr, "Assets/Item_Art/%s.png", item.name);
+		item.image = CP_Image_Load(art_addr);
+		printf("Items: %d,%s,%d,%lf,%d\n", item.id, item.name, item.type, item.modifier, item.price);
+		item_list[*item_list_size] = item;
+		++(*item_list_size);
+	}
+	fscanf_s(file, "}\n");
 	// Read and transfer all the information to world struct
-	if (generated_file) {
+	if (file) {
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
-			world.event_list[i].next_nodes.length = 0;
-			fscanf_s(generated_file, " ID: %d, Type: %d, [%f,%f], {", &world.event_list[i].id,
-				&world.event_list[i].type, &world.event_list[i].bound.x,
-				&world.event_list[i].bound.y);
-			world.event_list[i].event_sprite = World_SetNodeSprite(world.event_list[i].type);
+			world->event_list[i].next_nodes.length = 0;
+			fscanf_s(file, " ID: %d, Type: %d, [%f,%f], {", &world->event_list[i].id,
+				&world->event_list[i].type, &world->event_list[i].bound.x,
+				&world->event_list[i].bound.y);
+			world->event_list[i].event_sprite = World_SetNodeSprite(world->event_list[i].type);
 			// Set and find all the node connections ID
 			while (1) {
-				fscanf_s(generated_file, " %d%c", &node, &end, 3);
-				if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(node);
-				else List_Insert_End(&world.event_list[i].next_nodes, node);
-				printf_s("Length: %d\n", List_GetLength(world.event_list[i].next_nodes));
+				fscanf_s(file, " %d%c", &node, &end, 3);
+				if (world->event_list[i].next_nodes.length == 0) world->event_list[i].next_nodes = List_Initialize(node);
+				else List_Insert_End(&world->event_list[i].next_nodes, node);
+				printf_s("Length: %d\n", List_GetLength(world->event_list[i].next_nodes));
 				if (end != ',') break;
 			}
 		}
 	}
 	printf_s("Succcesful Reading");
-	world.is_generated = 1;
-	fclose(generated_file);
-	return world;
+	world->is_generated = 1;
+	fclose(file);
 }
 
 /* ============= HELPER FUNCTIONS ============= */

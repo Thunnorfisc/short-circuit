@@ -1,0 +1,25 @@
+World: 1, Node: 12, Money: 850
+Items: {
+2, Barrier, 3, 0.200000, Increases base defense.| 150
+2, Barrier, 3, 0.200000, Increases base defense.| 150
+}
+ID: 1, Type: 13, [1,1], {2,12,11}
+ID: 2, Type: 3, [2,2], {13,14}
+ID: 3, Type: 3, [3,4], {15}
+ID: 4, Type: 3, [4,1], {5}
+ID: 5, Type: 11, [5,2], {16,6}
+ID: 6, Type: 2, [6,3], {17,18}
+ID: 7, Type: 1, [7,5], {8}
+ID: 8, Type: 2, [8,4], {9}
+ID: 9, Type: 1, [9,3], {10}
+ID: 10, Type: 12, [10,1], {0}
+ID: 11, Type: 2, [2,4], {3}
+ID: 12, Type: 1, [2,3], {3}
+ID: 13, Type: 2, [3,1], {4}
+ID: 14, Type: 3, [3,5], {15}
+ID: 15, Type: 2, [4,3], {5}
+ID: 16, Type: 3, [6,1], {17,7}
+ID: 17, Type: 1, [7,2], {20,19}
+ID: 18, Type: 1, [7,4], {8,19}
+ID: 19, Type: 1, [8,3], {9}
+ID: 20, Type: 1, [8,1], {9}

@@ -64,7 +64,7 @@ void ItemEvent_Update(void)
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 			Draw_Textbox(random_items[i].description, nameSize / 2, CP_Input_GetMouseX(), CP_Input_GetMouseY() + WINDOW_HEIGHT * 0.1f,
-				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 		}
 	}

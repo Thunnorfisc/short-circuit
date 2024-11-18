@@ -335,7 +335,8 @@ void Draw_Main_Menu()
     }
 
     if (Draw_Button("Load Saved Game", ui.button.button_continue.x, ui.button.button_continue.y, ui.button.width, ui.button.height)) {
-        // CP_Engine_SetNextGameState(Game_Init2, Game_Update2, Game_Exit2);
+        World_SetLoadFlag();
+        CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
     }
 
     if (Draw_Button("Credits", ui.button.button_credits.x, ui.button.button_credits.y, ui.button.width, ui.button.height)) {

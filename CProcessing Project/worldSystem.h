@@ -27,3 +27,5 @@ void World_PlayerUI();
 int World_GetBoss();
 
 CP_Image World_GetCurrencyImage();
+
+void World_SetLoadFlag();

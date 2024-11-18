@@ -23,9 +23,12 @@
 /* ============= WORLD VARIABLES ============= */
 // General Variables
 World world = { 0 };
+WorldMaster master = {
+	.currency = 1000,
+	.current_world = 1,
+	.current_event = 0
+};
 int next_id = 0;
-int world_id = 1;
-int player_node = 0;
 int boss_id = 0;
 CP_Image world_bg;
 
@@ -34,13 +37,18 @@ Item item_list[INVENTORY_SIZE] = { 0 };
 int current_inventory_size = 0;
 
 // Currency Variables
-int currency = 1000; // CHANGE THIS IN ACTUAL BUILD
 char currency_str[5] = { 0 };
 CP_Image currency_sprite;
 
 // Node Variables
 CP_Image base_node_sprite;
 CP_Image selected_node_sprite;
+
+// Node Animation Variables
+//float maximum_change = 1.15f;
+//float minimum_change = 0.85f;
+//float change_rate = 0.01f;
+//float size_scale = 1.0f;
 
 // Player Variables
 Player player = {
@@ -52,6 +60,9 @@ Player player = {
 	.water_crit = 1.2,
 	.grass_crit = 1.2
 };
+
+// Flags
+int load_world_flag = 0;
 
 //Variables for Pause Menu
 int fullscreen = 0;
@@ -67,12 +78,20 @@ CP_Image World_SelectBaseNode(int event_id);
 /* ============= GAME SCENE FUNCTIONS ============= */
 void World_Init(void)
 {
+	if (load_world_flag) {
+		World_Load(&world, &master, item_list, &current_inventory_size);
+		currency_sprite = CP_Image_Load("Assets/Crystal.png");
+		base_node_sprite = CP_Image_Load("Assets/Node.png");
+		selected_node_sprite = CP_Image_Load("Assets/Selected Node.png");
+		load_world_flag = 0;
+	}
 	if (!world.is_generated) { 
-		world = World_Generate_Dynamic(world_id); 
+		world = World_Generate_Dynamic(master.current_world); 
 		currency_sprite = CP_Image_Load("Assets/Crystal.png");
 		base_node_sprite = CP_Image_Load("Assets/Node.png");
 		selected_node_sprite = CP_Image_Load("Assets/Selected Node.png");
 	}
+	World_Save(world, master, item_list, current_inventory_size);
 	world_bg = CP_Image_Load("Assets/world bg.png");
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
@@ -102,7 +121,7 @@ void World_Update(void)
 				NODE_RECT_WIDTH, NODE_RECT_HEIGHT, 255);
 			for (int j = 0; j < world.event_list[i].next_nodes.length; ++j) {
 				next_id = List_GetAtIndex(world.event_list[i].next_nodes, j);
-				if (next_id <= -1) break;
+				if (next_id <= 0) break;
 				CP_Settings_StrokeWeight(WINDOW_WIDTH / 240.0f);
 				CP_Graphics_DrawLine(world.event_list[i].location.x + NODE_RECT_WIDTH / 2,
 					world.event_list[i].location.y,
@@ -117,9 +136,9 @@ void World_Update(void)
 				if (IsAreaClicked(world.event_list[i].location.x, world.event_list[i].location.y,
 					NODE_RECT_WIDTH, NODE_RECT_HEIGHT, CP_Input_GetMouseX(), CP_Input_GetMouseY()))
 				{
-					for (int j = 0; j < world.event_list[player_node].next_nodes.length; ++j) {
-						if (List_GetAtIndex(world.event_list[player_node].next_nodes, j) == i + 1) {
-							player_node = i;
+					for (int j = 0; j < world.event_list[master.current_event].next_nodes.length; ++j) {
+						if (List_GetAtIndex(world.event_list[master.current_event].next_nodes, j) == i + 1) {
+							master.current_event = i;
 							// Go to battle system
 							PlayerStats_Calculate(item_list, player);
 							World_SwitchScene(world.event_list[i].type);
@@ -144,42 +163,16 @@ void World_Reset() {
 	}
 	memset(item_list, 0, sizeof item_list);
 	current_inventory_size = 0;
-	player_node = 0;
+	master.current_event = 0;
 	world.is_generated = 0;
 	CP_Image_Free(&currency_sprite);
 	CP_Image_Free(&base_node_sprite);
 	CP_Image_Free(&selected_node_sprite);
-	world_id = 0;
+	master.current_world = 0;
 }
 
-<<<<<<< HEAD
-CP_Color Event_Type_Colour(EventType type)
-{
-	CP_Color color = CP_Color_Create(255, 255, 255, 255);
-	switch (type) {
-	case BATTLE:
-		color = CP_Color_Create(0, 0, 255, 255);
-		break;
-	case ITEM:
-		color = CP_Color_Create(0, 255, 255, 255);
-		break;
-	case SHOP:
-		color = CP_Color_Create(255, 0, 255, 255);
-		break;
-	case MIDBOSS_BATTLE:
-		color = CP_Color_Create(255, 255, 0, 255);
-		break;
-	case BOSS_BATTLE:
-		color = CP_Color_Create(255, 0, 0, 255);
-		break;
-	default:
-		color = CP_Color_Create(105, 105, 105, 255);
-	}
-	return color;
-=======
 CP_Image World_SelectBaseNode(int event) {
-	return (event == player_node) ? selected_node_sprite : base_node_sprite;
->>>>>>> origin/world-system
+	return (event == master.current_event) ? selected_node_sprite : base_node_sprite;
 }
 
 void World_SwitchScene(EventType type) {
@@ -203,12 +196,12 @@ void World_SwitchScene(EventType type) {
 			if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 			CP_Image_Free(&world.event_list[i].event_sprite);
 		}
-		player_node = 0;
+		master.current_event = 0;
 		world.is_generated = 0;
 		CP_Image_Free(&currency_sprite);
 		CP_Image_Free(&base_node_sprite);
 		CP_Image_Free(&selected_node_sprite);
-		++world_id;
+		++master.current_world;
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
 		break;
 	default:
@@ -226,21 +219,25 @@ void World_UpdateInventory(Item item) {
 }
 
 void World_UpdateCurrency(int amt) {
-	currency += amt;
+	master.currency += amt;
 }
 
 int World_GetCurrency() {
-	return currency;
+	return master.currency;
 }
 
-<<<<<<< HEAD
 int World_GetBoss() {
 	return boss_id;
-=======
+}
+
 CP_Image World_GetCurrencyImage()
 {
 	return currency_sprite;
->>>>>>> origin/world-system
+}
+
+void World_SetLoadFlag()
+{
+	load_world_flag = 1;
 }
 
 void World_PlayerUI()
@@ -260,15 +257,15 @@ void World_PlayerUI()
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 			Draw_Textbox(item_list[i].description, name_size / 2, CP_Input_GetMouseX(), CP_Input_GetMouseY() + WINDOW_HEIGHT * 0.1f,
-				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 		}
 	}
 	CP_Settings_TextSize(name_size);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-	// Currency
+	// master.currency
 	CP_Image_Draw(currency_sprite, WINDOW_WIDTH - WINDOW_WIDTH / 36.0f - WINDOW_HEIGHT / 18.0f, WINDOW_HEIGHT / 36.0f,
 		WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
-	sprintf_s(currency_str, (unsigned int)sizeof currency_str, "%d", currency);
+	sprintf_s(currency_str, (unsigned int)sizeof currency_str, "%d", master.currency);
 	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 36.0f , WINDOW_HEIGHT / 36.0f);
 }
