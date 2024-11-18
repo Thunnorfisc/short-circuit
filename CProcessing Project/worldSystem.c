@@ -120,7 +120,7 @@ void World_Update(void)
 
 		//Go to inventory system
 		if (CP_Input_KeyDown(KEY_TAB)) {
-			// CP_Engine_SetNextGameState(Inventory_Init, Inventory_Update, Inventory_Exit);
+			CP_Engine_SetNextGameState(Inventory_Init, Inventory_Update, Inventory_Exit);
 		}
 		World_PlayerUI();
 	}
