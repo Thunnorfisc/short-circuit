@@ -31,6 +31,13 @@ NOTE!!! Do not edit these names or values without consulting the team
 //Use to get the half the width of the window
 #define WINDOW_WIDTH_HALF (float)WINDOW_WIDTH / 2.f
 
+//Use to get the ratio of the asset display
+#define WINDOW_RATIO (float)WINDOW_HEIGHT / 1080.f
+
+#define DEFAULT_ALPHA 255
+
+#define TEXT_SIZE 60.0f
+
 //Used to get the delta time of the program
 #define DELTA_TIME CP_System_GetDt()
 /*
@@ -52,6 +59,12 @@ typedef enum TYPES_OF_ARRAYS
 
 }TYPES_OF_ARRAYS;
 
+typedef struct Button {
+	CP_Vector position;
+	float width;
+	float height;
+}Button;
+
 //Used to draw buttons
 int Draw_Button(const char* text, float x, float y, float width, float height);
 
@@ -70,4 +83,4 @@ if(IsAreaClicked){ ... }
 */
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y);
 
-int Exist_In_Array(void* value_to_check, void* array, int type_of_array, int size_of_array);
+int Exist_In_Array(void* const value_to_check, void* const array, TYPES_OF_ARRAYS type_of_array, int size_of_array);

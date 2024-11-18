@@ -48,7 +48,6 @@ LinkedList List_Initialize(int value)
 {
 	LinkedList list;
 	Node* new_node = create_node(value);
-	Node* old_node = new_node;
 	list.head = new_node;
 	list.tail = new_node;
 	list.length = 1;

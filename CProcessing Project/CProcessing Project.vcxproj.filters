@@ -1,154 +1,57 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Source Files\MagicSystem">
-      <UniqueIdentifier>{934d0203-62a7-4c52-a230-3ae621cba582}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\BattleSystem">
-      <UniqueIdentifier>{a8fa091f-af5f-4364-8371-14c2edb4055b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\MenuSystem">
-      <UniqueIdentifier>{38e8daa4-8b60-4b7b-a02d-adbdac511f6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\ItemSystem">
-      <UniqueIdentifier>{ec30b8e9-fb2e-45a4-9071-dd4382976d0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MagicSystem">
-      <UniqueIdentifier>{5d0c8d6c-6984-488f-9e5b-7b842f64a87c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\BattleSystem">
-      <UniqueIdentifier>{6aa96424-49f9-4112-b764-28b1d88cb21e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\MenuSystem">
-      <UniqueIdentifier>{9bb13ee7-59a1-42c0-a0f5-b565741ec2f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\ItemSystem">
-      <UniqueIdentifier>{115c445f-1ba5-4780-9d79-ae7f554383dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\WorldSystem">
-      <UniqueIdentifier>{b0891e1c-8332-47c6-9683-401d5bd675ca}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\WorldSystem">
-      <UniqueIdentifier>{0b0498d1-8bbe-490a-96bc-5e2313cc3b3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GeneralSystem">
-      <UniqueIdentifier>{567985aa-823e-454f-af66-148e0bd1829f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GeneralSystem">
-      <UniqueIdentifier>{25a620dc-0e41-4c77-aab4-de748beb8920}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\PlayerSystems">
-      <UniqueIdentifier>{8f66de9c-2add-4c4c-bc6b-5da68d2034c5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\PlayerSystems">
-      <UniqueIdentifier>{620c5f3f-e7f8-4d17-9d97-d0c2ab9d21fa}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="battleSystem.c" />
+    <ClCompile Include="creditsScreen.c" />
+    <ClCompile Include="enemyStructs.c" />
+    <ClCompile Include="inventorySystem.c" />
+    <ClCompile Include="itemSystem.c" />
+    <ClCompile Include="linkedlist.c" />
+    <ClCompile Include="magicStructs.c" />
+    <ClCompile Include="magicSystem.c" />
+    <ClCompile Include="magicSystemUtil.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="mainMenuSystem.c" />
+    <ClCompile Include="TEST_playerStruct.c" />
+    <ClCompile Include="TEST_playerUtil.c" />
+    <ClCompile Include="worldEvent.c" />
+    <ClCompile Include="worldHelper.c" />
+    <ClCompile Include="worldSystem.c" />
+    <ClCompile Include="generalUtils.c" />
+    <ClCompile Include="shopSystem.c" />
+    <ClCompile Include="bossSystem.c" />
+    <ClCompile Include="bossUtils.c" />
+    <ClCompile Include="battleSystemUI.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="magicStructs.c">
-      <Filter>Source Files\MagicSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="magicSystem.c">
-      <Filter>Source Files\MagicSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="magicSystemUtil.c">
-      <Filter>Source Files\MagicSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="mainMenuSystem.c">
-      <Filter>Source Files\MenuSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="worldSystem.c">
-      <Filter>Source Files\WorldSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="linkedlist.c">
-      <Filter>Source Files\GeneralSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="worldEvent.c">
-      <Filter>Source Files\WorldSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="generalUtils.c">
-      <Filter>Source Files\GeneralSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="inventorySystem.c">
-      <Filter>Source Files\PlayerSystems</Filter>
-    </ClCompile>
-    <ClCompile Include="battleSystem.c">
-      <Filter>Source Files\BattleSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="enemyStructs.c">
-      <Filter>Source Files\BattleSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="creditsScreen.c">
-      <Filter>Source Files\MenuSystem</Filter>
-    </ClCompile>
+    <ClInclude Include="battleSystem.h" />
+    <ClInclude Include="creditScreen.h" />
+    <ClInclude Include="enemyStructs.h" />
+    <ClInclude Include="inventorySystem.h" />
+    <ClInclude Include="itemSystem.h" />
+    <ClInclude Include="linkedlist.h" />
+    <ClInclude Include="magicStructs.h" />
+    <ClInclude Include="magicSystem.h" />
+    <ClInclude Include="magicSystemUtil.h" />
+    <ClInclude Include="mainMenuSystem.h" />
+    <ClInclude Include="TEST_playerStruct.h" />
+    <ClInclude Include="TEST_playerUtil.h" />
+    <ClInclude Include="worldEvent.h" />
+    <ClInclude Include="worldHelper.h" />
+    <ClInclude Include="worldSystem.h" />
+    <ClInclude Include="generalUtils.h" />
+    <ClInclude Include="shopSystem.h" />
+    <ClInclude Include="bossStruct.h" />
+    <ClInclude Include="bossSystem.h" />
+    <ClInclude Include="bossUtils.h" />
+    <ClInclude Include="battleSystemUI.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Assets\magic_circuit_L.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\Assets\magic_circuit_S.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png" />
+    <Image Include="..\Assets\magic_circuit_L.png" />
+    <Image Include="..\Assets\magic_circuit_S.png" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="..\Assets\Exo2-Regular.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="magicStructs.h">
-      <Filter>Header Files\MagicSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="magicSystem.h">
-      <Filter>Header Files\MagicSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="magicSystemUtil.h">
-      <Filter>Header Files\MagicSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="mainMenuSystem.h">
-      <Filter>Header Files\MenuSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="linkedlist.h">
-      <Filter>Header Files\GeneralSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="worldSystem.h">
-      <Filter>Header Files\WorldSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="worldEvent.h">
-      <Filter>Header Files\WorldSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="generalUtils.h">
-      <Filter>Header Files\GeneralSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="inventorySystem.h">
-      <Filter>Header Files\PlayerSystems</Filter>
-    </ClInclude>
-    <ClInclude Include="battleSystem.h">
-      <Filter>Header Files\BattleSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="enemyStructs.h">
-      <Filter>Header Files\BattleSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="creditScreen.h">
-      <Filter>Header Files\MenuSystem</Filter>
-    </ClInclude>
+    <Font Include="..\Assets\Exo2-Regular.ttf" />
   </ItemGroup>
 </Project>
