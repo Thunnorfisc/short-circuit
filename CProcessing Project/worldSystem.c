@@ -24,7 +24,7 @@
 // General Variables
 World world = { 0 };
 WorldMaster master = {
-	.currency = 1000,
+	.currency = 150,
 	.current_world = 1,
 	.current_event = 0
 };
@@ -187,11 +187,10 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(Shop_Init, Shop_Update, Shop_Exit);
 		break;
 	case MIDBOSS_BATTLE:
-		boss_id++;
+		++boss_id;
 		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	case BOSS_BATTLE:
-		boss_id++;
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
 			if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 			CP_Image_Free(&world.event_list[i].event_sprite);
@@ -202,7 +201,8 @@ void World_SwitchScene(EventType type) {
 		CP_Image_Free(&base_node_sprite);
 		CP_Image_Free(&selected_node_sprite);
 		++master.current_world;
-		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
+		++boss_id;
+		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	default:
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);

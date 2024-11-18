@@ -9,7 +9,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
     switch (type) {
 
     case E_Wizard:
-        enemy.attack = 20;
+        enemy.attack = 120;
         enemy.weakness = Element_Water;
         enemy.healthbar = 100;
         enemy.resistance = Element_Fire;
@@ -18,7 +18,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         break;
 
     case E_Plant:
-        enemy.attack = 16;
+        enemy.attack = 116;
         enemy.weakness = Element_Fire;
         enemy.healthbar = 80;
         enemy.resistance = Element_Grass;
@@ -27,7 +27,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         break;
 
     case E_Vulture:
-        enemy.attack = 24;
+        enemy.attack = 124;
         enemy.weakness = Element_Grass;
         enemy.healthbar = 90;
         enemy.resistance = Element_Water;

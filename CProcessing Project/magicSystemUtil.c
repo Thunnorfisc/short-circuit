@@ -64,7 +64,7 @@ Return	   : int (true/false)
 int Circuit_Piece_Selected(CircuitPiece* selected, CircuitPiece list_of_circuits[], CP_Vector mouse_position, int* total_s_pieces) {
 	for (int i = 0; i < CIRCUIT_UI_LIST_SIZE; ++i) {
 		if (CP_Vector_Distance(mouse_position, list_of_circuits[i].position) < GRID_CELL_SIZE_OFFSET) {
-			if (total_s_pieces == 0 && list_of_circuits[i].type == S_Type) {
+			if (*total_s_pieces == 0 && list_of_circuits[i].type == S_Type) {
 				return 0;
 			}
 
