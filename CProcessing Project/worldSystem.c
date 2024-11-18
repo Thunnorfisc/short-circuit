@@ -152,7 +152,6 @@ void World_Reset() {
 	world_id = 0;
 }
 
-<<<<<<< HEAD
 CP_Color Event_Type_Colour(EventType type)
 {
 	CP_Color color = CP_Color_Create(255, 255, 255, 255);
@@ -176,10 +175,11 @@ CP_Color Event_Type_Colour(EventType type)
 		color = CP_Color_Create(105, 105, 105, 255);
 	}
 	return color;
-=======
+
+}
+
 CP_Image World_SelectBaseNode(int event) {
 	return (event == player_node) ? selected_node_sprite : base_node_sprite;
->>>>>>> origin/world-system
 }
 
 void World_SwitchScene(EventType type) {
@@ -194,11 +194,10 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(Shop_Init, Shop_Update, Shop_Exit);
 		break;
 	case MIDBOSS_BATTLE:
-		boss_id++;
+		++boss_id;
 		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	case BOSS_BATTLE:
-		boss_id++;
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
 			if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 			CP_Image_Free(&world.event_list[i].event_sprite);
@@ -209,7 +208,8 @@ void World_SwitchScene(EventType type) {
 		CP_Image_Free(&base_node_sprite);
 		CP_Image_Free(&selected_node_sprite);
 		++world_id;
-		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
+		++boss_id;
+		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	default:
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
@@ -233,14 +233,13 @@ int World_GetCurrency() {
 	return currency;
 }
 
-<<<<<<< HEAD
 int World_GetBoss() {
 	return boss_id;
-=======
+}
+
 CP_Image World_GetCurrencyImage()
 {
 	return currency_sprite;
->>>>>>> origin/world-system
 }
 
 void World_PlayerUI()

@@ -18,11 +18,13 @@ Description: Used to display the UI of Circuit Pieces the player will click and 
 Parameters : CircuitPiece list_of_circuit_pieces[], int size_of_array
 Return	   : void
 */
-void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N) {
+void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N, int s_count) {
 	for (int i = 0; i < N; ++i) {
+		int alpha = 255;
+		if (i >= 4 && s_count <= 0) alpha = 128;
 		CP_Image_DrawAdvanced(
 			c[i].image, c[i].position.x, c[i].position.y,
-			(float)c[i].circuit_size, (float)c[i].circuit_size, 255, (float)c[i].rot * 90.0f);
+			(float)c[i].circuit_size, (float)c[i].circuit_size, alpha, (float)c[i].rot * 90.0f);
 	}
 	
 }

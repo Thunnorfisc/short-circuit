@@ -35,7 +35,7 @@ int Boss_Initialize(Boss* boss, int boss_id, CP_Vector grid_location[GRID_DIMENS
         return (0);
     }
 
-    while (EOF != fscanf_s(boss_file, "Boss_ID: %d Attack: %f Enrage_Time: %d BP_Count: %d Name: %[^\n]",
+    while (EOF != fscanf_s(boss_file, "Boss_ID: %d Attack: %f Enrage_Time: %d BP_Count: %d Name: %[^\n]\n",
         &temp_boss.boss_id, &temp_boss.attack, &temp_boss.enrage_time, &temp_boss.num_of_bp, boss->boss_name, (unsigned int)sizeof(boss->boss_name)))
     {
         if (temp_boss.boss_id == boss_id) {
@@ -56,7 +56,7 @@ int Boss_Initialize(Boss* boss, int boss_id, CP_Vector grid_location[GRID_DIMENS
 
         for (int i = 0; i < boss->num_of_bp; ++i) {
             //Set path for each image file
-            sprintf_s(filepath_img, (unsigned int)sizeof(filepath_img), "%s%s_part%01d%s", asset_dir, boss->boss_name, i, ".png");
+            sprintf_s(filepath_img, (unsigned int)sizeof(filepath_img), "%s%s/%s_part%01d%s", asset_dir, boss->boss_name, boss->boss_name, i, ".png");
             bp_image_arr[i] = CP_Image_Load(filepath_img);
         }
     }
@@ -201,6 +201,11 @@ void Boss_Randomise_Position(BossPart bp[GRID_DIMENSIONS* GRID_DIMENSIONS], CP_V
 }
 
 void Gatekeeper_Mechanics(Player *player, Boss const boss, int* enrage) {
+    player->health -= (CP_Random_RangeFloat(boss.attack - 5.f, boss.attack) / boss.num_of_bp) / (float)player->defense;
+    enrage++;
+}
+
+void GateCore_Mechanics(Player* player, Boss const boss, int* enrage) {
     player->health -= (CP_Random_RangeFloat(boss.attack - 5.f, boss.attack) / boss.num_of_bp) / (float)player->defense;
     enrage++;
 }

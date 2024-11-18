@@ -1,1 +1,2 @@
 Boss_ID: 1 Attack: 600 Enrage_Time: 5 BP_Count: 4 Name: Gatekeeper
+Boss_ID: 2 Attack: 1000 Enrage_Time: 10 BP_Count: 9 Name: Gate Core

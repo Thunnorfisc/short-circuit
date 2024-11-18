@@ -137,8 +137,7 @@ static int CurrentCurrency() {
 }// to call in mainmenu
 
 void Display_Currency() {
-    //Test Value for current currency
-    //int currency = 1000;
+
     int currency = CurrentCurrency();
     CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
     char text[64];
@@ -159,7 +158,7 @@ void Handle_Pause_Menu(int* MenuOpen)
     // Handle pause menu if open
     if (*MenuOpen) {
         // Set text size for the title
-        CP_Settings_TextSize(50.0f);
+        CP_Settings_TextSize(50.0f * WINDOW_RATIO);
         CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 
         // Draw "PAUSED" title
@@ -323,7 +322,7 @@ void Draw_Main_Menu()
     ui.button.button_exit.x = ui.window.width * UI_CENTER_X;
     ui.button.button_exit.y = ui.window.height * UI_EXIT_Y;
 
-    Display_Currency();
+    //Display_Currency();
 
     Draw_Copyright();
 
@@ -334,7 +333,7 @@ void Draw_Main_Menu()
         CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
     }
 
-    if (Draw_Button("Load Saved Game", ui.button.button_continue.x, ui.button.button_continue.y, ui.button.width, ui.button.height)) {
+    if (Draw_Button("Load Game", ui.button.button_continue.x, ui.button.button_continue.y, ui.button.width, ui.button.height)) {
         // CP_Engine_SetNextGameState(Game_Init2, Game_Update2, Game_Exit2);
     }
 
@@ -348,14 +347,15 @@ void Draw_Main_Menu()
 }
 
 void Draw_Copyright(){
+    CP_Settings_Fill(COLOR_WHITE(255));
     UI ui = {
         .copyright.x = CP_System_GetWindowWidth() * UI_CENTER_X,
-        .copyright.y = CP_System_GetWindowHeight() * UI_COPYRIGHT_Y
+        .copyright.y = CP_System_GetWindowHeight() * (1 - UI_COPYRIGHT_Y)
     };
 
     CP_Settings_Save();
 
-    CP_Settings_TextSize(20.0f);
+    CP_Settings_TextSize(20.0f * WINDOW_RATIO);
     CP_Font_DrawText("All content (c) 2024 DigiPen Institute of Technology Singapore, all rights reserved.", ui.copyright.x, ui.copyright.y);
 
     CP_Settings_Restore();

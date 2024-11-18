@@ -40,3 +40,5 @@ void Boss_Calculate_Damage(BossPart* bp, Player const player, CircuitPiece piece
 void Boss_Randomise_Position(BossPart bp[GRID_DIMENSIONS * GRID_DIMENSIONS], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int bp_count);
 
 void Gatekeeper_Mechanics(Player* player, Boss const boss, int* enrage);
+
+void GateCore_Mechanics(Player* player, Boss const boss, int* enrage);
