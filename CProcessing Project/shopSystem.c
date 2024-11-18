@@ -11,9 +11,8 @@ Item shop_items[SHOP_ITEMS] = { 0 };
 char price_str[5];
 int half_num_items = 0;
 int generated = 0;
-CP_Image currency_img;
 CP_Image star_effect;
-int star_rot = 0;
+float star_rot = 0;
 CP_Font exo2;
 float shop_font_size = 0.0f;
 
@@ -22,7 +21,6 @@ CP_Color Shop_EnoughCurrencyColor(int player_currency, int price);
 void Shop_Init(void)
 {
 	if (!generated) generated = Item_Generate_List();
-	currency_img = CP_Image_Load("Assets/Crystal.png");
 	star_effect = CP_Image_Load("Assets/Item_Art/Star Effects.png");
 	Item_RandomItemGenerator(shop_items, SHOP_ITEMS);
 	exo2 = CP_Font_Load("Assets/Exo2-Regular.ttf");
@@ -41,10 +39,10 @@ void Shop_Update(void)
 			WINDOW_WIDTH_HALF + ((i - half_num_items) * WINDOW_WIDTH_HALF * 0.35f), 
 			WINDOW_HEIGHT_HALF,
 			WINDOW_WIDTH * 0.15f, WINDOW_HEIGHT * 0.3f, 255);
-		CP_Image_Draw(currency_img, WINDOW_WIDTH_HALF + ((i - half_num_items) * WINDOW_WIDTH_HALF * 0.35f) - WINDOW_WIDTH * 0.025f,
+		CP_Image_Draw(World_GetCurrencyImage(), WINDOW_WIDTH_HALF + ((i - half_num_items) * WINDOW_WIDTH_HALF * 0.35f) - WINDOW_WIDTH * 0.025f,
 			WINDOW_HEIGHT_HALF + WINDOW_HEIGHT * 0.3f, WINDOW_WIDTH * 0.05f, WINDOW_HEIGHT * 0.1f, 255);
 		sprintf_s(price_str, (unsigned int)sizeof price_str, "%d", shop_items[i].price);
-		CP_Settings_TextSize(shop_font_size * 1.5);
+		CP_Settings_TextSize(shop_font_size * 1.5f);
 		CP_Settings_Fill(Shop_EnoughCurrencyColor(World_GetCurrency(), shop_items[i].price));
 		CP_Font_DrawText(price_str, WINDOW_WIDTH_HALF + ((i - half_num_items) * WINDOW_WIDTH_HALF * 0.35f) + WINDOW_WIDTH * 0.025f,
 			WINDOW_HEIGHT_HALF + WINDOW_HEIGHT * 0.3f);
@@ -79,7 +77,7 @@ void Shop_Update(void)
 			CP_Image_DrawAdvanced(star_effect, WINDOW_WIDTH_HALF + ((i - half_num_items) * WINDOW_WIDTH_HALF * 0.35f),
 				WINDOW_HEIGHT_HALF,
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 255, star_rot);
-			star_rot -= 5;
+			star_rot -= 5.0f;
 
 		}
 	}
@@ -88,7 +86,6 @@ void Shop_Update(void)
 
 void Shop_Exit(void)
 {
-	CP_Image_Free(&currency_img);
 	CP_Image_Free(&star_effect);
 }
 

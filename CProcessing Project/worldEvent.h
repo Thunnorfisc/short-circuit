@@ -13,9 +13,11 @@ typedef enum EventType {
 	NON_SPECIAL_TYPE_END, // This is a non-special type ender, it is not an event type and
 	//-----------------// // is used to count the number of non-special events
 	// Special events
-	MIDBOSS_BATTLE = 11,
+	SPECIAL_START = 10,
+	MIDBOSS_BATTLE,
 	BOSS_BATTLE,
-	STARTING_NODE
+	STARTING_NODE,
+	SPECIAL_END
 } EventType;
 
 // The node for events
@@ -24,6 +26,7 @@ typedef struct EventNode {
 	EventType type;
 	CP_Vector location;
 	CP_Vector bound;
+	CP_Image event_sprite;
 	LinkedList next_nodes;
 } EventNode;
 
