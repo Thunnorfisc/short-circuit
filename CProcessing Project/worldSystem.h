@@ -16,9 +16,8 @@ void World_Reset();
 
 World World_Generate_Dynamic(int);
 
-CP_Color Event_Type_Colour(EventType);
-
 void World_UpdateInventory(Item item);
 void World_UpdateCurrency(int amt);
 int World_GetCurrency();
+CP_Image World_GetCurrencyImage();
 void World_PlayerUI();

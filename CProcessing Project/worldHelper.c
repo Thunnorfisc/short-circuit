@@ -2,6 +2,7 @@
 #include "generalUtils.h"
 #include "worldEvent.h"
 #include "worldHelper.h"
+#include "cprocessing.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -29,6 +30,11 @@ EventType World_GetRandom_EventType(EventTypeMap* type_map);
 	2 = below
 */
 int World_FindNextBoundNodes(int* event_matrix, int y, int x, int direction);
+
+/*
+    Set Node Sprite depends on type
+*/
+CP_Image World_SetNodeSprite(EventType type);
 
 
 /* ============= WORLD FUNCTIONS ============= */
@@ -70,6 +76,7 @@ World World_Generate_Dynamic(int world_number) {
 		else if (event.bound.x == (int)(EVENT_BOUND_X / 2) && ++special_bound) event.type = MIDBOSS_BATTLE;
 		else if (event.bound.x == 1 && ++special_bound) event.type = STARTING_NODE;
 		else event.type = World_GetRandom_EventType(type_map);
+		event.event_sprite = World_SetNodeSprite(event.type);
 		// printf_s("ID: %d, Type: %d, [%d,%d]\n", event.id, event.type, (int)event.bound.x, (int)event.bound.y);
 		total_events--;
 		world.event_list[event.id - 1] = event;
@@ -94,6 +101,7 @@ World World_Generate_Dynamic(int world_number) {
 			}
 			event.bound.y = (float)event_y;
 			event.type = World_GetRandom_EventType(type_map);
+			event.event_sprite = World_SetNodeSprite(event.type);
 			bound_event_arr[event_y - 1][bound - 1] = event.id;
 			printf_s("ID: %d, Type: %d, [%d,%d]\n", event.id, event.type, (int)event.bound.x, (int)event.bound.y);
 			total_events--;
@@ -292,6 +300,7 @@ World World_Load(int world_number)
 			fscanf_s(generated_file, " ID: %d, Type: %d, [%f,%f], {", &world.event_list[i].id,
 				&world.event_list[i].type, &world.event_list[i].bound.x,
 				&world.event_list[i].bound.y);
+			world.event_list[i].event_sprite = World_SetNodeSprite(world.event_list[i].type);
 			// Set and find all the node connections ID
 			while (1) {
 				fscanf_s(generated_file, " %d%c", &node, &end, 3);
@@ -303,6 +312,7 @@ World World_Load(int world_number)
 		}
 	}
 	printf_s("Succcesful Reading");
+	world.is_generated = 1;
 	fclose(generated_file);
 	return world;
 }
@@ -356,4 +366,28 @@ int World_FindNextBoundNodes(int* event_matrix, int y, int next_x, int direction
 		return 0;
 	}
 	return 0;
+}
+
+CP_Image World_SetNodeSprite(EventType type) {
+	CP_Image img;
+	switch (type) {
+	case BATTLE:
+		img = CP_Image_Load("Assets/Node_Art/battle.png");
+		break;
+	case ITEM:
+		img = CP_Image_Load("Assets/Node_Art/item.png");
+		break;
+	case SHOP:
+		img = CP_Image_Load("Assets/Node_Art/shop.png");
+		break;
+	case MIDBOSS_BATTLE:
+		img = CP_Image_Load("Assets/Node_Art/midboss.png");
+		break;
+	case BOSS_BATTLE:
+		img = CP_Image_Load("Assets/Node_Art/world boss.png");
+		break;
+	default:
+		img = CP_Image_Load("Assets/Node_Art/start.png");
+	}
+	return img;
 }
