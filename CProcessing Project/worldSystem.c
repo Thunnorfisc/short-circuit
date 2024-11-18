@@ -223,7 +223,7 @@ void World_PlayerUI()
 	for (int i = 0; i < current_inventory_size; ++i) {
 		CP_Image_Draw(item_list[i].image, (WINDOW_WIDTH / 64.0f) + (i * (WINDOW_WIDTH / 32.0f)), WINDOW_HEIGHT / 48.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
 	}
-	for(int i = 0; i < current_inventory_size; ++i) {
+	for (int i = 0; i < current_inventory_size; ++i) {
 		if (IsAreaClicked((WINDOW_WIDTH / 64.0f) + (i * (WINDOW_WIDTH / 32.0f)),
 			WINDOW_HEIGHT / 48.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 			Draw_Textbox(item_list[i].name, name_size, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
@@ -240,5 +240,5 @@ void World_PlayerUI()
 	CP_Image_Draw(currency_sprite, WINDOW_WIDTH - WINDOW_WIDTH / 48.0f - WINDOW_HEIGHT / 18.0f, WINDOW_HEIGHT / 48.0f,
 		WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
 	sprintf_s(currency_str, (unsigned int)sizeof currency_str, "%d", currency);
-	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 48.0f , WINDOW_HEIGHT / 48.0f);
+	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 48.0f, WINDOW_HEIGHT / 48.0f);
 }
