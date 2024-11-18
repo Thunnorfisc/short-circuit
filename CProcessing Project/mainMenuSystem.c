@@ -122,7 +122,6 @@ void Main_Menu_Init(void)
 void Main_Menu_Update(void)
 {
     Handle_Fullscreen(&isFullscreen);
-
     switch (currentMenuState) {
     case SPLASH_SCREEN:
         Draw_Splash_Screen();

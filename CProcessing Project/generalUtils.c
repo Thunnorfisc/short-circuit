@@ -109,16 +109,24 @@ int Exist_In_Array(void* value_to_check,void* array, int type_of_array, int size
 	default:
 		break;
 	}
+	return 0;
 }
 
 //this function is used to draw a button - yande
 int Draw_Button(const char* text, float x, float y, float width, float height)
-{
+{	
+	CP_Settings_Save();
+
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+
 	CP_Settings_Fill(CP_Color_Create(200, 200, 200, 255));
 	CP_Graphics_DrawRect(x, y, width, height);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
 	CP_Font_DrawText(text, x, y);
 
+	CP_Settings_Restore();
+
+	// Check for click
 	float click_x = CP_Input_GetMouseX();
 	float click_y = CP_Input_GetMouseY();
 
@@ -126,4 +134,31 @@ int Draw_Button(const char* text, float x, float y, float width, float height)
 		CP_Graphics_DrawRect(x, y, width - 10, height - 10);
 		return 1;
 	}
+	return 0;
+}
+
+int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, float width, float height) {
+	CP_Settings_Save();
+
+	CP_Settings_ImageMode(CP_POSITION_CENTER);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+
+	// Draw image
+	CP_Image_DrawAdvanced(image, x, y, width, height, 255, 0.0f);
+
+	// Draw text
+	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+	CP_Font_DrawText(text, x, y);
+
+	CP_Settings_Restore();
+
+	// Check for click
+	float click_x = CP_Input_GetMouseX();
+	float click_y = CP_Input_GetMouseY();
+
+	if (IsAreaClicked(x, y, width, height, click_x, click_y) && CP_Input_MouseClicked()) {
+		CP_Image_DrawAdvanced(image, x, y, width-10, height-10, 255, 0.0f);
+		return 1;
+	}
+	return 0;
 }
