@@ -154,6 +154,10 @@ void Battle_System_Update()
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 	}
 
+	if (player.health <= 0) {
+		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
+	}
+
 	// Check if the enemies died
 	if (check_if_enemy_died) {
 		Enemy alive_enemies[ENEMY_COUNT] = { 0 };
@@ -228,7 +232,7 @@ void Battle_System_Update()
 	CP_Image_Draw(background, (float)CP_System_GetWindowWidth()/2.f, (float)CP_System_GetWindowHeight()/2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight(), DEFAULT_ALPHA);
 
 	// Set background dim
-	CP_Settings_Fill(CP_Color_Create(0,0,0,DEFAULT_ALPHA/1.5));
+	CP_Settings_Fill(CP_Color_Create(0,0,0,(int)(DEFAULT_ALPHA/1.5f)));
 	CP_Graphics_DrawRect((float)CP_System_GetWindowWidth() / 2.f, (float)CP_System_GetWindowHeight() / 2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight());
 	
 	// Set Grid color to black
@@ -283,12 +287,9 @@ void Battle_System_Update()
 			load_elements = 1;
 			// Randomisze enemy positions again
 			Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
-			printf("Closed Circuit\n");
-			check_if_enemy_died = 1;
 		}
-		else {
-			printf("Opened Circuit\n");
-		}
+
+		check_if_enemy_died = 1;
 	}
 
 	/*--------------------------------------------- END DISPLAY ASSETS --------------------------------------------------------*/
@@ -307,6 +308,9 @@ void Battle_System_Exit()
 	CP_Image_Free(&e_plant_image);
 	CP_Image_Free(&e_vulture_image);
 
+	for (int i = 0; i < UI_COUNT; ++i) {
+		CP_Image_Free(&battle_ui[i].img);
+	}
 	//Change back to true to make sure the pipe elements are shuffled upon re-entering battle-system
 	load_elements = 1;
 	initialize_player = 1;

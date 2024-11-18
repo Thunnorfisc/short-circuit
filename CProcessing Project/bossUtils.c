@@ -1,7 +1,7 @@
 #include "bossUtils.h"
 #include <string.h>
-
-
+#include "generalUtils.h"
+#include <time.h>
 /*
 Function   : BossParts_Initialize
 Description: Used to initialize the bodypart array in the Boss Struct
@@ -15,6 +15,7 @@ void BossParts_Initialize(BossPart bp[], int initiative, float healthbar, CP_Ima
     bp[index].pos = pos;
     bp[index].weakness = weakness;
     bp[index].resistance = resistance;
+    bp[index].id = index;
 }
 
 /*
@@ -34,11 +35,12 @@ int Boss_Initialize(Boss* boss, int boss_id, CP_Vector grid_location[GRID_DIMENS
         return (0);
     }
 
-    while (EOF != fscanf_s(boss_file, "%d,%d,%d,%[^\n]",
-        &temp_boss.boss_id,&temp_boss.enrage_time, &temp_boss.num_of_bp, boss->boss_name, (unsigned int)sizeof(boss->boss_name)))
+    while (EOF != fscanf_s(boss_file, "Boss_ID: %d Attack: %f Enrage_Time: %d BP_Count: %d Name: %[^\n]",
+        &temp_boss.boss_id, &temp_boss.attack, &temp_boss.enrage_time, &temp_boss.num_of_bp, boss->boss_name, (unsigned int)sizeof(boss->boss_name)))
     {
         if (temp_boss.boss_id == boss_id) {
             boss->boss_id = temp_boss.boss_id;
+            boss->attack = temp_boss.attack;
             boss->enrage_time = temp_boss.enrage_time;
             boss->num_of_bp = temp_boss.num_of_bp;
             break;
@@ -74,10 +76,10 @@ int Boss_Initialize(Boss* boss, int boss_id, CP_Vector grid_location[GRID_DIMENS
     for (int i = 0; i < boss->num_of_bp; ++i) {
         BossPart temp_bp = { 0 };
 
-        fscanf_s(bp_file, "%f,%d,%f,%f,%d,%d",
-            &temp_bp.healthbar, &temp_bp.initiative, &temp_bp.pos.x, &temp_bp.pos.y, &temp_bp.resistance, &temp_bp.weakness);
+        fscanf_s(bp_file, "ID: %d Health: %f Initiative: %d Pos_X: %f Pos_Y: %f Resistance(0 - 3): %d Weakness (0 - 3): %d\n",
+            &temp_bp.id, &temp_bp.healthbar, &temp_bp.initiative, &temp_bp.pos.x, &temp_bp.pos.y, &temp_bp.resistance, &temp_bp.weakness);
 
-        BossParts_Initialize(boss->parts, temp_bp.initiative, temp_bp.healthbar, bp_image_arr[i], grid_location[(int)temp_bp.pos.y-1][(int)temp_bp.pos.x-1], temp_bp.weakness, temp_bp.resistance, i);
+        BossParts_Initialize(boss->parts, temp_bp.initiative, temp_bp.healthbar, bp_image_arr[i], grid_location[(int)temp_bp.pos.y-1][(int)temp_bp.pos.x-1], temp_bp.weakness, temp_bp.resistance, temp_bp.id);
     }
 
     fclose(bp_file);
@@ -91,18 +93,18 @@ Description: Used to check which enemy was attacked
 Parameters : Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player
 Return	   : void
 */
-void Check_Boss_Hit(BossPart bp_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player) {
+void Check_Boss_Hit(BossPart bp_arr[GRID_DIMENSIONS* GRID_DIMENSIONS], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player, int bp_count) {
     int i = 0;
     int attack_count = 0;
     //Check which enemy was hit
-    BossPart enemy_hit_arr[3] = { 0 };
+    BossPart enemy_hit_arr[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
     //CircuitPieces that hit
-    CircuitPiece circuit_pieces_hit[3] = { 0 };
+    CircuitPiece circuit_pieces_hit[GRID_DIMENSIONS & GRID_DIMENSIONS] = { 0 };
     int total_num_of_pieces = 0;
 
     //Count how many enemies were hit, how many pieces were used and which pieces hit
     while (CP_Vector_Length(index_used[i])) {
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < bp_count; j++) {
             if (CP_Vector_Distance(bp_arr[j].pos, selected_pieces[(int)index_used[i].x - 1][(int)index_used[i].y - 1].position) == 0) {
                 //Calculate the damage on the enemies
                 circuit_pieces_hit[attack_count] = selected_pieces[(int)index_used[i].x - 1][(int)index_used[i].y - 1];
@@ -117,8 +119,13 @@ void Check_Boss_Hit(BossPart bp_arr[3], CP_Vector index_used[], CircuitPiece sel
 
     //Calculate the damage
     int index = 0;
-    while (CP_Vector_Length(enemy_hit_arr[index].pos)) {
-        Boss_Calculate_Damage(&(bp_arr[index]), player, circuit_pieces_hit[index], total_num_of_pieces, attack_count);
+    while (CP_Vector_Length(enemy_hit_arr[index].pos) && index < attack_count) {
+        for (int i = 0; i < bp_count; ++i) {
+            if (enemy_hit_arr[index].id == bp_arr[i].id) {
+                Boss_Calculate_Damage(&(bp_arr[i]), player, circuit_pieces_hit[index], total_num_of_pieces, attack_count);
+            }
+        }
+        
         index++;
     }
 }
@@ -170,4 +177,30 @@ void Boss_Calculate_Damage(BossPart* enemy, Player const player, CircuitPiece pi
     damage_dealt = (double)player.attack * (double)number_of_pipes / (double)num_of_enemies_hit * damage_multiplier;
 
     enemy->healthbar -= (int)damage_dealt;
+}
+
+void Boss_Randomise_Position(BossPart bp[GRID_DIMENSIONS* GRID_DIMENSIONS], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int bp_count) {
+
+    CP_Vector generated_vectors[GRID_DIMENSIONS* GRID_DIMENSIONS] = { 0 };  // Array to store positions that are already generated
+    CP_Vector new_vector = { 0 };
+    int generated_i, generated_j;
+
+    for (int i = 0; i < bp_count;) {
+        // Generating new positions of the enemies using Grid System
+        srand((unsigned int)time(NULL));
+        generated_i = CP_Random_RangeInt(0, GRID_DIMENSIONS - 1);  // Random index for grid
+        generated_j = CP_Random_RangeInt(0, GRID_DIMENSIONS - 1);
+        new_vector = gridLocation[generated_i][generated_j];  // Get the position from grid
+
+        if (!CP_Vector_Length(generated_vectors[0]) || !Exist_In_Array(&new_vector, &generated_vectors, A_CP_VECTOR, 3)) {
+            bp[i].pos = new_vector;
+            generated_vectors[i] = new_vector;
+            ++i;
+        }
+    }
+}
+
+void Gatekeeper_Mechanics(Player *player, Boss const boss, int* enrage) {
+    player->health -= (CP_Random_RangeFloat(boss.attack - 5.f, boss.attack) / boss.num_of_bp) / (float)player->defense;
+    enrage++;
 }

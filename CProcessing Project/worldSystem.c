@@ -28,6 +28,7 @@ World world = { 0 };
 int next_id = 0;
 int world_id = 1;
 int player_node = 0;
+int boss_id = 0;
 Item item_list[INVENTORY_SIZE] = { 0 };
 int current_inventory_size = 0;
 int currency = 1000; // CHANGE THIS IN ACTUAL BUILD
@@ -37,7 +38,7 @@ Player player = {
 	.health = 1000,
 	.s_mana = 2,
 	.attack = 10,
-	.defense = 10.0,
+	.defense = 1.0,
 	.fire_crit = 1.2,
 	.water_crit = 1.2,
 	.grass_crit = 1.2
@@ -156,7 +157,6 @@ CP_Color Event_Type_Colour(EventType type)
 		color = CP_Color_Create(255, 0, 255, 255);
 		break;
 	case MIDBOSS_BATTLE:
-
 		color = CP_Color_Create(255, 255, 0, 255);
 		break;
 	case BOSS_BATTLE:
@@ -180,9 +180,11 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(Shop_Init, Shop_Update, Shop_Exit);
 		break;
 	case MIDBOSS_BATTLE:
+		boss_id++;
 		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	case BOSS_BATTLE:
+		boss_id++;
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
 			if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 		}
@@ -211,6 +213,10 @@ void World_UpdateCurrency(int amt) {
 
 int World_GetCurrency() {
 	return currency;
+}
+
+int World_GetBoss() {
+	return boss_id;
 }
 
 void World_PlayerUI()

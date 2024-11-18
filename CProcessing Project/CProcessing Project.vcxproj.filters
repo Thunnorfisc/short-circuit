@@ -1,57 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="battleSystem.c" />
-    <ClCompile Include="creditsScreen.c" />
-    <ClCompile Include="enemyStructs.c" />
-    <ClCompile Include="inventorySystem.c" />
-    <ClCompile Include="itemSystem.c" />
-    <ClCompile Include="linkedlist.c" />
-    <ClCompile Include="magicStructs.c" />
-    <ClCompile Include="magicSystem.c" />
-    <ClCompile Include="magicSystemUtil.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="mainMenuSystem.c" />
-    <ClCompile Include="TEST_playerStruct.c" />
-    <ClCompile Include="TEST_playerUtil.c" />
-    <ClCompile Include="worldEvent.c" />
-    <ClCompile Include="worldHelper.c" />
-    <ClCompile Include="worldSystem.c" />
-    <ClCompile Include="generalUtils.c" />
-    <ClCompile Include="shopSystem.c" />
-    <ClCompile Include="bossSystem.c" />
-    <ClCompile Include="bossUtils.c" />
-    <ClCompile Include="battleSystemUI.c" />
+    <ClCompile Include="battleSystem.c">
+      <Filter>Battle Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="battleSystemUI.c">
+      <Filter>Battle Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="bossUtils.c">
+      <Filter>Enemy Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="creditsScreen.c">
+      <Filter>Menu Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyStructs.c">
+      <Filter>Enemy Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="generalUtils.c">
+      <Filter>General Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="inventorySystem.c">
+      <Filter>Player Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="linkedlist.c">
+      <Filter>General Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="magicStructs.c">
+      <Filter>Magic Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="magicSystem.c">
+      <Filter>Magic Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="magicSystemUtil.c">
+      <Filter>Magic Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST_playerStruct.c">
+      <Filter>Player Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="TEST_playerUtil.c">
+      <Filter>Player Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="worldEvent.c">
+      <Filter>World Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="worldHelper.c">
+      <Filter>World Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="worldSystem.c">
+      <Filter>World Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="mainMenuSystem.c">
+      <Filter>Menu Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="itemSystem.c">
+      <Filter>Item System</Filter>
+    </ClCompile>
+    <ClCompile Include="shopSystem.c">
+      <Filter>Item System</Filter>
+    </ClCompile>
+    <ClCompile Include="bossSystem.c">
+      <Filter>Battle Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="battleSystem.h" />
-    <ClInclude Include="creditScreen.h" />
-    <ClInclude Include="enemyStructs.h" />
-    <ClInclude Include="inventorySystem.h" />
-    <ClInclude Include="itemSystem.h" />
-    <ClInclude Include="linkedlist.h" />
-    <ClInclude Include="magicStructs.h" />
-    <ClInclude Include="magicSystem.h" />
-    <ClInclude Include="magicSystemUtil.h" />
-    <ClInclude Include="mainMenuSystem.h" />
-    <ClInclude Include="TEST_playerStruct.h" />
-    <ClInclude Include="TEST_playerUtil.h" />
-    <ClInclude Include="worldEvent.h" />
-    <ClInclude Include="worldHelper.h" />
-    <ClInclude Include="worldSystem.h" />
-    <ClInclude Include="generalUtils.h" />
-    <ClInclude Include="shopSystem.h" />
-    <ClInclude Include="bossStruct.h" />
-    <ClInclude Include="bossSystem.h" />
-    <ClInclude Include="bossUtils.h" />
-    <ClInclude Include="battleSystemUI.h" />
+    <ClInclude Include="battleSystem.h">
+      <Filter>Battle Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="battleSystemUI.h">
+      <Filter>Battle Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="bossStruct.h">
+      <Filter>Enemy Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="bossUtils.h">
+      <Filter>Enemy Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="creditScreen.h">
+      <Filter>Menu Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyStructs.h">
+      <Filter>Enemy Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="generalUtils.h">
+      <Filter>General Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="inventorySystem.h">
+      <Filter>Player Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="linkedlist.h">
+      <Filter>General Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="magicStructs.h">
+      <Filter>Magic Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="magicSystem.h">
+      <Filter>Magic Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="magicSystemUtil.h">
+      <Filter>Magic Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TEST_playerStruct.h">
+      <Filter>Player Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TEST_playerUtil.h">
+      <Filter>Player Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="worldSystem.h">
+      <Filter>World Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="worldEvent.h">
+      <Filter>World Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="worldHelper.h">
+      <Filter>World Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="mainMenuSystem.h">
+      <Filter>Menu Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="itemSystem.h">
+      <Filter>Item System</Filter>
+    </ClInclude>
+    <ClInclude Include="shopSystem.h">
+      <Filter>Item System</Filter>
+    </ClInclude>
+    <ClInclude Include="bossSystem.h">
+      <Filter>Battle Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png" />
-    <Image Include="..\Assets\magic_circuit_L.png" />
-    <Image Include="..\Assets\magic_circuit_S.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\Assets\Exo2-Regular.ttf" />
+    <Filter Include="General Systems">
+      <UniqueIdentifier>{b0625d4b-5629-417d-a87a-f6b4e7218758}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Player Systems">
+      <UniqueIdentifier>{8478e151-3c86-4223-93aa-be5976391d6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World Systems">
+      <UniqueIdentifier>{af68a2a5-3e81-48a3-a62d-e745eab20e92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Enemy Systems">
+      <UniqueIdentifier>{3b7c26d8-919f-4b33-95d4-7884f4662107}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Magic Systems">
+      <UniqueIdentifier>{ac8deac5-56d5-4939-ab82-47289a8c67ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Battle Systems">
+      <UniqueIdentifier>{e45e6f64-7e63-4995-b445-252e2bb10848}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu Systems">
+      <UniqueIdentifier>{db6abe6c-2742-49c6-8555-df99b4f5f026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Item System">
+      <UniqueIdentifier>{6c0a8686-9591-456d-b6ee-4a210c8d87f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -120,14 +120,6 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
     <ClCompile Include="generalUtils.c" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png" />
-    <Image Include="..\Assets\magic_circuit_L.png" />
-    <Image Include="..\Assets\magic_circuit_S.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\Assets\Exo2-Regular.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="battleSystem.h" />
     <ClInclude Include="battleSystemUI.h" />
     <ClInclude Include="bossStruct.h" />

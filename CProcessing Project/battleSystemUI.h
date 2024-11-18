@@ -1,6 +1,7 @@
 #pragma once
 #include "TEST_playerStruct.h"
 #include "enemyStructs.h"
+#include "bossStruct.h"
 #include "cprocessing.h"
 
 #define UI_COUNT 5
@@ -26,8 +27,10 @@ Return	   : void
 */
 void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], Enemy const original_enemies[ENEMY_COUNT], CP_Vector mouse_pos, BattleUI ui);
 
+void Display_Boss_Hover(Boss boss, BossPart const original_bp[], CP_Vector mouse_pos, BattleUI ui, int count);
+
 BattleUI UI_Component_Create(CP_Image img, CP_Vector pos, float width, float height);
 
 void UI_Initialize(BattleUI ui[UI_COUNT]);
 
-void Display_UI(BattleUI const ui[UI_COUNT], Player player, float original_health);
+void Display_UI(BattleUI ui[UI_COUNT], Player player, float original_health);

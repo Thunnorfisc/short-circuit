@@ -27,7 +27,7 @@ Description: Used to check which enemy was attacked
 Parameters : Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player
 Return	   : void
 */
-void Check_Boss_Hit(BossPart bp[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player);
+void Check_Boss_Hit(BossPart bp[GRID_DIMENSIONS* GRID_DIMENSIONS], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player, int bp_count);
 
 /*
 Function   : Enemy_Calculate_Damage
@@ -36,3 +36,7 @@ Parameters : Enemy* enemy, Player const player, CircuitPiece piece_that_hit, int
 Return	   : void
 */
 void Boss_Calculate_Damage(BossPart* bp, Player const player, CircuitPiece piece_that_hit, int number_of_pipes, int num_of_enemies_hit);
+
+void Boss_Randomise_Position(BossPart bp[GRID_DIMENSIONS * GRID_DIMENSIONS], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int bp_count);
+
+void Gatekeeper_Mechanics(Player* player, Boss const boss, int* enrage);

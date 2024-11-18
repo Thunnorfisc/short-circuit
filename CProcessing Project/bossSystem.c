@@ -6,14 +6,22 @@
 #include "generalUtils.h"
 #include "magicSystemUtil.h"
 #include "TEST_playerUtil.h"
+#include "battleSystemUI.h"
+
+// Variables for Battle System UI
+BattleUI boss_battle_ui[UI_COUNT];
+CP_Image boss_background;
 
 // an array of Enemy structures called enemies with a size of ENEMY_COUNT
 Boss boss;
 int check_if_boss_died = 0;
+int enrage = 0;
+BossPart original_bp[GRID_DIMENSIONS * GRID_DIMENSIONS];
 
 //Player object to calculate the damage to be done. Damage taken from a temp file
 int initialize_player_b = 1;
 Player player;
+float player_original_health;
 
 /* Circuits--------------------------------------------------------------------------------------------------------------*/
 //Image of the circuit pieces
@@ -55,10 +63,15 @@ Button button_submit;
 
 void Boss_System_Init()
 {
+	enrage = 0;
 
 	//Setting Modes for display
 	CP_Settings_ImageMode(CP_POSITION_CENTER);
 	CP_Settings_RectMode(CP_POSITION_CENTER);
+
+	// Initialize UI
+	UI_Initialize(boss_battle_ui);
+	boss_background = CP_Image_Load("Assets/Door_Way.png");
 
 	//Loading the image for the Magic Circuit's L Piece
 	circuit_image_corner = CP_Image_Load(CIRCUIT_L_ASSET_ADDR);
@@ -108,19 +121,28 @@ void Boss_System_Init()
 	// Load Boss
 	Boss_Initialize(&boss, 1, grid_squares);
 
+	for (int i = 0; i < boss.num_of_bp; ++i) {
+		original_bp[i] = boss.parts[i];
+	}
 
 	if (initialize_player_b) {
 		PlayerStats_ReadFile(&player);
 		initialize_player_b = 0;
+		player_original_health = player.health;
 	}
 }
 
 void Boss_System_Update()
 {
+	mouse_position_b = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 	//DEBUG: Go Back to Map System
 	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+	}
+
+	if (enrage >= boss.enrage_time || player.health <=0) {
+		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
 	}
 
 	//Load Player Stats
@@ -137,7 +159,7 @@ void Boss_System_Update()
 
 	//Check if the enemies died
 	if (check_if_boss_died) {
-		BossPart alive_enemies[GRID_DIMENSIONS*GRID_DIMENSIONS] = { 0 };
+		BossPart alive_enemies[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
 		int count_dead = 0;
 		int index_to_remove[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
 
@@ -163,12 +185,21 @@ void Boss_System_Update()
 		if (!boss.num_of_bp) CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 
 		check_if_boss_died = 0;
+		switch (boss.boss_id)
+		{
+		case 1:
+			Gatekeeper_Mechanics(&player, boss, &enrage);
+			Boss_Randomise_Position(boss.parts, grid_squares, boss.num_of_bp);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	/* --------------- This Section will be to check for the functions that can run when mouse is interacted -------------*/
 	//Check where the mouse clicked and what piece was selected
 	if (CP_Input_MouseDown(MOUSE_BUTTON_1)) {
-		mouse_position_b = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 		//Function to check which circuit piece is selected
 		if (!selected_circuit_piece_b)
@@ -189,15 +220,23 @@ void Boss_System_Update()
 	// Set the background with white
 	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 
+	//Set the background image
+	CP_Image_Draw(boss_background, (float)CP_System_GetWindowWidth() / 2.f, (float)CP_System_GetWindowHeight() / 2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight(), DEFAULT_ALPHA);
+
 	// Set Grid color to black
 	CP_Settings_Fill(COLOR_BLACK);
 
-	//Draw grid
+	// Draw grid
 	Grid_Display(grid_squares);
+
+	// Draw UI
+	Display_UI(boss_battle_ui, player, player_original_health);
+	Display_Boss_Hover(boss, original_bp, mouse_position_b, boss_battle_ui[4], boss.num_of_bp);
+	//Display_Enemy_Hover(enemies, original_enemy_arr, mouse_position, battle_ui[4]);
 
 	// Draw each enemy based on its type
 	for (int i = 0; i < boss.num_of_bp; i++) {
-		CP_Image_Draw(boss.parts[i].image, 
+		CP_Image_Draw(boss.parts[i].image,
 			boss.parts[i].pos.x,
 			boss.parts[i].pos.y,
 			GRID_CELL_SIZE, GRID_CELL_SIZE, 255);
@@ -218,20 +257,16 @@ void Boss_System_Update()
 	}
 
 	//Display button for submiting magic system
-	if (Draw_Button("Submit", button_submit.position.x, button_submit.position.y, button_submit.width * WINDOW_RATIO, button_submit.height * WINDOW_RATIO)) {
+	if ((IsAreaClicked(boss_battle_ui[1].pos.x, boss_battle_ui[1].pos.y, boss_battle_ui[1].width, boss_battle_ui[1].height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked())) {
 		if (Is_Closed_Circuit(index_used_b, circuit_selected_list_b)) {
-			check_if_boss_died = 1;
-			Check_Boss_Hit(boss.parts, index_used_b, circuit_selected_list_b, player);
+			Check_Boss_Hit(boss.parts, index_used_b, circuit_selected_list_b, player, boss.num_of_bp);
 
 			//Delete all circuits chosen and reload elements
 			load_elements_b = 1;
 			memset(circuit_selected_list_b, 0, sizeof(circuit_selected_list_b));
 			memset(index_used_b, 0, sizeof(index_used_b));
-			printf("Closed Circuit\n");
 		}
-		else {
-			printf("Opened Circuit\n");
-		}
+		check_if_boss_died = 1;
 	}
 }
 
@@ -248,5 +283,5 @@ void Boss_System_Exit()
 	//Change back to true to make sure the pipe elements are shuffled upon re-entering battle-system
 	load_elements_b = 1;
 	initialize_player_b = 1;
+	enrage = 0;
 }
-

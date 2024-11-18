@@ -1,6 +1,5 @@
 #include "battleSystemUI.h"
 #include "generalUtils.h"
-
 /*
 Function   : Display_Enemy_Hover
 Description: Used to display the Enemy Stats by hovering over the Enemy
@@ -21,16 +20,46 @@ void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], Enemy const original_enemie
 			CP_Settings_TextSize(text_size);
 			CP_Font_DrawText(enemies[i].name, ui.pos.x, (ui.pos.y - ui.height/2.f) + text_size/2.f + 3* BUFFER * WINDOW_RATIO);
 
+			for (int j = 0; j < ENEMY_COUNT; ++j) {
+				if (enemies[i].enemy_type == original_enemies[j].enemy_type) {
+					//Display Health of Enemy Stats
+					CP_Settings_Fill(HP_COLOR);
+					CP_Settings_RectMode(CP_POSITION_CORNER);
+					CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2 * WINDOW_RATIO, ui.pos.y, hp_width * enemies[i].healthbar / original_enemies[j].healthbar, hp_height);
+					break;
+				}
+			}
+			CP_Settings_RectMode(CP_POSITION_CENTER);
+
+			//draw enemy data
+			break;
+		}
+	}
+}
+
+void Display_Boss_Hover(Boss boss, BossPart const original_bp[], CP_Vector mouse_pos, BattleUI ui, int count) {
+	float text_size = TEXT_SIZE * WINDOW_RATIO;
+	float hp_width = ui.width - BUFFER * 4 * WINDOW_RATIO;
+	float hp_height = BUFFER * 3 * WINDOW_RATIO;
+
+	for (int i = 0; i < boss.num_of_bp; ++i) {
+		if (CP_Vector_Distance(boss.parts[i].pos, mouse_pos) <= GRID_CELL_SIZE / 2.0f) {
+			CP_Image_Draw(ui.img, ui.pos.x, ui.pos.y, ui.width, ui.height, DEFAULT_ALPHA / 2);
+
+			//Display Name of the enemy
+			CP_Settings_Fill(CP_Color_Create(0, 0, 0, DEFAULT_ALPHA));
+			CP_Settings_TextSize(text_size);
+			CP_Font_DrawText(boss.boss_name, ui.pos.x, (ui.pos.y - ui.height / 2.f) + text_size / 2.f + 3 * BUFFER * WINDOW_RATIO);
+
 			//Display Health of Enemy
 			CP_Settings_Fill(HP_COLOR);
 			CP_Settings_RectMode(CP_POSITION_CORNER);
-			CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2 * WINDOW_RATIO, ui.pos.y, hp_width * enemies[i].healthbar/original_enemies[i].healthbar, hp_height);
+			CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2 * WINDOW_RATIO, ui.pos.y, hp_width * boss.parts[i].healthbar / original_bp[boss.parts->id].healthbar, hp_height);
 			CP_Settings_RectMode(CP_POSITION_CENTER);
 			//draw enemy data
 			break;
 		}
 	}
-
 }
 
 /*
@@ -94,16 +123,16 @@ Description: Display all UI Components
 Parameters : BattleUI const ui[UI_COUNT], Player player, float original_health
 Return	   : void
 */
-void Display_UI(BattleUI const ui[UI_COUNT], Player player, float original_health) {
+void Display_UI(BattleUI ui[UI_COUNT], Player player, float original_health) {
 	//Default Health Size
 	float width = ui[0].width * 0.78f;
-	float height = ui[0].height * 0.81f;
+	float height = (ui[0].height * 0.81f) * (player.health / original_health);
 	float text_size = TEXT_SIZE * WINDOW_RATIO;
 
 	//Calculate and display player health
 	CP_Settings_Fill(HP_COLOR);
 	CP_Settings_NoStroke();
-	CP_Graphics_DrawRect(ui[0].pos.x - ui[0].width * 0.11f, ui[0].pos.y + ui[0].height * 0.08f + height * ((original_health - player.health) / original_health), width, height * (player.health / original_health));
+	CP_Graphics_DrawRect(ui[0].pos.x - ui[0].width * 0.11f, WINDOW_HEIGHT - (height / 2.f), width, height);
 
 	//Display the attack text
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, DEFAULT_ALPHA));
