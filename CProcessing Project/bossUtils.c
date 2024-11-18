@@ -8,7 +8,7 @@ Description: Used to initialize the bodypart array in the Boss Struct
 Parameters : BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int number_of_parts
 Return	   : void
 */
-void BossParts_Initialize(BossPart bp[], int initiative, int healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int index) {
+void BossParts_Initialize(BossPart bp[], int initiative, float healthbar, CP_Image image, CP_Vector pos, ElementType weakness, ElementType resistance, int index) {
     bp[index].initiative = initiative;
     bp[index].healthbar = healthbar;
     bp[index].image = image;
@@ -46,16 +46,14 @@ int Boss_Initialize(Boss* boss, int boss_id, CP_Vector grid_location[GRID_DIMENS
     }
 
     CP_Image bp_image_arr[25];
-    char asset_dir[100] = "Assets/Enemy_Files/", filepath[154] = "", filepath_img[154] = "";
+    char asset_dir[100] = "Assets/Enemy_Files/", filepath[154] = {'\0'}, filepath_img[154] = { '\0' };
 
     if (boss->boss_name != NULL){
         //Concatenates the asset_dir
-        memset(filepath, "", sizeof(filepath));
         sprintf_s(filepath, (unsigned int)sizeof(filepath), "%s%s%s", asset_dir, boss->boss_name, ".txt");
 
         for (int i = 0; i < boss->num_of_bp; ++i) {
             //Set path for each image file
-            memset(filepath_img, "", sizeof(filepath_img));
             sprintf_s(filepath_img, (unsigned int)sizeof(filepath_img), "%s%s_part%01d%s", asset_dir, boss->boss_name, i, ".png");
             bp_image_arr[i] = CP_Image_Load(filepath_img);
         }
@@ -76,7 +74,7 @@ int Boss_Initialize(Boss* boss, int boss_id, CP_Vector grid_location[GRID_DIMENS
     for (int i = 0; i < boss->num_of_bp; ++i) {
         BossPart temp_bp = { 0 };
 
-        fscanf_s(bp_file, "%d,%d,%f,%f,%d,%d",
+        fscanf_s(bp_file, "%f,%d,%f,%f,%d,%d",
             &temp_bp.healthbar, &temp_bp.initiative, &temp_bp.pos.x, &temp_bp.pos.y, &temp_bp.resistance, &temp_bp.weakness);
 
         BossParts_Initialize(boss->parts, temp_bp.initiative, temp_bp.healthbar, bp_image_arr[i], grid_location[(int)temp_bp.pos.y-1][(int)temp_bp.pos.x-1], temp_bp.weakness, temp_bp.resistance, i);

@@ -4,9 +4,6 @@
 
 #define E_MAGE_ASSET_ADDR "Assets/e_mage.png"
 
-//Total number of different enemy types
-#define ENEMY_COUNT 3
-
 // Enemy asset addresses
 #define E_WIZARD_ASSET_ADDR "Assets/e_mage.png"
 #define E_PLANT_ASSET_ADDR "Assets/e_plant.png"

@@ -3,7 +3,7 @@
 #include <time.h>
 
 //Change this to read from file and add int initiative code
-Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
+Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
     Enemy enemy = {.enemy_type = type, .position = v };
     
     switch (type) {
@@ -14,7 +14,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 100;
         enemy.resistance = Element_Fire;
         enemy.resist_multiplier = 0.5;
-        
+        strcpy_s(enemy.name, sizeof(enemy.name), "Wizard");
         break;
 
     case E_Plant:
@@ -23,6 +23,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 80;
         enemy.resistance = Element_Grass;
         enemy.resist_multiplier = 0.5;
+        strcpy_s(enemy.name, sizeof(enemy.name), "Plant");
         break;
 
     case E_Vulture:
@@ -31,6 +32,7 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
         enemy.healthbar = 90;
         enemy.resistance = Element_Water;
         enemy.resist_multiplier = 0.5;
+        strcpy_s(enemy.name, sizeof(enemy.name), "Vulture");
         break;
 
     default:
@@ -40,9 +42,9 @@ Enemy initializeEnemy(EnemyTypes type, CP_Vector v) {
     return enemy;
 }
 
-void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemies) {
+void Enemy_Initialize_Array(Enemy enemies[ENEMY_COUNT], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemies) {
     
-    CP_Vector generated_vectors[3] = { 0 };  // Array to store positions that are already generated
+    CP_Vector generated_vectors[ENEMY_COUNT] = { 0 };  // Array to store positions that are already generated
     CP_Vector new_vector = { 0 };
     int generated_i, generated_j;
 
@@ -57,7 +59,7 @@ void Enemy_Initialize_Array(Enemy enemies[3], CP_Vector gridLocation[GRID_DIMENS
             // Store the enemies in an array
             EnemyTypes enemy_type_arr[3] = { E_Wizard, E_Plant, E_Vulture };
             // Randomise the different type of enemies that will appear
-            if (do_randomise_enemies) enemies[i] = initializeEnemy(enemy_type_arr[CP_Random_RangeInt(0, 2)], new_vector);
+            if (do_randomise_enemies) enemies[i] = Enemy_Arr_Initialize(enemy_type_arr[CP_Random_RangeInt(0, 2)], new_vector);
             else enemies[i].position = new_vector;
             generated_vectors[i] = new_vector;
             ++i;    		
@@ -158,7 +160,10 @@ Description: Used to calculate the amount of damage the enemy will do
 Parameters : Enemy enemy, Player* player
 Return	   : void
 */
-void Enemy_Damage_Player(Enemy enemy, Player* player) {
-    int enemy_damage = CP_Random_RangeInt(enemy.attack - 5, enemy.attack);
-    player->health -= enemy_damage * player->defense;
+void Enemy_Damage_Player(Enemy enemy[ENEMY_COUNT], Player* player) {
+    float enemy_damage = 0;
+    for (int i = 0; i < ENEMY_COUNT; ++i) {
+        enemy_damage += CP_Random_RangeFloat((float)enemy[i].attack - 5.f, (float)enemy[i].attack);
+    }
+    player->health -= enemy_damage * (float)player->defense;
 }

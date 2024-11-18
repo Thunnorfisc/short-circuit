@@ -53,6 +53,8 @@ Parameters : CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS]
 Return	   : void
 */
 void Grid_Display(CP_Vector const grid[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
+	CP_Settings_Fill(CP_Color_Create(255, 255, 255, DEFAULT_ALPHA / 2));
+	CP_Settings_Stroke(COLOR_BLACK);
 	for (int row = 0; row < GRID_DIMENSIONS; ++row) {
 		for (int col = 0; col < GRID_DIMENSIONS; ++col) {
 			CP_Graphics_DrawRect(grid[row][col].x, grid[row][col].y, GRID_CELL_SIZE, GRID_CELL_SIZE);

@@ -18,7 +18,7 @@ ElementType resistance : Resistance of the Boss Part
 */
 typedef struct BossPart {
 	int initiative;
-	int healthbar;
+	float healthbar;
 	CP_Image image;
 	CP_Vector pos;
 	ElementType weakness;

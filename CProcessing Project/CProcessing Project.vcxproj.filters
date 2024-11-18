@@ -19,6 +19,9 @@
     <ClCompile Include="worldSystem.c" />
     <ClCompile Include="generalUtils.c" />
     <ClCompile Include="shopSystem.c" />
+    <ClCompile Include="bossSystem.c" />
+    <ClCompile Include="bossUtils.c" />
+    <ClCompile Include="battleSystemUI.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="battleSystem.h" />
@@ -38,6 +41,10 @@
     <ClInclude Include="worldSystem.h" />
     <ClInclude Include="generalUtils.h" />
     <ClInclude Include="shopSystem.h" />
+    <ClInclude Include="bossStruct.h" />
+    <ClInclude Include="bossSystem.h" />
+    <ClInclude Include="bossUtils.h" />
+    <ClInclude Include="battleSystemUI.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png" />

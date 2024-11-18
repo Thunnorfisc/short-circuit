@@ -2,7 +2,7 @@
 #include "worldHelper.h"
 #include "itemSystem.h"
 #include "cprocessing.h"
-#define INVENTORY_SIZE 30
+//#define INVENTORY_SIZE 30
 
 void World_Init(void);
 

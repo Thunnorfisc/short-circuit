@@ -114,6 +114,7 @@ int Exist_In_Array(void* const value_to_check,void* const array, TYPES_OF_ARRAYS
 		break;
 	}
 	default:
+		return 0;
 		break;
 	}
 }
@@ -133,4 +134,5 @@ int Draw_Button(const char* text, float x, float y, float width, float height)
 		CP_Graphics_DrawRect(x, y, width - 10, height - 10);
 		return 1;
 	}
+	return 0;
 }
