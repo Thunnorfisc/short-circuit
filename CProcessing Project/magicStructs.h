@@ -6,7 +6,7 @@ Description: This will be the file that holds the structs that will be used sole
 #pragma once
 #include "cprocessing.h"
 
-#define CIRCUIT_PIECE_SIZE 128 * ((float)CP_System_GetWindowHeight()/1080.f)
+#define GRID_CELL_SIZE Calculate_Cell_Size()
 
 //This is the struct that will be used to create the pieces for the magic circuit system
 typedef struct CircuitPiece {

@@ -10,7 +10,6 @@ Description: This file will contain utilty functions that will be used for the M
 
 //Defined values specifically for magic system
 #define GRID_DIMENSIONS 5
-#define GRID_CELL_SIZE 128
 #define GRID_CELL_SIZE_OFFSET (float)GRID_CELL_SIZE/2.f
 #define CIRCUIT_UI_LIST_SIZE 4
 #define BUFFER 10.f
@@ -56,3 +55,5 @@ of Circuit pieces
 void Add_To_Index_Array(CP_Vector index_list[], CP_Vector vector_to_add, int size);
 
 int Check_Placement(CP_Vector index_used[], CP_Vector index_to_use, CircuitPiece circuit_pos[GRID_DIMENSIONS][GRID_DIMENSIONS], CircuitPiece selectedPiece);
+
+float Calculate_Cell_Size(void);

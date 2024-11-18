@@ -79,3 +79,4 @@ void Grid_Initialize(CP_Vector grid[GRID_DIMENSIONS][GRID_DIMENSIONS]) {
 	}
 	return;
 }
+

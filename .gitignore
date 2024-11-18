@@ -19,3 +19,4 @@ bin/Debug-x64/Assets/Event_Chains/Generated
 *.exp
 *.iobj
 *.ipdb
+*.recipe

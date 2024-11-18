@@ -233,7 +233,7 @@ void Handle_Fullscreen(int* fullscreen) {
             CP_System_Fullscreen();
         }
         else {
-            CP_System_SetWindowSize(1920, 1080);
+            CP_System_SetWindowSize(1280, 720);
         }
     }
 }
