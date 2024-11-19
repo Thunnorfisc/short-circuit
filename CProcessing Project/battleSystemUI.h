@@ -23,6 +23,8 @@
 #define FIRE_UI "Assets/UI/Icon_Fire_Weakness.png"
 #define WATER_UI "Assets/UI/Icon_Water_Weakness.png"
 #define WEAKNESS_UI_SIZE 128 * WINDOW_RATIO
+// ^ arrow to indicate critical damage will be dealt for enemy's weakness
+#define CRIT_WEAKNESS "Assets/UI/crit_weakness.png"
 
 #define CIRCUIT_UI_Y (float)WINDOW_HEIGHT - Calculate_Cell_Size() - BUFFER;
 #define CIRCUIT_UI_X WINDOW_WIDTH_HALF;
