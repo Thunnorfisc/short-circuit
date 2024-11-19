@@ -168,10 +168,15 @@ void Display_UI(BattleUI ui[UI_COUNT], Player player, float original_health, int
 	CP_Settings_Fill(COLOR_WHITE(124));
 	CP_Graphics_DrawRect(ui[2].pos.x, ui[2].pos.y, ui[2].width, ui[2].height);
 
-	char s_count_str[3];
-	sprintf_s(s_count_str,sizeof(s_count_str),"x%d",s_count);
+	// To display count of straight pipes
+	char s_count_str[40];
+	sprintf_s(s_count_str,sizeof(s_count_str),"(Vertical/Horizontal): %d Left",s_count);
 	CP_Settings_Fill(COLOR_WHITE(255));
-	CP_Font_DrawText(s_count_str, ui[2].pos.x + ui[2].width/2 + BUFFER * 3 * WINDOW_RATIO, ui[2].pos.y);
+	// Hardcode first
+	int text_y_pos = ui[2].pos.y - 50;
+	int text_x_pos = ui[2].pos.x - 100;
+	CP_Settings_TextSize(text_size - 25);
+	CP_Font_DrawText(s_count_str, text_x_pos + ui[2].width/2 + BUFFER * 3 * WINDOW_RATIO, text_y_pos);
 
 	for (int i = 0; i < UI_COUNT - 1; ++i) {
 		if (ui[i].width == 0) break;
