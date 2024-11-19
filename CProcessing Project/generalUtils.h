@@ -19,6 +19,8 @@ NOTE!!! Do not edit these names or values without consulting the team
 
 #define COLOR_BLACK CP_Color_Create(0, 0, 0, 255)
 
+#define COLOR_WHITE(a) CP_Color_Create(255, 255, 255, a)
+
 //Use to get the height of the window
 #define WINDOW_HEIGHT CP_System_GetWindowHeight()
 

@@ -9,6 +9,8 @@
 // Variables for Battle System UI
 BattleUI battle_ui[UI_COUNT];
 CP_Image background;
+CP_Image weakness_ui[3];
+CP_Image circuit_ui;
 
 // Variables to generate enemies
 int random_enemy_count = 0;
@@ -23,6 +25,7 @@ CP_Image e_vulture_image;
 Enemy enemies[ENEMY_COUNT];
 Enemy original_enemy_arr[ENEMY_COUNT];
 int check_if_enemy_died = 0;
+int original_count_enemy = 0;
 
 // Player object to calculate the damage to be done. Damage taken from a temp file
 int initialize_player = 1;
@@ -77,6 +80,10 @@ void Battle_System_Init()
 	UI_Initialize(battle_ui);
 	background = CP_Image_Load("Assets/Door_Way.png");
 
+	weakness_ui[0] = CP_Image_Load(GRASS_UI);
+	weakness_ui[1] = CP_Image_Load(WATER_UI);
+	weakness_ui[2] = CP_Image_Load(FIRE_UI);
+
 	// Loading the image for the Magic Circuit's L Piece
 	circuit_image_corner = CP_Image_Load(CIRCUIT_L_ASSET_ADDR);
 	circuit_image_straight = CP_Image_Load(CIRCUIT_S_ASSET_ADDR);
@@ -91,31 +98,26 @@ void Battle_System_Init()
 	e_wizard_image = CP_Image_Load(E_WIZARD_ASSET_ADDR);
 	e_plant_image = CP_Image_Load(E_PLANT_ASSET_ADDR);
 	e_vulture_image = CP_Image_Load(E_VULTURE_ASSET_ADDR);
-
 	/*------------Calculating the buffer for the display location of the UI for the circuits---------- */
 	float grid_size = GRID_DIMENSIONS * GRID_CELL_SIZE;
-	float circuit_ui_corner_buffer_top = (float)(grid_size + GRID_CELL_SIZE_OFFSET * 4);
-	float circuit_ui_corner_buffer_left = (float)(WINDOW_WIDTH - (GRID_CELL_SIZE * NUM_OF_L_PIECE + BUFFER * (NUM_OF_L_PIECE - 1))) / 2.f;
+	float circuit_piece_x = CIRCUIT_UI_X;
+	float circuit_piece_y = CIRCUIT_UI_Y;
 
 	// This loop will initialize the corner pieces to be displayed on the UI for selection
 	for (int i = 0, j = i + 1; i < NUM_OF_L_PIECE; ++i, j = j < 3 ? j + 1 : 0) {
 		circuit_list[i] = New_Circuit_Piece(
-			CP_Vector_Set(circuit_ui_corner_buffer_left + GRID_CELL_SIZE_OFFSET + GRID_CELL_SIZE * i + BUFFER * i, circuit_ui_corner_buffer_top),
+			CP_Vector_Set(circuit_piece_x - GRID_CELL_SIZE * i, circuit_piece_y),
 			circuit_image_corner,
 			i, j, i, GRID_CELL_SIZE, L_Type);
 	}
 
-	float circuit_ui_straight_buffer_top = ((float)WINDOW_HEIGHT - (GRID_CELL_SIZE * NUM_OF_S_PIECE + BUFFER)) / 2.f;
-	float circuit_ui_straight_buffer_left = circuit_ui_corner_buffer_left / 2.f;
 	// This loop will initialize the straight pieces to be displayed on the UI for selection
 	for (int i = 0, j = i + 2; i < NUM_OF_S_PIECE; ++i,++j) {
 		circuit_list[NUM_OF_L_PIECE + i] = New_Circuit_Piece(
-			CP_Vector_Set(circuit_ui_straight_buffer_left, circuit_ui_straight_buffer_top + (float)GRID_CELL_SIZE / 2.f + GRID_CELL_SIZE * i + BUFFER * i),
+			CP_Vector_Set(circuit_piece_x + GRID_CELL_SIZE * j, circuit_piece_y),
 			circuit_image_straight,
 			i, j, i, GRID_CELL_SIZE, S_Type);
 	}
-
-	total_s_pieces = 2;
 
 	// Initialize the button for submit
 	button_submit.width = 128 * 2;
@@ -133,6 +135,7 @@ void Battle_System_Init()
 
 	// Randomly generate unique enemy positions
 	Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 1);
+	original_count_enemy = random_enemy_count;
 
 	for (int i = 0; i < ENEMY_COUNT; ++i) {
 		original_enemy_arr[i] = enemies[i];
@@ -142,6 +145,9 @@ void Battle_System_Init()
 		original_health = player.health;
 		initialize_player = 0;
 	}
+
+	total_s_pieces = player.s_mana;
+
 }
 
 void Battle_System_Update()
@@ -150,8 +156,13 @@ void Battle_System_Update()
 	mouse_position = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 	// DEBUG: Go Back to Map System
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+	}*/
+
+	if (player.health <= 0) {
+		World_Reset();
+		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
 	}
 
 	// Check if the enemies died
@@ -179,7 +190,10 @@ void Battle_System_Update()
 			}
 		}
 
-		if (!random_enemy_count) CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+		if (!random_enemy_count) {
+			World_UpdateCurrency(original_count_enemy*50);
+			CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
+		}
 
 		// Enemy will damage the player after checking if they are still alive
 		Enemy_Damage_Player(enemies, &player);
@@ -191,6 +205,7 @@ void Battle_System_Update()
 	if (initialize_player) {
 		PlayerStats_ReadFile(&player);
 		initialize_player = 0;
+		total_s_pieces = player.s_mana;
 	}
 
 	// Load Elemental Circuits
@@ -228,15 +243,16 @@ void Battle_System_Update()
 	CP_Image_Draw(background, (float)CP_System_GetWindowWidth()/2.f, (float)CP_System_GetWindowHeight()/2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight(), DEFAULT_ALPHA);
 
 	// Set background dim
-	CP_Settings_Fill(CP_Color_Create(0,0,0,DEFAULT_ALPHA/1.5));
+	CP_Settings_Fill(CP_Color_Create(0,0,0,(int)(DEFAULT_ALPHA/1.5f)));
 	CP_Graphics_DrawRect((float)CP_System_GetWindowWidth() / 2.f, (float)CP_System_GetWindowHeight() / 2.f, (float)CP_System_GetWindowWidth(), (float)CP_System_GetWindowHeight());
 	
 	// Set Grid color to black
 	CP_Settings_Fill(COLOR_BLACK);
 
 	// Draw UI
-	Display_UI(battle_ui, player, original_health);
-	Display_Enemy_Hover(enemies, original_enemy_arr, mouse_position, battle_ui[4]);
+	Display_UI(battle_ui, player, original_health, total_s_pieces);
+
+	Display_Enemy_Hover(enemies, weakness_ui, original_enemy_arr, mouse_position, battle_ui[3]);
 
 	// Draw grid
 	Grid_Display(grid_squares);
@@ -260,7 +276,7 @@ void Battle_System_Update()
 	}
 
 	// Draw Circuit UI
-	Draw_UI_CircuitPiece(circuit_list, circuit_image_corner, CIRCUIT_UI_LIST_SIZE);
+	Draw_UI_CircuitPiece(circuit_list, circuit_image_corner, CIRCUIT_UI_LIST_SIZE, total_s_pieces);
 
 	// Draw Selected Circuit Pieces
 	Draw_SelectedCircuitPieces(circuit_selected_list);
@@ -276,19 +292,15 @@ void Battle_System_Update()
 	if ((IsAreaClicked(battle_ui[1].pos.x, battle_ui[1].pos.y, battle_ui[1].width, battle_ui[1].height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked())) {
 		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
 			Check_Enemy_Hit(enemies,index_used,circuit_selected_list,player);
-			
-			// Delete all circuits chosen and reload elements
-			memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
-			memset(index_used, 0, sizeof(index_used));
-			load_elements = 1;
-			// Randomisze enemy positions again
-			Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
-			printf("Closed Circuit\n");
-			check_if_enemy_died = 1;
 		}
-		else {
-			printf("Opened Circuit\n");
-		}
+		// Delete all circuits chosen and reload elements
+		memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
+		memset(index_used, 0, sizeof(index_used));
+		load_elements = 1;
+		total_s_pieces = player.s_mana;
+		// Randomisze enemy positions again
+		Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
+		check_if_enemy_died = 1;
 	}
 
 	/*--------------------------------------------- END DISPLAY ASSETS --------------------------------------------------------*/
@@ -307,6 +319,9 @@ void Battle_System_Exit()
 	CP_Image_Free(&e_plant_image);
 	CP_Image_Free(&e_vulture_image);
 
+	for (int i = 0; i < UI_COUNT; ++i) {
+		CP_Image_Free(&battle_ui[i].img);
+	}
 	//Change back to true to make sure the pipe elements are shuffled upon re-entering battle-system
 	load_elements = 1;
 	initialize_player = 1;

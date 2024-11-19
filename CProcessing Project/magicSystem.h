@@ -18,7 +18,7 @@ Description: Used to display the UI of Circuit Pieces the player will click and 
 Parameters : CircuitPiece list_of_circuit_pieces[], int size_of_array
 Return	   : void
 */
-void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N);
+void Draw_UI_CircuitPiece(CircuitPiece c[], CP_Image circuit_image_l, int N, int s_count);
 
 /*
 Function   : Draw_SelectedCircuitPieces

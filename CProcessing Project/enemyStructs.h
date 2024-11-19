@@ -49,7 +49,7 @@ Description: Used to check which enemy was attacked
 Parameters : Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player
 Return	   : void
 */
-void Check_Enemy_Hit(Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player);
+void Check_Enemy_Hit(Enemy enemy_arr[ENEMY_COUNT], CP_Vector const index_used[GRID_DIMENSIONS * GRID_DIMENSIONS], CircuitPiece const selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player const player);
 
 /*
 Function   : Enemy_Calculate_Damage

@@ -34,14 +34,14 @@ Parameters :
 - Grass : 0;
 - Water : 1;
 - Fire  : 2;
-- None  : -1;
+- None  : 3;
 */
 // Enum for the enemy elemental weaknesses
 typedef enum ElementType {
-	Element_Grass,
+	Element_Grass = 1,
 	Element_Water,
 	Element_Fire,
-	Element_None,
+	Element_None = 0,
 } ElementType;
 
 /*

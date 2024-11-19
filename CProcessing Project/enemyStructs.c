@@ -9,7 +9,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
     switch (type) {
 
     case E_Wizard:
-        enemy.attack = 10;
+        enemy.attack = 120;
         enemy.weakness = Element_Water;
         enemy.healthbar = 100;
         enemy.resistance = Element_Fire;
@@ -18,7 +18,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         break;
 
     case E_Plant:
-        enemy.attack = 8;
+        enemy.attack = 116;
         enemy.weakness = Element_Fire;
         enemy.healthbar = 80;
         enemy.resistance = Element_Grass;
@@ -27,7 +27,7 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
         break;
 
     case E_Vulture:
-        enemy.attack = 12;
+        enemy.attack = 124;
         enemy.weakness = Element_Grass;
         enemy.healthbar = 90;
         enemy.resistance = Element_Water;
@@ -73,7 +73,7 @@ Description: Used to check which enemy was attacked
 Parameters : Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player
 Return	   : void
 */
-void Check_Enemy_Hit(Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player player) {
+void Check_Enemy_Hit(Enemy enemy_arr[ENEMY_COUNT], CP_Vector const index_used[GRID_DIMENSIONS * GRID_DIMENSIONS], CircuitPiece const selected_pieces[GRID_DIMENSIONS][GRID_DIMENSIONS], Player const player) {
     int i = 0;
     int attack_count = 0;
     //Check which enemy was hit
@@ -99,7 +99,7 @@ void Check_Enemy_Hit(Enemy enemy_arr[3], CP_Vector index_used[], CircuitPiece se
 
     //Calculate the damage
     int index = 0;
-    while (CP_Vector_Length(enemy_hit_arr[index].position)){
+    while (CP_Vector_Length(enemy_hit_arr[index].position) && index < attack_count){
         Enemy_Calculate_Damage(&(enemy_arr[index]), player, circuit_pieces_hit[index], total_num_of_pieces, attack_count);
         index++;
     }
@@ -151,7 +151,7 @@ void Enemy_Calculate_Damage(Enemy* enemy, Player const player, CircuitPiece piec
 
     damage_dealt = (double)player.attack * (double)number_of_pipes/ (double)num_of_enemies_hit * damage_multiplier;
 
-    enemy->healthbar -= (int)damage_dealt;
+    enemy->healthbar -= (float)damage_dealt;
 }
 
 /*
@@ -165,5 +165,5 @@ void Enemy_Damage_Player(Enemy enemy[ENEMY_COUNT], Player* player) {
     for (int i = 0; i < ENEMY_COUNT; ++i) {
         enemy_damage += CP_Random_RangeFloat((float)enemy[i].attack - 5.f, (float)enemy[i].attack);
     }
-    player->health -= enemy_damage * (float)player->defense;
+    player->health -= enemy_damage / (float)player->defense;
 }
