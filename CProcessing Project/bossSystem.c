@@ -7,7 +7,7 @@
 #include "magicSystemUtil.h"
 #include "TEST_playerUtil.h"
 #include "battleSystemUI.h"
-
+#include "battleSystem.h"
 // Variables for Battle System UI
 BattleUI boss_battle_ui[UI_COUNT];
 CP_Image boss_background;
@@ -20,16 +20,16 @@ int enrage = 0;
 BossPart original_bp[GRID_DIMENSIONS * GRID_DIMENSIONS];
 int gate_core_initialize = 1;
 
-//Player object to calculate the damage to be done. Damage taken from a temp file
+//player_boss object to calculate the damage to be done. Damage taken from a temp file
 int initialize_player_b = 1;
-Player player;
+Player player_boss;
 float player_original_health;
 
 /* Circuits--------------------------------------------------------------------------------------------------------------*/
 //Image of the circuit pieces
 CP_Image circuit_image_corner, circuit_image_straight;
 
-//List of all the circuit pieces the player can use
+//List of all the circuit pieces the player_boss can use
 CircuitPiece circuit_list[CIRCUIT_UI_LIST_SIZE];
 
 //Circuit Piece Selected
@@ -128,15 +128,23 @@ void Boss_System_Init()
 	}
 
 	if (initialize_player_b) {
-		PlayerStats_ReadFile(&player);
+		PlayerStats_ReadFile(&player_boss);
 		initialize_player_b = 0;
-		player_original_health = player.health;
-		total_s_pieces = player.s_mana;
+		player_original_health = player_boss.health;
+		total_s_pieces = player_boss.s_mana;
 	}
 }
 
 void Boss_System_Update()
 {
+	//Load player_boss Stats
+	if (initialize_player_b) {
+		PlayerStats_ReadFile(&player_boss);
+		initialize_player_b = 0;
+		total_s_pieces = player_boss.s_mana;
+	}
+
+
 	mouse_position_b = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 	//DEBUG: Go Back to Map System
@@ -144,16 +152,10 @@ void Boss_System_Update()
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 	}*/
 
-	if (enrage >= boss.enrage_time || player.health <=0) {
+	if (enrage >= boss.enrage_time || player_boss.health <=0) {
 		World_Reset();
+		Reset_Initialize(&initialize_player_b);
 		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-	}
-
-	//Load Player Stats
-	if (initialize_player_b) {
-		PlayerStats_ReadFile(&player);
-		initialize_player_b = 0;
-		total_s_pieces = player.s_mana;
 	}
 
 	//Load Elemental Circuits
@@ -192,11 +194,11 @@ void Boss_System_Update()
 		switch (boss.boss_id)
 		{
 		case 1:
-			Gatekeeper_Mechanics(&player, boss, &enrage);
+			Gatekeeper_Mechanics(&player_boss, boss, &enrage);
 			Boss_Randomise_Position(boss.parts, grid_squares, boss.num_of_bp);
 			break;
 		case 2:
-			Gatekeeper_Mechanics(&player, boss, &enrage);
+			Gatekeeper_Mechanics(&player_boss, boss, &enrage);
 			Boss_Randomise_Position(boss.parts, grid_squares, boss.num_of_bp);
 
 			int check_core = 0;
@@ -258,7 +260,7 @@ void Boss_System_Update()
 	Grid_Display(grid_squares);
 
 	// Draw UI
-	Display_UI(boss_battle_ui, player, player_original_health,total_s_pieces);
+	Display_UI(boss_battle_ui, player_boss, player_original_health,total_s_pieces);
 	Display_Boss_Hover(boss, boss_weakness_ui, original_bp, mouse_position_b, boss_battle_ui[3], boss.num_of_bp);
 	//Display_Enemy_Hover(enemies, original_enemy_arr, mouse_position, battle_ui[4]);
 
@@ -277,7 +279,7 @@ void Boss_System_Update()
 	//Draw Selected Circuit Pieces
 	Draw_SelectedCircuitPieces(circuit_selected_list_b);
 
-	//Display Selected Circuit Piece while the player is dragging the piece
+	//Display Selected Circuit Piece while the player_boss is dragging the piece
 	if (selected_circuit_piece_b) {
 		CP_Image_DrawAdvanced(
 			circuit_piece_selected_b.image, mouse_position_b.x, mouse_position_b.y,
@@ -290,13 +292,14 @@ void Boss_System_Update()
 			if (boss.boss_id == 2 && gate_core_initialize) {
 				gate_core_initialize = 0;
 			}
-			else Check_Boss_Hit(boss.parts, index_used_b, circuit_selected_list_b, player, boss.num_of_bp);
-
-			//Delete all circuits chosen and reload elements
-			load_elements_b = 1;
-			memset(circuit_selected_list_b, 0, sizeof(circuit_selected_list_b));
-			memset(index_used_b, 0, sizeof(index_used_b));
+			else Check_Boss_Hit(boss.parts, index_used_b, circuit_selected_list_b, player_boss, boss.num_of_bp);
 		}
+
+		//Delete all circuits chosen and reload elements
+		load_elements_b = 1;
+		memset(circuit_selected_list_b, 0, sizeof(circuit_selected_list_b));
+		memset(index_used_b, 0, sizeof(index_used_b));
+		total_s_pieces = player_boss.s_mana;
 		check_if_boss_died = 1;
 	}
 }

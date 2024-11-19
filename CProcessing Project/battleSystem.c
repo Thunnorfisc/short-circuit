@@ -27,16 +27,16 @@ Enemy original_enemy_arr[ENEMY_COUNT];
 int check_if_enemy_died = 0;
 int original_count_enemy = 0;
 
-// Player object to calculate the damage to be done. Damage taken from a temp file
+// player_battle object to calculate the damage to be done. Damage taken from a temp file
 int initialize_player = 1;
-Player player;
+Player player_battle;
 float original_health;
 
 /*----------------------------------- Circuits -----------------------------------*/
 // Image of the circuit pieces
 CP_Image circuit_image_corner, circuit_image_straight;
 
-// List of all the circuit pieces the player can use
+// List of all the circuit pieces the player_battle can use
 CircuitPiece circuit_list[CIRCUIT_UI_LIST_SIZE];
 
 // Circuit Piece Selected
@@ -141,12 +141,12 @@ void Battle_System_Init()
 		original_enemy_arr[i] = enemies[i];
 	}
 	if (initialize_player) {
-		PlayerStats_ReadFile(&player);
-		original_health = player.health;
+		PlayerStats_ReadFile(&player_battle);
+		original_health = player_battle.health;
 		initialize_player = 0;
 	}
 
-	total_s_pieces = player.s_mana;
+	total_s_pieces = player_battle.s_mana;
 
 }
 
@@ -156,11 +156,18 @@ void Battle_System_Update()
 	mouse_position = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 	// DEBUG: Go Back to Map System
-	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}*/
+	}
+	// Load player_battle Stats
+	if (initialize_player) {
+		PlayerStats_ReadFile(&player_battle);
+		initialize_player = 0;
+		total_s_pieces = player_battle.s_mana;
+	}
 
-	if (player.health <= 0) {
+	if (player_battle.health <= 0) {
+		initialize_player = 1;
 		World_Reset();
 		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
 	}
@@ -195,17 +202,10 @@ void Battle_System_Update()
 			CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 		}
 
-		// Enemy will damage the player after checking if they are still alive
-		Enemy_Damage_Player(enemies, &player);
+		// Enemy will damage the player_battle after checking if they are still alive
+		Enemy_Damage_Player(enemies, &player_battle);
 
 		check_if_enemy_died = 0;
-	}
-
-	// Load Player Stats
-	if (initialize_player) {
-		PlayerStats_ReadFile(&player);
-		initialize_player = 0;
-		total_s_pieces = player.s_mana;
 	}
 
 	// Load Elemental Circuits
@@ -250,7 +250,7 @@ void Battle_System_Update()
 	CP_Settings_Fill(COLOR_BLACK);
 
 	// Draw UI
-	Display_UI(battle_ui, player, original_health, total_s_pieces);
+	Display_UI(battle_ui, player_battle, original_health, total_s_pieces);
 
 	Display_Enemy_Hover(enemies, weakness_ui, original_enemy_arr, mouse_position, battle_ui[3]);
 
@@ -281,7 +281,7 @@ void Battle_System_Update()
 	// Draw Selected Circuit Pieces
 	Draw_SelectedCircuitPieces(circuit_selected_list);
 
-	// Display Selected Circuit Piece while the player is dragging the piece
+	// Display Selected Circuit Piece while the player_battle is dragging the piece
 	if (selected_circuit_piece) {
 		CP_Image_DrawAdvanced(
 			circuit_piece_selected.image, mouse_position.x, mouse_position.y,
@@ -291,13 +291,13 @@ void Battle_System_Update()
 	// Display button for submiting magic system
 	if ((IsAreaClicked(battle_ui[1].pos.x, battle_ui[1].pos.y, battle_ui[1].width, battle_ui[1].height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked())) {
 		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
-			Check_Enemy_Hit(enemies,index_used,circuit_selected_list,player);
+			Check_Enemy_Hit(enemies,index_used,circuit_selected_list,player_battle);
 		}
 		// Delete all circuits chosen and reload elements
 		memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
 		memset(index_used, 0, sizeof(index_used));
 		load_elements = 1;
-		total_s_pieces = player.s_mana;
+		total_s_pieces = player_battle.s_mana;
 		// Randomisze enemy positions again
 		Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
 		check_if_enemy_died = 1;
@@ -327,3 +327,7 @@ void Battle_System_Exit()
 	initialize_player = 1;
 }
 
+void Reset_Initialize(int* boss_initialize) {
+	initialize_player = 1;
+	*boss_initialize = 1;
+}

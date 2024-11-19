@@ -14,3 +14,5 @@ void Battle_System_Init(void);
 void Battle_System_Update(void);
 
 void Battle_System_Exit(void);
+
+void Reset_Initialize(int* boss_initialize);
