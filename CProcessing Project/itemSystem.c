@@ -58,7 +58,7 @@ void ItemEvent_Update(void)
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 
 			CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 			CP_Image_DrawAdvanced(star_effects, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
-				WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.3f, WINDOW_WIDTH * 0.3f, 255, star_effects_rot);
+				WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.3f, WINDOW_WIDTH * 0.3f, 255, star_effects_rot * DELTA_TIME);
 			star_effects_rot -= 5.0f;
 			Draw_Textbox(random_items[i].name, nameSize, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,

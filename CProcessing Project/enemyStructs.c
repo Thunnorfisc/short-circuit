@@ -77,7 +77,7 @@ void Check_Enemy_Hit(Enemy enemy_arr[ENEMY_COUNT], CP_Vector const index_used[GR
     int i = 0;
     int attack_count = 0;
     //Check which enemy was hit
-    Enemy enemy_hit_arr[3] = { 0 };
+    Enemy* enemy_hit_arr[3] = { 0 };
     //CircuitPieces that hit
     CircuitPiece circuit_pieces_hit[3] = { 0 };
     int total_num_of_pieces = 0;
@@ -88,7 +88,7 @@ void Check_Enemy_Hit(Enemy enemy_arr[ENEMY_COUNT], CP_Vector const index_used[GR
             if (CP_Vector_Distance(enemy_arr[j].position, selected_pieces[(int)index_used[i].x - 1][(int)index_used[i].y - 1].position) == 0) {
                 //Calculate the damage on the enemies
                 circuit_pieces_hit[attack_count] = selected_pieces[(int)index_used[i].x - 1][(int)index_used[i].y - 1];
-                enemy_hit_arr[attack_count] = enemy_arr[j];
+                enemy_hit_arr[attack_count] = &(enemy_arr[j]);
                 attack_count++;
                 continue;
             }
@@ -99,8 +99,9 @@ void Check_Enemy_Hit(Enemy enemy_arr[ENEMY_COUNT], CP_Vector const index_used[GR
 
     //Calculate the damage
     int index = 0;
-    while (CP_Vector_Length(enemy_hit_arr[index].position) && index < attack_count){
-        Enemy_Calculate_Damage(&(enemy_arr[index]), player, circuit_pieces_hit[index], total_num_of_pieces, attack_count);
+
+    while (enemy_hit_arr[index] != NULL && index < attack_count){
+        Enemy_Calculate_Damage(enemy_hit_arr[index], player, circuit_pieces_hit[index], total_num_of_pieces, attack_count);
         index++;
     }
 }

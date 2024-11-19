@@ -11,6 +11,10 @@
 // Position ratios for UI elements
 #define UI_CENTER_X         0.5f    // Centered horizontally
 #define UI_CENTER_Y         0.5f    // Centered vertically
+#define FONT_SIZE_LARGE     0.05f
+#define FONT_SIZE_MEDIUM    0.035f
+#define FONT_SIZE_SMALL     0.025f
+#define FONT_SIZE_TINY      0.02f
 
 // Vertical position ratios for main menu UI
 #define UI_TITLE_Y         0.2f
@@ -35,6 +39,7 @@
 #define PAUSE_BUTTON_H    0.1f
 
 int drawPlayerStatus = 0;
+int isFullscreen = 0;
 
 // Structure definitions
 typedef struct {
@@ -98,7 +103,7 @@ PlayerStats playerStats = {
 
 void Main_Menu_Init(void)
 {
-    logo = CP_Image_Load("Assets/DigiPen_Singapore_WEB_RED.png"); //image logo
+    logo = CP_Image_Load("Assets/DigiPen_Singapore_WEB_RED.png");
     CP_Settings_ImageMode(CP_POSITION_CENTER);
 
     if (currentMenuState != MAIN_MENU) {
@@ -106,16 +111,17 @@ void Main_Menu_Init(void)
         currentMenuState = SPLASH_SCREEN;
     }
 
-    CP_Font_Load("Assets/Exo2-Regular.ttf"); //text assets
-    float textSize = 60.0f; // text size
-    CP_Settings_TextSize(textSize); //text size
-    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE); //text alignment
-    CP_Settings_RectMode(CP_POSITION_CENTER); //reactangle alignment
+    CP_Font_Load("Assets/Exo2-Regular.ttf");
+    float windowHeight = (float)CP_System_GetWindowHeight();
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_LARGE); 
+    CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+    CP_Settings_RectMode(CP_POSITION_CENTER);
     LoadGameState();
 }
 
 void Main_Menu_Update(void)
 {
+    Handle_Fullscreen(&isFullscreen);
     switch (currentMenuState) {
     case SPLASH_SCREEN:
         Draw_Splash_Screen();
@@ -137,8 +143,9 @@ static int CurrentCurrency() {
 }// to call in mainmenu
 
 void Display_Currency() {
-
     int currency = CurrentCurrency();
+    float windowHeight = (float)CP_System_GetWindowHeight();
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_SMALL);
     CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
     char text[64];
     sprintf_s(text, sizeof(text), "Currency: %d", currency);
@@ -202,6 +209,8 @@ void HandlePlayerStats() {
     while (CP_Input_KeyDown(KEY_TAB)) {
         drawPlayerStatus = !drawPlayerStatus;
         if (drawPlayerStatus) {
+            float windowHeight = (float)CP_System_GetWindowHeight();
+            CP_Settings_TextSize(windowHeight * FONT_SIZE_MEDIUM);
             CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
             CP_Font_DrawText("Player Status", WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.3f);
 

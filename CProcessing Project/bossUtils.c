@@ -99,7 +99,7 @@ void Check_Boss_Hit(BossPart bp_arr[GRID_DIMENSIONS* GRID_DIMENSIONS], CP_Vector
     //Check which enemy was hit
     BossPart enemy_hit_arr[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
     //CircuitPieces that hit
-    CircuitPiece circuit_pieces_hit[GRID_DIMENSIONS & GRID_DIMENSIONS] = { 0 };
+    CircuitPiece circuit_pieces_hit[GRID_DIMENSIONS * GRID_DIMENSIONS] = { 0 };
     int total_num_of_pieces = 0;
 
     //Count how many enemies were hit, how many pieces were used and which pieces hit

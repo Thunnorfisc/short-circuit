@@ -76,7 +76,7 @@ void Shop_Update(void)
 
 			CP_Image_DrawAdvanced(star_effect, WINDOW_WIDTH_HALF + ((i - half_num_items) * WINDOW_WIDTH_HALF * 0.35f),
 				WINDOW_HEIGHT_HALF,
-				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 255, star_rot);
+				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 255, star_rot * DELTA_TIME);
 			star_rot -= 5.0f;
 
 		}
