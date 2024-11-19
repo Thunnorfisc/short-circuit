@@ -33,6 +33,7 @@ typedef struct BattleUI {
 	float width, height;
 }BattleUI;
 
+extern int Enemy_Hovered;
 /*
 Function   : Display_Enemy_Hover
 Description: Used to display the Enemy Stats by hovering over the Enemy

@@ -5,6 +5,7 @@
 #include "enemyStructs.h"
 #include "TEST_playerUtil.h"
 #include "battleSystemUI.h"
+#include "tutorial.h"
 
 // Variables for Battle System UI
 BattleUI battle_ui[UI_COUNT];
@@ -69,6 +70,9 @@ CP_Vector grid_squares[GRID_DIMENSIONS][GRID_DIMENSIONS];
 // Button Variables
 Button button_submit;
 
+// Various checks
+int Piece_Placed = 0;
+int Spell_Cast = 0;
 
 void Battle_System_Init()
 {	
@@ -148,6 +152,8 @@ void Battle_System_Init()
 
 	total_s_pieces = player_battle.s_mana;
 
+	// Initialize Tutorial
+	Tutorial_SetState(TUTORIAL_BATTLE_START);
 }
 
 void Battle_System_Update()
@@ -219,19 +225,21 @@ void Battle_System_Update()
 	if (CP_Input_MouseDown(MOUSE_BUTTON_1)) {
 
 		//Function to check which circuit piece is selected
-		if (!selected_circuit_piece)
+		if (!selected_circuit_piece) {
 			selected_circuit_piece = Circuit_Piece_Selected(&circuit_piece_selected, circuit_list, mouse_position, &total_s_pieces);
-
+		}
 	}
 	// Check when the mouse is released if the location for release is allowed for the piece
 	else if (CP_Input_MouseReleased(MOUSE_BUTTON_1)) {
 		if (selected_circuit_piece) {
 			if (Grid_Circuit_Drop(circuit_selected_list, grid_squares, circuit_piece_selected, index_used, mouse_position)) {
 				total_s_pieces -= circuit_piece_selected.type == S_Type ? 1 : 0;
+				Piece_Placed = 1;
 			}
 			selected_circuit_piece = 0;
 		}
 	}
+
 	
 	/* ------------------------------------End of check for function when mouse is interacted ----------------------------*/
 
@@ -292,6 +300,7 @@ void Battle_System_Update()
 	if ((IsAreaClicked(battle_ui[1].pos.x, battle_ui[1].pos.y, battle_ui[1].width, battle_ui[1].height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked())) {
 		if (Is_Closed_Circuit(index_used, circuit_selected_list)) {
 			Check_Enemy_Hit(enemies,index_used,circuit_selected_list,player_battle);
+			Spell_Cast = 1;
 		}
 		// Delete all circuits chosen and reload elements
 		memset(circuit_selected_list, 0, sizeof(circuit_selected_list));
@@ -302,7 +311,8 @@ void Battle_System_Update()
 		Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 0);
 		check_if_enemy_died = 1;
 	}
-
+	Tutorial_Update();
+	Tutorial_Draw();
 	/*--------------------------------------------- END DISPLAY ASSETS --------------------------------------------------------*/
 }
 

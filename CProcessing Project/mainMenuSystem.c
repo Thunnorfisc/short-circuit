@@ -5,21 +5,16 @@
 #include "worldSystem.h"
 #include "creditScreen.h"
 
-//#include "button_newgame.h"
-//#include "oldgame.h"
-
 // Position ratios for UI elements
 #define UI_CENTER_X         0.5f    // Centered horizontally
 #define UI_CENTER_Y         0.5f    // Centered vertically
 #define FONT_SIZE_LARGE     0.05f
-#define FONT_SIZE_MEDIUM    0.035f
-#define FONT_SIZE_SMALL     0.025f
 #define FONT_SIZE_TINY      0.02f
 
 // Vertical position ratios for main menu UI
 #define UI_TITLE_Y         0.2f
 #define UI_LOGO_Y          0.5f
-#define UI_COPYRIGHT_Y     0.05f
+#define UI_COPYRIGHT_Y     0.95f
 #define UI_NEWGAME_Y       0.35f
 #define UI_CREDITS_Y       0.65f
 #define UI_EXIT_Y          0.80f
@@ -93,14 +88,6 @@ CP_Image logo;
 MenuState currentMenuState = SPLASH_SCREEN;
 float splashStartTime = 0;
 
-
-PlayerStats playerStats = {
-    .attack_power = 0,
-    .health_points = 0 ,
-    .currency = 100
-};
-
-
 void Main_Menu_Init(void)
 {
     logo = CP_Image_Load("Assets/DigiPen_Singapore_WEB_RED.png");
@@ -111,12 +98,13 @@ void Main_Menu_Init(void)
         currentMenuState = SPLASH_SCREEN;
     }
 
+    // Set text properties
     CP_Font_Load("Assets/Exo2-Regular.ttf");
     float windowHeight = (float)CP_System_GetWindowHeight();
     CP_Settings_TextSize(windowHeight * FONT_SIZE_LARGE); 
     CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
+    
     CP_Settings_RectMode(CP_POSITION_CENTER);
-    LoadGameState();
 }
 
 void Main_Menu_Update(void)
@@ -138,23 +126,6 @@ void Main_Menu_Exit(void)
     CP_Image_Free(&logo);
 }
 
-static int CurrentCurrency() {
-    return playerStats.currency;
-}// to call in mainmenu
-
-void Display_Currency() {
-    int currency = CurrentCurrency();
-    float windowHeight = (float)CP_System_GetWindowHeight();
-    CP_Settings_TextSize(windowHeight * FONT_SIZE_SMALL);
-    CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-    char text[64];
-    sprintf_s(text, sizeof(text), "Currency: %d", currency);
-    CP_Font_DrawText(text,
-        1600.0f * 0.1f,
-        800.0f * 0.1f);
-}
-
-
 void Handle_Pause_Menu(int* MenuOpen)
 {
     // Toggle menu with escape key
@@ -164,8 +135,7 @@ void Handle_Pause_Menu(int* MenuOpen)
 
     // Handle pause menu if open
     if (*MenuOpen) {
-        // Set text size for the title
-        CP_Settings_TextSize(50.0f * WINDOW_RATIO);
+        // Set text colour for the title
         CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 
         // Draw "PAUSED" title
@@ -183,17 +153,7 @@ void Handle_Pause_Menu(int* MenuOpen)
             currentMenuState = MAIN_MENU;  // Set menu state
             CP_Engine_SetNextGameStateForced(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
             *MenuOpen = !*MenuOpen;
-        }
-
-        if (Draw_Button("Save Game",
-            WINDOW_WIDTH * UI_CENTER_X,
-            WINDOW_HEIGHT * PAUSE_SAVE_Y,
-            WINDOW_WIDTH * PAUSE_BUTTON_W,
-            WINDOW_HEIGHT * PAUSE_BUTTON_H)) {
-
-            SaveGameState();
-        }
-
+        }      
         if (Draw_Button("Quit Game",
             WINDOW_WIDTH * UI_CENTER_X,
             WINDOW_HEIGHT * PAUSE_QUIT_Y,
@@ -202,34 +162,6 @@ void Handle_Pause_Menu(int* MenuOpen)
 
             CP_Engine_Terminate();
         }
-    }
-}
-
-void HandlePlayerStats() {
-    while (CP_Input_KeyDown(KEY_TAB)) {
-        drawPlayerStatus = !drawPlayerStatus;
-        if (drawPlayerStatus) {
-            float windowHeight = (float)CP_System_GetWindowHeight();
-            CP_Settings_TextSize(windowHeight * FONT_SIZE_MEDIUM);
-            CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
-            CP_Font_DrawText("Player Status", WINDOW_WIDTH * 0.5f, WINDOW_HEIGHT * 0.3f);
-
-            // Display player stats
-            char text[64];
-            sprintf_s(text, sizeof(text), "Attack Power: %d", playerStats.attack_power);
-            CP_Font_DrawText(text,
-                WINDOW_WIDTH * UI_CENTER_X,
-                WINDOW_HEIGHT * 0.4f);
-            sprintf_s(text, sizeof(text), "Health Points: %d", playerStats.health_points);
-            CP_Font_DrawText(text,
-                WINDOW_WIDTH * UI_CENTER_X,
-                WINDOW_HEIGHT * UI_CENTER_Y);
-            sprintf_s(text, sizeof(text), "Currency: %d", playerStats.currency);
-            CP_Font_DrawText(text,
-                WINDOW_WIDTH * UI_CENTER_X,
-                WINDOW_HEIGHT * 0.6f);
-        }
-        else return;
     }
 }
 
@@ -243,34 +175,6 @@ void Handle_Fullscreen(int* fullscreen) {
         else {
             CP_System_SetWindowSize(1280, 720);
         }
-    }
-}
-
-
-
-void SaveGameState() {
-    FILE* file = fopen("save.txt", "wb");
-
-    if (file != NULL) {
-        // Write player stats to file
-        fwrite(&playerStats.attack_power, sizeof(int), 1, file);
-        fwrite(&playerStats.health_points, sizeof(int), 1, file);
-        fwrite(&playerStats.currency, sizeof(int), 1, file);
-
-        fclose(file);
-    }
-}
-
-void LoadGameState() {
-    FILE* file = fopen("save.txt", "rb");
-
-    if (file != NULL) {
-        // Read player stats from file
-        fread(&playerStats.attack_power, sizeof(int), 1, file);
-        fread(&playerStats.health_points, sizeof(int), 1, file);
-        fread(&playerStats.currency, sizeof(int), 1, file);
-
-        fclose(file);
     }
 }
 
@@ -331,10 +235,6 @@ void Draw_Main_Menu()
     ui.button.button_exit.x = ui.window.width * UI_CENTER_X;
     ui.button.button_exit.y = ui.window.height * UI_EXIT_Y;
 
-    //Display_Currency();
-
-    Draw_Copyright();
-
     CP_Settings_Fill(CP_Color_Create(20, 200, 200, 255));
     CP_Font_DrawText("Short Circuit", ui.title.x, ui.title.y);
 
@@ -354,19 +254,19 @@ void Draw_Main_Menu()
     if (Draw_Button("Quit Game", ui.button.button_exit.x, ui.button.button_exit.y, ui.button.width, ui.button.height)) {
         CP_Engine_Terminate();
     }
+    Draw_Copyright();
 }
 
 void Draw_Copyright(){
     CP_Settings_Fill(COLOR_WHITE(255));
     UI ui = {
         .copyright.x = CP_System_GetWindowWidth() * UI_CENTER_X,
-        .copyright.y = CP_System_GetWindowHeight() * (1 - UI_COPYRIGHT_Y)
+        .copyright.y = CP_System_GetWindowHeight() * UI_COPYRIGHT_Y
     };
 
     CP_Settings_Save();
-
-    CP_Settings_TextSize(20.0f * WINDOW_RATIO);
+    float windowHeight = (float)CP_System_GetWindowHeight();
+    CP_Settings_TextSize(windowHeight * FONT_SIZE_TINY);
     CP_Font_DrawText("All content (c) 2024 DigiPen Institute of Technology Singapore, all rights reserved.", ui.copyright.x, ui.copyright.y);
-
     CP_Settings_Restore();
 }

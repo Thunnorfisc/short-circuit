@@ -67,7 +67,7 @@ typedef struct Button {
 	float height;
 }Button;
 
-//Used to draw buttons
+//For drawing buttons
 int Draw_Button(const char* text, float x, float y, float width, float height);
 int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, float width, float height);
 

@@ -6,6 +6,7 @@ Description: Used to display the Enemy Stats by hovering over the Enemy
 Parameters : Enemy enemies[ENEMY_COUNT], CP_Vector mouse_pos
 Return	   : void
 */
+int Enemy_Hovered = 0;
 void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3], Enemy const original_enemies[ENEMY_COUNT], CP_Vector mouse_pos, BattleUI ui) {
 	float text_size = TEXT_SIZE * WINDOW_RATIO;
 	float hp_width = ui.width - BUFFER * 4 * WINDOW_RATIO;
@@ -40,6 +41,10 @@ void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3],
 				CP_Image_Draw(weakness[enemies[i].resistance - 1], ui.pos.x + WEAKNESS_UI_SIZE/2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
 				CP_Settings_Fill(CP_Color_Create(129, 0, 0, DEFAULT_ALPHA / 2));
 				CP_Graphics_DrawCircle(ui.pos.x + WEAKNESS_UI_SIZE/2.f + 2 * WINDOW_RATIO, y_pos_elements - 2 * WINDOW_RATIO, WEAKNESS_UI_SIZE);
+			}
+
+			if (CP_Input_MouseClicked()) {
+				Enemy_Hovered = 1;
 			}
 			break;
 		}
@@ -178,3 +183,4 @@ void Display_UI(BattleUI ui[UI_COUNT], Player player, float original_health, int
 		CP_Image_Draw(ui[i].img, ui[i].pos.x, ui[i].pos.y, ui[i].width, ui[i].height, DEFAULT_ALPHA);
 	}
 }
+

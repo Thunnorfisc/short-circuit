@@ -9,6 +9,10 @@
 #define E_PLANT_ASSET_ADDR "Assets/e_plant.png"
 #define E_VULTURE_ASSET_ADDR "Assets/e_vulture.png"
 
+//Various Checks
+extern int Piece_Placed;
+extern int Spell_Cast;
+
 void Battle_System_Init(void);
 
 void Battle_System_Update(void);
