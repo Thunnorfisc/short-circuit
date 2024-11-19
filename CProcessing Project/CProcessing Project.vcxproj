@@ -98,38 +98,47 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="battleSystem.c" />
+    <ClCompile Include="battleSystemUI.c" />
+    <ClCompile Include="bossSystem.c" />
+    <ClCompile Include="bossUtils.c" />
     <ClCompile Include="creditsScreen.c" />
     <ClCompile Include="enemyStructs.c" />
     <ClCompile Include="inventorySystem.c" />
+    <ClCompile Include="itemSystem.c" />
     <ClCompile Include="linkedlist.c" />
     <ClCompile Include="magicStructs.c" />
     <ClCompile Include="magicSystem.c" />
     <ClCompile Include="magicSystemUtil.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mainMenuSystem.c" />
+    <ClCompile Include="shopSystem.c" />
+    <ClCompile Include="TEST_playerStruct.c" />
+    <ClCompile Include="TEST_playerUtil.c" />
     <ClCompile Include="worldEvent.c" />
+    <ClCompile Include="worldHelper.c" />
     <ClCompile Include="worldSystem.c" />
     <ClCompile Include="generalUtils.c" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\DigiPen_Singapore_WEB_RED.png" />
-    <Image Include="..\Assets\magic_circuit_L.png" />
-    <Image Include="..\Assets\magic_circuit_S.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\Assets\Exo2-Regular.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="battleSystem.h" />
+    <ClInclude Include="battleSystemUI.h" />
+    <ClInclude Include="bossStruct.h" />
+    <ClInclude Include="bossSystem.h" />
+    <ClInclude Include="bossUtils.h" />
     <ClInclude Include="creditScreen.h" />
     <ClInclude Include="enemyStructs.h" />
     <ClInclude Include="inventorySystem.h" />
+    <ClInclude Include="itemSystem.h" />
     <ClInclude Include="linkedlist.h" />
     <ClInclude Include="magicStructs.h" />
     <ClInclude Include="magicSystem.h" />
     <ClInclude Include="magicSystemUtil.h" />
     <ClInclude Include="mainMenuSystem.h" />
+    <ClInclude Include="shopSystem.h" />
+    <ClInclude Include="TEST_playerStruct.h" />
+    <ClInclude Include="TEST_playerUtil.h" />
     <ClInclude Include="worldEvent.h" />
+    <ClInclude Include="worldHelper.h" />
     <ClInclude Include="worldSystem.h" />
     <ClInclude Include="generalUtils.h" />
   </ItemGroup>

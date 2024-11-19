@@ -1,19 +1,8 @@
 #pragma once
-#include "worldEvent.h"
+#include "worldHelper.h"
+#include "itemSystem.h"
 #include "cprocessing.h"
-
-#define EVENT_NUMBER 20
-
-typedef struct World {
-	int id;
-	int is_generated;
-	EventNode event_list[EVENT_NUMBER];
-} World;
-
-typedef struct WorldMaster {
-	int current_world;
-	int current_event;
-} GameMaster;
+//#define INVENTORY_SIZE 30
 
 void World_Init(void);
 
@@ -27,6 +16,16 @@ void World_Reset();
 
 World World_Generate_Dynamic(int);
 
-World Read_World(int);
+void World_UpdateInventory(Item item);
 
-CP_Color Event_Type_Colour(EventType);
+void World_UpdateCurrency(int amt);
+
+int World_GetCurrency();
+
+void World_PlayerUI();
+
+int World_GetBoss();
+
+CP_Image World_GetCurrencyImage();
+
+void World_SetLoadFlag();

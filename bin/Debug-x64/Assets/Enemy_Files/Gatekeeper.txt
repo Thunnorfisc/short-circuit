@@ -1,0 +1,4 @@
+ID: 0 Health: 150 Initiative: 1 Pos_X: 2 Pos_Y: 2 Resistance(0 - 3): 2 Weakness (0 - 3): 1
+ID: 1 Health: 150 Initiative: 1 Pos_X: 2 Pos_Y: 4 Resistance(0 - 3): 2 Weakness (0 - 3): 3
+ID: 2 Health: 150 Initiative: 1 Pos_X: 4 Pos_Y: 4 Resistance(0 - 3): 3 Weakness (0 - 3): 2
+ID: 3 Health: 150 Initiative: 1 Pos_X: 4 Pos_Y: 2 Resistance(0 - 3): 2 Weakness (0 - 3): 3
