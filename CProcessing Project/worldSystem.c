@@ -14,9 +14,13 @@
 #define OFFSET_X WINDOW_WIDTH/EVENT_BOUND_X
 #define OFFSET_Y WINDOW_HEIGHT/EVENT_BOUND_Y
 
-#define NODE_SCALE 2
+// Re-adjusted scale to fit legend at top right corner
+#define NODE_SCALE 1.5
 #define NODE_RECT_WIDTH (WINDOW_WIDTH / EVENT_NUMBER / 1.6f) * NODE_SCALE
 #define NODE_RECT_HEIGHT (WINDOW_HEIGHT / EVENT_NUMBER / 0.9f) * NODE_SCALE
+
+#define LEGEND_MARGIN_X 150
+#define LEGEND_MARGIN_Y 200
 
 #define NODE_TYPES_NUMBER (NON_SPECIAL_TYPE_END - 1) + (SPECIAL_END - SPECIAL_START - 1)
 
@@ -113,8 +117,9 @@ void World_Update(void)
 	if (!menu_open) {
 		// Render Nodes
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
-			world.event_list[i].location.x = world.event_list[i].bound.x * (((WINDOW_WIDTH - OFFSET_X) - ((EVENT_BOUND_X - 1))) / EVENT_BOUND_X);
-			world.event_list[i].location.y = world.event_list[i].bound.y * (((WINDOW_HEIGHT - OFFSET_Y) - ((EVENT_BOUND_Y - 1))) / EVENT_BOUND_Y);
+			// LEGEND_MARGIN_X & LEGEND_MARGIN_Y to create space for legend (top right)
+			world.event_list[i].location.x = world.event_list[i].bound.x * (((WINDOW_WIDTH - LEGEND_MARGIN_X - OFFSET_X) - ((EVENT_BOUND_X - 1))) / EVENT_BOUND_X);
+			world.event_list[i].location.y = LEGEND_MARGIN_Y + world.event_list[i].bound.y * (((WINDOW_HEIGHT - LEGEND_MARGIN_Y - OFFSET_Y) - ((EVENT_BOUND_Y - 1))) / EVENT_BOUND_Y);
 			CP_Image_Draw(World_SelectBaseNode(i), world.event_list[i].location.x, world.event_list[i].location.y,
 				NODE_RECT_WIDTH, NODE_RECT_HEIGHT, 255);
 			CP_Image_Draw(world.event_list[i].event_sprite, world.event_list[i].location.x, world.event_list[i].location.y,
