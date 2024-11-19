@@ -104,6 +104,9 @@ void World_Update(void)
 	// Handle fullscreen toggle
 	Handle_Fullscreen(&fullscreen);
 
+	// Handle inventory page
+	Handle_Inventory();
+
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 128));
