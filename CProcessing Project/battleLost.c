@@ -11,14 +11,14 @@
 
 
 void BattleLost_Update(void) {
-	CP_Color backgroundColor = CP_Color_Create(235, 232, 232, 255);
+	CP_Color backgroundColor = CP_Color_Create(0, 0, 0, 255);
 	CP_Graphics_ClearBackground(backgroundColor);
 
-	CP_Settings_Fill(COLOR_BLACK);
+	CP_Settings_Fill(CP_Color_Create(20, 200, 200, 255));
 	CP_Settings_TextSize(TEXT_SIZE);
 	CP_Font_DrawText("You Lost!", WINDOW_WIDTH_HALF, WINDOW_HEIGHT_1_5);
 	
-	CP_Color returnMainMenuButton = CP_Color_Create(0, 255, 45, 255);
+	CP_Color returnMainMenuButton = CP_Color_Create(200, 200, 200, 255);
 	CP_Settings_Fill(returnMainMenuButton);
 	CP_Graphics_DrawRect(WINDOW_WIDTH_HALF, WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 1/2.f, WINDOW_HEIGHT * 1 / 8.f);
 
