@@ -19,10 +19,10 @@
 #define NODE_RECT_WIDTH (WINDOW_WIDTH / EVENT_NUMBER / 1.6f) * NODE_SCALE
 #define NODE_RECT_HEIGHT (WINDOW_HEIGHT / EVENT_NUMBER / 0.9f) * NODE_SCALE
 
-#define LEGEND_MARGIN_X 150
-#define LEGEND_MARGIN_Y 200
-
 #define NODE_TYPES_NUMBER (NON_SPECIAL_TYPE_END - 1) + (SPECIAL_END - SPECIAL_START - 1)
+
+// Hover over text length for each node
+#define TYPE_NAME_STR_LEN 150
 
 /* ============= WORLD VARIABLES ============= */
 // General Variables
@@ -35,6 +35,7 @@ WorldMaster master = {
 int next_id = 0;
 int boss_id = 0;
 CP_Image world_bg;
+char type_str[TYPE_NAME_STR_LEN] = {0};
 
 // Inventory Related Variables
 Item item_list[INVENTORY_SIZE] = { 0 };
@@ -78,6 +79,8 @@ int menu_open = 0;
 */
 void World_SwitchScene(EventType type);
 CP_Image World_SelectBaseNode(int event_id);
+CP_Color World_LineColor(int event);
+void World_EventTypeName(char* str, size_t size, EventType type);
 
 /* ============= GAME SCENE FUNCTIONS ============= */
 void World_Init(void)
@@ -117,9 +120,8 @@ void World_Update(void)
 	if (!menu_open) {
 		// Render Nodes
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
-			// LEGEND_MARGIN_X & LEGEND_MARGIN_Y to create space for legend (top right)
-			world.event_list[i].location.x = world.event_list[i].bound.x * (((WINDOW_WIDTH - LEGEND_MARGIN_X - OFFSET_X) - ((EVENT_BOUND_X - 1))) / EVENT_BOUND_X);
-			world.event_list[i].location.y = LEGEND_MARGIN_Y + world.event_list[i].bound.y * (((WINDOW_HEIGHT - LEGEND_MARGIN_Y - OFFSET_Y) - ((EVENT_BOUND_Y - 1))) / EVENT_BOUND_Y);
+			world.event_list[i].location.x = world.event_list[i].bound.x * (((WINDOW_WIDTH - OFFSET_X) - ((EVENT_BOUND_X - 1))) / EVENT_BOUND_X);
+			world.event_list[i].location.y = world.event_list[i].bound.y * (((WINDOW_HEIGHT - OFFSET_Y) - ((EVENT_BOUND_Y - 1))) / EVENT_BOUND_Y);
 			CP_Image_Draw(World_SelectBaseNode(i), world.event_list[i].location.x, world.event_list[i].location.y,
 				NODE_RECT_WIDTH, NODE_RECT_HEIGHT, 255);
 			CP_Image_Draw(world.event_list[i].event_sprite, world.event_list[i].location.x, world.event_list[i].location.y,
@@ -127,7 +129,12 @@ void World_Update(void)
 			for (int j = 0; j < world.event_list[i].next_nodes.length; ++j) {
 				next_id = List_GetAtIndex(world.event_list[i].next_nodes, j);
 				if (next_id <= 0) break;
-				CP_Settings_StrokeWeight(WINDOW_WIDTH / 240.0f);
+				CP_Settings_StrokeWeight(WINDOW_WIDTH / 360.0f);
+
+				// Color the line
+				// Data type is CP_Color
+				CP_Settings_Stroke(World_LineColor(i));
+
 				CP_Graphics_DrawLine(world.event_list[i].location.x + NODE_RECT_WIDTH / 2,
 					world.event_list[i].location.y,
 					world.event_list[next_id - 1].location.x - NODE_RECT_WIDTH / 2,
@@ -136,11 +143,12 @@ void World_Update(void)
 		}
 
 		// Update Player
-		if (CP_Input_MouseClicked()) {
-			for (int i = 0; i < EVENT_NUMBER; ++i) {
-				if (IsAreaClicked(world.event_list[i].location.x, world.event_list[i].location.y,
-					NODE_RECT_WIDTH, NODE_RECT_HEIGHT, CP_Input_GetMouseX(), CP_Input_GetMouseY()))
-				{
+		for (int i = 0; i < EVENT_NUMBER; ++i) {
+			if (IsAreaClicked(world.event_list[i].location.x, world.event_list[i].location.y,
+				NODE_RECT_WIDTH, NODE_RECT_HEIGHT, CP_Input_GetMouseX(), CP_Input_GetMouseY()))
+			{
+				// If mouse if clicked
+				if (CP_Input_MouseClicked()) {
 					for (int j = 0; j < world.event_list[master.current_event].next_nodes.length; ++j) {
 						if (List_GetAtIndex(world.event_list[master.current_event].next_nodes, j) == i + 1) {
 							master.current_event = i;
@@ -150,8 +158,15 @@ void World_Update(void)
 						}
 					}
 				}
+				// If mouse is just hovered
+				World_EventTypeName(type_str, TYPE_NAME_STR_LEN, world.event_list[i].type);
+				Draw_Textbox(type_str, 18.0f * WINDOW_RATIO, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
+					WINDOW_WIDTH * 0.10f, WINDOW_HEIGHT * 0.15f, CP_Color_Create(255, 255, 255, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+				
 			}
 		}
+
+		// 
 		World_PlayerUI();
 	}
 }
@@ -178,6 +193,15 @@ void World_Reset() {
 
 CP_Image World_SelectBaseNode(int event) {
 	return (event == master.current_event) ? selected_node_sprite : base_node_sprite;
+}
+
+CP_Color World_LineColor(int event) {
+	if (event == master.current_event) {
+		return CP_Color_Create(0, 0, 255, 255);
+	}
+	else {
+		return CP_Color_Create(255, 255, 255, 255);
+	}
 }
 
 void World_SwitchScene(EventType type) {
@@ -211,6 +235,28 @@ void World_SwitchScene(EventType type) {
 		break;
 	default:
 		CP_Engine_SetNextGameState(Battle_System_Init, Battle_System_Update, Battle_System_Exit);
+	}
+}
+
+void World_EventTypeName(char* str, size_t size, EventType type) {
+	switch (type) {
+	case BATTLE:
+		strcpy_s(str, size, "You notice shadows in the woods. Investigate?");
+		break;
+	case ITEM:
+		strcpy_s(str, size, "You found a treasure chest! Hooray!");
+		break;
+	case SHOP:
+		strcpy_s(str, size, "You stumble upon a mystical shop! \n Choose wisely...Below 150 jewels will not be entertained!");
+		break;
+	case MIDBOSS_BATTLE:
+		strcpy_s(str, size, "You hear growling and heavy footsteps approaching. \n Will you face it?");
+		break;
+	case BOSS_BATTLE:
+		strcpy_s(str, size, "Danger lies ahead...");
+		break;
+	default:
+		strcpy_s(str, size, "Adventure lies ahead!");
 	}
 }
 

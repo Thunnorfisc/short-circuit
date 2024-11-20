@@ -124,7 +124,7 @@ int Draw_Textbox(const char* text, float textSize, float x, float y,
 	CP_Graphics_DrawRect(x, y, w, h);
 	CP_Settings_TextSize(textSize);
 	CP_Settings_Fill(text_color);
-	if (mode == CP_POSITION_CENTER)  CP_Font_DrawTextBox(text, x - (w / 2), y, w);
+	if (mode == CP_POSITION_CENTER) CP_Font_DrawTextBox(text, x - (w / 2), y, w); 
 	else CP_Font_DrawTextBox(text, x, y + (h/2), w);
 	if (IsAreaClicked(x, y, w, h, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
 		return 1;
