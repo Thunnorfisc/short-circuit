@@ -12,6 +12,7 @@
 #define TUTORIAL_TEXT_SIZE (WINDOW_HEIGHT * 0.025f)
 
 static TutorialState current_state = TUTORIAL_BATTLE_START;
+static int showing_tutorial = 1;
 
 typedef struct {
     const char* message;
@@ -50,13 +51,13 @@ static const TutorialStep tutorial_steps[] = {
         "Left icon shows weakness\n"
         "Right icon (with red overlay) shows resistance\n"
         "Click on the enemy to proceed.",
-        0, // Automatically proceeds when condition met
+        1, 
         Check_Enemy_Hovered
     },
     [TUTORIAL_BATTLE_DRAG_PIECE] = {
         "Click and drag puzzle pieces from below.\n"
         "Elemental pieces (colored) deal extra damage to matching weaknesses!",
-        0,
+        0, // Automatically proceeds when condition met
         Check_Piece_Placed
     },
     [TUTORIAL_BATTLE_CAST_SPELL] = {
