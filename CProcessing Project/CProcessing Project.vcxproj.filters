@@ -62,6 +62,12 @@
     <ClCompile Include="bossSystem.c">
       <Filter>Battle Systems</Filter>
     </ClCompile>
+    <ClCompile Include="battleWon.c">
+      <Filter>Battle Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="battleLost.c">
+      <Filter>Battle Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="battleSystem.h">
@@ -125,6 +131,12 @@
       <Filter>Item System</Filter>
     </ClInclude>
     <ClInclude Include="bossSystem.h">
+      <Filter>Battle Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="battleLost.h">
+      <Filter>Battle Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="battleWon.h">
       <Filter>Battle Systems</Filter>
     </ClInclude>
   </ItemGroup>

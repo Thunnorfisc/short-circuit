@@ -86,7 +86,9 @@ void World_EventTypeName(char* str, size_t size, EventType type);
 void World_Init(void)
 {
 	if (load_world_flag) {
-		World_Load(&world, &master, item_list, &current_inventory_size);
+		if (!World_Load(&world, &master, item_list, &current_inventory_size)) {
+			world = World_Generate_Dynamic(master.current_world);
+		}
 		currency_sprite = CP_Image_Load("Assets/Crystal.png");
 		base_node_sprite = CP_Image_Load("Assets/Node.png");
 		selected_node_sprite = CP_Image_Load("Assets/Selected Node.png");
@@ -160,8 +162,8 @@ void World_Update(void)
 				}
 				// If mouse is just hovered
 				World_EventTypeName(type_str, TYPE_NAME_STR_LEN, world.event_list[i].type);
-				Draw_Textbox(type_str, 18.0f * WINDOW_RATIO, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
-					WINDOW_WIDTH * 0.10f, WINDOW_HEIGHT * 0.15f, CP_Color_Create(255, 255, 255, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+				Draw_TextBoxAdvanced(type_str, 20.0f * WINDOW_RATIO, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
+					WINDOW_WIDTH * 0.10f, WINDOW_HEIGHT * 0.15f, 2.5f/7.f, CP_Color_Create(255, 255, 255, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 				
 			}
 		}
@@ -247,10 +249,10 @@ void World_EventTypeName(char* str, size_t size, EventType type) {
 		strcpy_s(str, size, "You found a treasure chest! Hooray!");
 		break;
 	case SHOP:
-		strcpy_s(str, size, "You stumble upon a mystical shop! \n Choose wisely...Below 150 jewels will not be entertained!");
+		strcpy_s(str, size, "You stumble upon a mystical shop! Choose wisely...Below 150 jewels will not be entertained!");
 		break;
 	case MIDBOSS_BATTLE:
-		strcpy_s(str, size, "You hear growling and heavy footsteps approaching. \n Will you face it?");
+		strcpy_s(str, size, "You hear growling and heavy footsteps approaching. Will you face it?");
 		break;
 	case BOSS_BATTLE:
 		strcpy_s(str, size, "Danger lies ahead...");
@@ -319,4 +321,14 @@ void World_PlayerUI()
 		WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
 	sprintf_s(currency_str, (unsigned int)sizeof currency_str, "%d", master.currency);
 	CP_Font_DrawText(currency_str, WINDOW_WIDTH - WINDOW_WIDTH / 36.0f , WINDOW_HEIGHT / 36.0f);
+}
+
+// To reset 
+// boss id when player die/ player wins the game
+// currency back to base 150
+void ResetGame() {
+	boss_id = 0;
+	master.currency = 150;
+	remove("Assets/world.txt");
+	World_Reset();
 }

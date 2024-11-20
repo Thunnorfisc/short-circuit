@@ -170,3 +170,19 @@ int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, f
 	}
 	return 0;
 }
+
+int Draw_TextBoxAdvanced(const char* text, float textSize, float x, float y,
+	float w, float h, float y_scale, CP_Color box_color, CP_Color text_color,
+	CP_POSITION_MODE mode) {
+	CP_Settings_RectMode(mode);
+	CP_Settings_Fill(box_color);
+	CP_Graphics_DrawRect(x, y, w, h);
+	CP_Settings_TextSize(textSize);
+	CP_Settings_Fill(text_color);
+	if (mode == CP_POSITION_CENTER) CP_Font_DrawTextBox(text, x - (w / 2), y, w);
+	else CP_Font_DrawTextBox(text, x, y + y_scale * h, w);
+	if (IsAreaClicked(x, y, w, h, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+		return 1;
+	}
+	return 0;
+}

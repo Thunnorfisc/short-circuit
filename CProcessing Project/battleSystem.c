@@ -5,6 +5,9 @@
 #include "enemyStructs.h"
 #include "TEST_playerUtil.h"
 #include "battleSystemUI.h"
+#include "battleLost.h"
+#include "itemSystem.h"
+
 
 // Variables for Battle System UI
 BattleUI battle_ui[UI_COUNT];
@@ -15,6 +18,9 @@ CP_Image circuit_ui;
 // Variables to generate enemies
 int random_enemy_count = 0;
 CP_Image enemy_image = { 0 };
+
+// Store string to show element of each pipe to be shown when hovering over
+const char* element_type[4] = {"This is a base circuit", "This is a grass element", "This is a water element", "This is a fire element"};
 
 // Define images for each enemy type
 CP_Image e_wizard_image;
@@ -119,6 +125,9 @@ void Battle_System_Init()
 			i, j, i, GRID_CELL_SIZE, S_Type);
 	}
 
+	
+	
+
 	// Initialize the button for submit
 	button_submit.width = 128 * 2;
 	button_submit.height = 64;
@@ -154,6 +163,47 @@ void Battle_System_Update()
 {
 	//Set Mouse position
 	mouse_position = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
+	float circuit_piece_x = CIRCUIT_UI_X;
+	float circuit_piece_y = CIRCUIT_UI_Y;
+
+	// To calculate the starting x,y position of the circuit background image
+	float starting_position_circuit_background = circuit_piece_x - (GRID_CELL_SIZE * 3.5f);
+	// Get x value difference
+	float x_difference = CP_Input_GetMouseX() - starting_position_circuit_background;
+	// Get y value difference
+	float y_difference = circuit_piece_y  - CP_Input_GetMouseY();
+	// To absolute negative y value difference and return positive value
+	y_difference = (y_difference < 0) ? -y_difference : y_difference;
+	
+	// Check if mouse is hovering over the circuit background UIs
+	if ((x_difference > 0.f && x_difference < GRID_CELL_SIZE * 7.f) && (y_difference < GRID_CELL_SIZE / 2.0F)) {
+		// x_difference is from starting position of the circuit background image to the mouse's x y position divded by each grid size
+		// To get the index
+		int index = (int) (x_difference / GRID_CELL_SIZE);
+		// How the index is stored in circuit_list is the opposite
+		//index 0 of circuit_list == index 3 of current array
+		if (index <= 3) {
+			index = 3 - index;
+			CircuitPiece CP = circuit_list[index];
+			// To debug and ensure it is the correct string showing
+			//printf("string %s\n", element_type[CP.element]);
+			Draw_TextBoxAdvanced(element_type[CP.element], 20.0f * WINDOW_RATIO, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
+				WINDOW_WIDTH * 0.10f, WINDOW_HEIGHT * 0.15f, 2.5f / 7.f, CP_Color_Create(255, 255, 255, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+			CP_Settings_RectMode(CP_POSITION_CENTER);
+		}
+		// circuit background image have a total of 6 indexes
+		// circuit_list have a total of 5 indexes
+		// Remaining of 2 indexes (5, 6)
+		// Example: current index is 5
+		// index - 1 = index 4 of circuit_list
+		if (index > 4) {
+			index = index - 1;
+			CircuitPiece CP = circuit_list[index];
+			// To debug and ensure it is the correct string showing
+			//printf("string %s\n", element_type[CP.element]);
+			
+		}
+	}
 
 	// DEBUG: Go Back to Map System
 	if (CP_Input_KeyDown(KEY_ESCAPE)) {
@@ -168,8 +218,8 @@ void Battle_System_Update()
 
 	if (player_battle.health <= 0) {
 		initialize_player = 1;
-		World_Reset();
-		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
+		// Go to battleLost screen when player health is lesser than or equal to 0
+		CP_Engine_SetNextGameState(BattleLost_Initialize, BattleLost_Update, BattleLost_Exit);
 	}
 
 	// Check if the enemies died
