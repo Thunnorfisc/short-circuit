@@ -5,11 +5,29 @@
 #include "battleSystem.h"
 #include "battleSystemUI.h"
 
-#define TUTORIAL_BOX_WIDTH (WINDOW_WIDTH * 0.25f)
-#define TUTORIAL_BOX_HEIGHT (WINDOW_HEIGHT * 0.1f)
-#define TUTORIAL_BOX_X (WINDOW_WIDTH * 0.15f)
-#define TUTORIAL_BOX_Y (WINDOW_HEIGHT * 0.1f)
-#define TUTORIAL_TEXT_SIZE (WINDOW_HEIGHT * 0.025f)
+#define TUTORIAL_BOX_WIDTH     (WINDOW_WIDTH * 0.25f)
+#define TUTORIAL_BOX_HEIGHT    (WINDOW_HEIGHT * 0.1f)
+#define TUTORIAL_BOX_X         (WINDOW_WIDTH * 0.15f)
+#define TUTORIAL_BOX_Y         (WINDOW_HEIGHT * 0.1f)
+#define TUTORIAL_TEXT_SIZE     (WINDOW_HEIGHT * 0.025f)
+
+#define TUTORIAL_BOX_Y_MULT    1.7f
+#define TUTORIAL_BOX_H_MULT    2.5f
+#define TUTORIAL_TEXT_X_MULT   0.25f
+#define TUTORIAL_TEXT_Y_MULT   0.7f
+#define TUTORIAL_TEXT_PADDING  20
+
+typedef enum {
+    RED_BOX_R = 255,
+    RED_BOX_G = 0,
+    RED_BOX_B = 0,
+    RED_BOX_ALPHA = 180,
+
+    TEXT_R = 255,
+    TEXT_G = 255,
+    TEXT_B = 255,
+    TEXT_ALPHA = 255
+} TutorialColors;
 
 static TutorialState current_state = TUTORIAL_BATTLE_START;
 static int showing_tutorial = 1;
@@ -51,7 +69,7 @@ static const TutorialStep tutorial_steps[] = {
         "Left icon shows weakness\n"
         "Right icon (with red overlay) shows resistance\n"
         "Click on the enemy to proceed.",
-        1, 
+        0, 
         Check_Enemy_Hovered
     },
     [TUTORIAL_BATTLE_DRAG_PIECE] = {
@@ -89,24 +107,24 @@ void Tutorial_Update(void) {
 void Tutorial_Draw(void) {
     if (!showing_tutorial) return;
 
-    // Draw semi-transparent black box
-    CP_Settings_Fill(CP_Color_Create(255, 0, 0, 180));
+    // Draw semi-transparent red box
+    CP_Settings_Fill(CP_Color_Create(RED_BOX_R, RED_BOX_G, RED_BOX_B, RED_BOX_ALPHA));
     CP_Graphics_DrawRect(
         TUTORIAL_BOX_X,
-        TUTORIAL_BOX_Y * 1.7f,
+        TUTORIAL_BOX_Y * TUTORIAL_BOX_Y_MULT,
         TUTORIAL_BOX_WIDTH,
-        TUTORIAL_BOX_HEIGHT * 2.5f
+        TUTORIAL_BOX_HEIGHT * TUTORIAL_BOX_H_MULT
     );
 
     // Draw tutorial text
     CP_Settings_TextSize(TUTORIAL_TEXT_SIZE);
-    CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+    CP_Settings_Fill(CP_Color_Create(TEXT_R, TEXT_G, TEXT_B, TEXT_ALPHA));
     if (tutorial_steps[current_state].message) {
         CP_Font_DrawTextBox(
             tutorial_steps[current_state].message,
-            TUTORIAL_BOX_X * 0.25f,
-            TUTORIAL_BOX_Y * 0.7f,
-            TUTORIAL_BOX_WIDTH - 20
+            TUTORIAL_BOX_X * TUTORIAL_TEXT_X_MULT,
+            TUTORIAL_BOX_Y * TUTORIAL_TEXT_Y_MULT,
+            TUTORIAL_BOX_WIDTH - TUTORIAL_TEXT_PADDING
         );
     }
 }
