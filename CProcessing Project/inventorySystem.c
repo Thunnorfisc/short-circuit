@@ -11,10 +11,10 @@
 CP_Font exo2;
 char buffer[50] = { 0 };
 Item item_list[INVENTORY_SIZE];
-Player player;
-
+Player player_inv;
+const char* Type_Of_Items[] = { "Health Points","Mana","Attack","Defense","Fire Critical Damage","Water Critical Damage","Grass Critical Damage" };
 int current_inventory_size;
-float centrex, centrey, name_y, stat_y, font_size, pstat_x, pstat_y, health_y, mana_y, defence_y, fire_y, water_y, grass_y, attack_y,rect_x, rect_y, text_x, num_x, rect_width, image_x, iname_x, image_y, image_width, image_height, init_image_y, idesc_x;
+float centrex, centrey, name_y, stat_y, font_size, pstat_x, pstat_y, health_y, mana_y, defence_y, fire_y, water_y, grass_y, attack_y,rect_x, rect_y, text_x, num_x, rect_width, image_x, iname_x, image_y, image_width, image_height, init_image_y, idesc_x, item_x, itype_x;
 
 
 void Inventory_Init(void) {
@@ -42,10 +42,13 @@ void Inventory_Init(void) {
 	rect_width = centrex*0.7f;
 	image_x = WINDOW_WIDTH / 64.0f;
 	iname_x = WINDOW_WIDTH / 30.0f;
-	idesc_x = centrex * 0.4f;
+	idesc_x = centrex * 0.45f;
+	item_x = centrex * 0.01f;
 	image_width = WINDOW_HEIGHT / 24.0f;
 	image_height = image_width;
 	init_image_y = WINDOW_HEIGHT / 10.0f;
+	PlayerStats_ReadFile(&player_inv);
+
 }
 
 void Inventory_Update(void) {
@@ -68,30 +71,30 @@ void Inventory_Update(void) {
 	CP_Font_DrawText("Fire Critial Damage:", pstat_x, fire_y);
 	CP_Font_DrawText("Water Critial Damage:", pstat_x, water_y);
 	CP_Font_DrawText("Grass Critial Damage:", pstat_x, grass_y);
-
-	sprintf_s(buffer, 50, "%.3f", player.health);
+	sprintf_s(buffer, 50, "%.2f", player_inv.health);
 	CP_Font_DrawText(buffer, num_x, health_y);
-	sprintf_s(buffer, 50, "%.3lf", player.defense);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.defense);
 	CP_Font_DrawText(buffer, num_x, defence_y);
-	sprintf_s(buffer, 50, "%d", player.s_mana);
+	sprintf_s(buffer, 50, "%d", player_inv.s_mana);
 	CP_Font_DrawText(buffer, num_x, mana_y);
-	sprintf_s(buffer, 50, "%.3lf", player.fire_crit);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.fire_crit);
 	CP_Font_DrawText(buffer, num_x, fire_y);
-	sprintf_s(buffer, 50, "%.3lf", player.water_crit);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.water_crit);
 	CP_Font_DrawText(buffer, num_x, water_y);
-	sprintf_s(buffer, 50, "%.3lf", player.grass_crit);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.grass_crit);
 	CP_Font_DrawText(buffer, num_x, grass_y);
-	sprintf_s(buffer, 50, "%d", player.attack);
+	sprintf_s(buffer, 50, "%d", player_inv.attack);
 	CP_Font_DrawText(buffer, num_x, attack_y);
-	CP_Font_DrawText("Items:", 0, rect_y);
+	CP_Font_DrawText("Items:", item_x, rect_y);
 
 	float imgSize = 128;
 	for (int i = 0; i < current_inventory_size; ++i) {
 		CP_Image_Draw(item_list[i].image, image_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)), image_width, image_height, 255);
-		CP_Font_DrawText(item_list[i].name, iname_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)));
-		sprintf_s(buffer, 50, "%c + %.3lf",item_list[i].type, item_list[i].modifier);
 
+		CP_Font_DrawText(item_list[i].name, iname_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)));
+		sprintf_s(buffer, 50, "+%.2lf %s", item_list[i].modifier, Type_Of_Items[(int)item_list[i].type]);
 		CP_Font_DrawText(buffer, idesc_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)));
+
 	}
 }
 

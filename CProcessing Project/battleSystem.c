@@ -131,7 +131,10 @@ void Battle_System_Init()
 
 	// Randomly generate the number of enemies to be spawned
 	random_enemy_count = CP_Random_RangeInt(1, ENEMY_COUNT);
-	printf("Number of enemies to be generated: %d\n", random_enemy_count);
+	
+	
+	
+	("Number of enemies to be generated: %d\n", random_enemy_count);
 
 	// Randomly generate unique enemy positions
 	Enemy_Initialize_Array(enemies, grid_squares, random_enemy_count, 1);

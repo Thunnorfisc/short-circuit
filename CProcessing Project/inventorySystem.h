@@ -9,7 +9,6 @@
 #define MOUSEY CP_Input_GetMouseY()
 #define CLICKED CP_Input_MouseClicked()
 
-
 void Inventory_Init(void);
 
 void Inventory_Update(void);
