@@ -3,43 +3,52 @@
 #include "inventorySystem.h"
 #include "generalUtils.h"	
 #include "worldSystem.h"
+#include "TEST_playerUtil.h"
+#include "itemSystem.h"
+
+
 
 CP_Font exo2;
-Inventory inventory = { 0 };
 char buffer[50] = { 0 };
-float centrex, centrey, swordb_y, shieldb_y, emptyb_y, sword2b_y, shield2b_y, button_width, button_height, inv_x, name_y, stat_y, pstat_x, font_size;
+Item item_list[INVENTORY_SIZE];
+Player player_inv;
+const char* Type_Of_Items[] = { "Health Points","Mana","Attack","Defense","Fire Critical Damage","Water Critical Damage","Grass Critical Damage" };
+int current_inventory_size;
+float centrex, centrey, name_y, stat_y, font_size, pstat_x, pstat_y, health_y, mana_y, defence_y, fire_y, water_y, grass_y, attack_y,rect_x, rect_y, text_x, num_x, rect_width, image_x, iname_x, image_y, image_width, image_height, init_image_y, idesc_x, item_x, itype_x;
 
-typedef struct pst {
-	int attack_power;
-	int health_points;
-	int currency;
-} pst;
-
-pst ps = {
-	.attack_power = 0,
-	.health_points = 0 ,
-	.currency = 100
-};
 
 void Inventory_Init(void) {
+	// Font settings
+	font_size = (float)(WINDOW_HEIGHT / 24);
+	exo2 = CP_Font_Load(FONT_ASSET_ADDR);
+	CP_Font_Set(exo2);
+	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_LEFT, CP_TEXT_ALIGN_V_MIDDLE);
+	CP_Settings_TextSize(font_size);
 	// Initialising ui  
 	centrex = WINDOW_WIDTH_HALF;
 	centrey = WINDOW_HEIGHT_HALF;
-	emptyb_y = WINDOW_HEIGHT_HALF * 0.2f;
-	swordb_y = WINDOW_HEIGHT_HALF * 0.5f;
-	shieldb_y = WINDOW_HEIGHT_HALF * 0.8f;
-	sword2b_y = WINDOW_HEIGHT_HALF * 1.1f;
-	shield2b_y = WINDOW_HEIGHT_HALF * 1.4f;
-	button_width = WINDOW_WIDTH * 0.3f;
-	button_height = WINDOW_HEIGHT * 0.1f;
-	inv_x = WINDOW_WIDTH_HALF * 0.5f;
-	pstat_x = WINDOW_WIDTH_HALF * 1.5f;
-	font_size = WINDOW_HEIGHT_HALF * 0.05f;
-	// Font settings
-	exo2 = CP_Font_Load(FONT_ASSET_ADDR);
-	CP_Font_Set(exo2);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Settings_TextSize(font_size);
+	pstat_x = centrex * 1.2f;
+	pstat_y = centrey * 0.10f;
+	health_y = centrey * 0.17f;
+	mana_y = centrey * 0.24f;
+	defence_y = centrey * 0.31f;
+	fire_y = centrey * 0.38f;
+	water_y = centrey * 0.45f;
+	grass_y = centrey * 0.52f;
+	attack_y = centrey * 0.59f;
+	rect_x = centrex * 1.18f;
+	rect_y = centrey * 0.06f;
+	num_x = centrex * 1.6f;
+	rect_width = centrex*0.7f;
+	image_x = WINDOW_WIDTH / 64.0f;
+	iname_x = WINDOW_WIDTH / 30.0f;
+	idesc_x = centrex * 0.45f;
+	item_x = centrex * 0.01f;
+	image_width = WINDOW_HEIGHT / 24.0f;
+	image_height = image_width;
+	init_image_y = WINDOW_HEIGHT / 10.0f;
+	PlayerStats_ReadFile(&player_inv);
+
 }
 
 void Inventory_Update(void) {
@@ -49,91 +58,52 @@ void Inventory_Update(void) {
 	}
     // Clear the background
     CP_Graphics_ClearBackground(BACKGROUND_COLOR);
-	// Draw the buttons
-	CP_Settings_Fill(COLOR_RED);
-	CP_Graphics_DrawRect(centrex, emptyb_y, button_width, button_height);
-	CP_Graphics_DrawRect(centrex, shieldb_y, button_width, button_height);
-	CP_Graphics_DrawRect(centrex, swordb_y, button_width, button_height);
-	CP_Settings_Fill(COLOR_BLACK);
-	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
-	CP_Font_DrawText("Empty", centrex, emptyb_y);
-	CP_Font_DrawText("Add Sword", centrex, swordb_y);
-	CP_Font_DrawText("Add Shield", centrex, shieldb_y);
-	// Button actions
-	if (IsAreaClicked(centrex, emptyb_y, button_width, button_height, MOUSEX, MOUSEY) && CLICKED) {
-		for (int i = 0; i < array_count(inventory.slots); ++i) {
-			inventory = Empty_Inventory_Slot(inventory, i);
-			inventory = Empty_Inventory_Slot(inventory, i);
-			ps.attack_power = 0;
-			ps.health_points = 0;
-		}
-		
-	}
-	if (IsAreaClicked(centrex, swordb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
-		inventory = Add_Sword_To_Inventory(inventory, 0);
-		ps.attack_power += inventory.slots->sword.attack;
+	CP_Settings_Fill(COLOR_BLUE);
+	CP_Settings_RectMode(CP_POSITION_CORNER);
+	CP_Graphics_DrawRect(rect_x,rect_y,rect_width,attack_y);
+	// Display player stats
+	CP_Settings_Fill(COLOR_WHITE(255));
+	CP_Font_DrawText("Player Stats:", pstat_x, pstat_y);
+	CP_Font_DrawText("Health:", pstat_x, health_y);
+	CP_Font_DrawText("Defence:", pstat_x, defence_y);
+	CP_Font_DrawText("Mana:", pstat_x, mana_y);
+	CP_Font_DrawText("Attack:", pstat_x, attack_y);
+	CP_Font_DrawText("Fire Critial Damage:", pstat_x, fire_y);
+	CP_Font_DrawText("Water Critial Damage:", pstat_x, water_y);
+	CP_Font_DrawText("Grass Critial Damage:", pstat_x, grass_y);
+	sprintf_s(buffer, 50, "%.2f", player_inv.health);
+	CP_Font_DrawText(buffer, num_x, health_y);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.defense);
+	CP_Font_DrawText(buffer, num_x, defence_y);
+	sprintf_s(buffer, 50, "%d", player_inv.s_mana);
+	CP_Font_DrawText(buffer, num_x, mana_y);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.fire_crit);
+	CP_Font_DrawText(buffer, num_x, fire_y);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.water_crit);
+	CP_Font_DrawText(buffer, num_x, water_y);
+	sprintf_s(buffer, 50, "%.2lf", player_inv.grass_crit);
+	CP_Font_DrawText(buffer, num_x, grass_y);
+	sprintf_s(buffer, 50, "%d", player_inv.attack);
+	CP_Font_DrawText(buffer, num_x, attack_y);
+	CP_Font_DrawText("Items:", item_x, rect_y);
+
+	float imgSize = 128;
+	for (int i = 0; i < current_inventory_size; ++i) {
+		CP_Image_Draw(item_list[i].image, image_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)), image_width, image_height, 255);
+
+		CP_Font_DrawText(item_list[i].name, iname_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)));
+		sprintf_s(buffer, 50, "+%.2lf %s", item_list[i].modifier, Type_Of_Items[(int)item_list[i].type]);
+		CP_Font_DrawText(buffer, idesc_x, init_image_y + (i * (WINDOW_WIDTH / 32.0f)));
 
 	}
-	if (IsAreaClicked(centrex, shieldb_y, button_width, button_height, CP_Input_GetMouseX(), CP_Input_GetMouseY()) && CP_Input_MouseClicked()) {
-		inventory = Add_Shield_To_Inventory(inventory, 1);
-		ps.health_points += inventory.slots->shield.hp;
-	}
-	
-	// Display player stats
-	CP_Settings_Fill(COLOR_RED);
-	CP_Font_DrawText("Player Stats:", pstat_x, emptyb_y);
-	sprintf_s(buffer, 50, "Attack: %d", ps.attack_power);
-	CP_Font_DrawText(buffer, pstat_x, swordb_y);
-	sprintf_s(buffer, 50, "Health: %d", ps.health_points);
-	CP_Font_DrawText(buffer, pstat_x, shieldb_y);
-	// Display the inventory
-	Print_Inventory(inventory);
-	
 }
 
 void Inventory_Exit(void) {
-
+	
 }
 
-// check if inventory is full, if not full add item to inventory
-Inventory Add_Sword_To_Inventory(Inventory inventory, int where) {
-	if (where < array_count(inventory.slots)) {
-		inventory.slots[where].type = InventoryTYPE_SWORD;
-		inventory.slots[where].sword.attack = 10;
-	}
-	return inventory;
-}
-
-Inventory Add_Shield_To_Inventory(Inventory inventory, int where) {
-	if (where < array_count(inventory.slots)) {
-		inventory.slots[where].type = InventoryTYPE_SHIELD;
-		inventory.slots[where].shield.hp = 10;
-	}
-	return inventory;
-}
-
-Inventory Empty_Inventory_Slot(Inventory inventory, int where) {
-	if (where < array_count(inventory.slots)) {
-		inventory.slots[where].type = InventoryTYPE_EMPTY;
-	}
-	return inventory;
-}
-// Run through inventory slots, check if item is in inventory and print the item if it is in inventory
-void Print_Inventory(Inventory inventory) {
-	for (int i = 0; i < array_count(inventory.slots); ++i) {
-		name_y = (i + 0.5f) * 160.0f;
-		stat_y = (i + 1) * 160.0f;
-		switch (inventory.slots[i].type) {
-		case InventoryTYPE_SWORD:
-			CP_Font_DrawText("Sword", inv_x, name_y);
-			sprintf_s(buffer, 50, "Attack: %d", inventory.slots[i].sword.attack);
-			CP_Font_DrawText(buffer, inv_x, stat_y);
-			break;
-		case InventoryTYPE_SHIELD:
-			CP_Font_DrawText("Shield", inv_x, name_y);
-			sprintf_s(buffer, 50, "Health: %d", inventory.slots[i].shield.hp);
-			CP_Font_DrawText(buffer, inv_x, stat_y);
-			break;
-		}
+void Handle_Inventory(void) {
+	if (CP_Input_KeyTriggered(KEY_TAB)) {
+		CP_Engine_SetNextGameStateForced(Inventory_Init, Inventory_Update, Inventory_Exit);
 	}
 }

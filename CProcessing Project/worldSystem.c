@@ -104,6 +104,9 @@ void World_Update(void)
 	// Handle fullscreen toggle
 	Handle_Fullscreen(&fullscreen);
 
+	// Handle Inventory Screen
+	Handle_Inventory();
+
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 128));
@@ -134,7 +137,7 @@ void World_Update(void)
 		if (CP_Input_MouseClicked()) {
 			for (int i = 0; i < EVENT_NUMBER; ++i) {
 				if (IsAreaClicked(world.event_list[i].location.x, world.event_list[i].location.y,
-					NODE_RECT_WIDTH, NODE_RECT_HEIGHT, CP_Input_GetMouseX(), CP_Input_GetMouseY()))
+					NODE_RECT_WIDTH, NODE_RECT_HEIGHT, CP_Input_GetMouseX(), CP_Input_GetMouseY()) )
 				{
 					for (int j = 0; j < world.event_list[master.current_event].next_nodes.length; ++j) {
 						if (List_GetAtIndex(world.event_list[master.current_event].next_nodes, j) == i + 1) {
@@ -147,6 +150,11 @@ void World_Update(void)
 				}
 			}
 		}
+		// Update Player
+		if (CP_Input_KeyTriggered(KEY_TAB)) {
+				PlayerStats_Calculate(item_list, player);	
+		}
+		
 		World_PlayerUI();
 	}
 }
