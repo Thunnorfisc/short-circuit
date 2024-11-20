@@ -73,16 +73,19 @@ static const TutorialStep tutorial_steps[] = {
         Check_Enemy_Hovered
     },
     [TUTORIAL_BATTLE_DRAG_PIECE] = {
-        "Click and drag puzzle pieces from below.\n"
+        "Click and drag puzzle pieces from below\n"
+        "and drop them into the grid.\n"
+        "Dropped pieces cannot be recovered.\n"
         "Elemental pieces (colored) deal extra damage to matching weaknesses!",
         0, // Automatically proceeds when condition met
         Check_Piece_Placed
     },
     [TUTORIAL_BATTLE_CAST_SPELL] = {
         "Create a complete loop using \n"
-        "puzzle pieces to deal damage to the enemy\n"
-        "Click 'Cast' to end turn\n"
-        "Defeat the enemy to earn currency.",
+        "puzzle pieces to deal damage to the enemy.\n"
+        "Click 'Cast' to end turn.\n"
+        "Defeat the enemy to earn currency.\n"
+        "You can press 'tab' after the battle to view your inventory.",
         0,
         Check_Spell_Cast
     },
