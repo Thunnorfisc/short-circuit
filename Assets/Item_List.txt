@@ -5,7 +5,7 @@
 5, Ablazed Necklace, 4, 1.25, Increases critical multiplier for fire elemental type attacks.| 250
 6, Briny Bracelet, 5, 1.25, Increases critical multiplier for water elemental type attacks.| 250
 7, Overgrown Stick,6,1.25, Increases critical multiplier for grass elemental type attacks.| 250
-8, Morellonomicon, 2, 2.0, Increases base attack greatly. | 300
+8, Morellonomicon, 2, 20.0, Increases base attack greatly. | 300
 9, Fimbulwinter, 0, 300.0, Increases base health greatly.| 300
 10, Hellfire Torch, 4, 2.5, Increases critical multiplier for fire elemental type attacks greatly.| 500
 11, Magical Stick, 6,1.25, Increases critical multiplier for grass elemental type attacks greatly.| 500
