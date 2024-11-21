@@ -9,6 +9,7 @@
 #include "bossSystem.h"
 #include "worldHelper.h"
 #include "shopSystem.h"
+#include "cprocessing.h"
 #include "TEST_playerUtil.h"
 
 #define OFFSET_X WINDOW_WIDTH/EVENT_BOUND_X
@@ -238,7 +239,7 @@ void World_SwitchScene(EventType type) {
 		CP_Image_Free(&base_node_sprite);
 		CP_Image_Free(&selected_node_sprite);
 		++master.current_world;
-		++boss_id;
+		boss_id = 2;
 		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	default:
