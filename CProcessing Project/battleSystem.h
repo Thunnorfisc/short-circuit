@@ -1,6 +1,8 @@
 #pragma once
 #include "generalUtils.h"
 #include "enemyStructs.h"
+#include "worldSystem.h"
+#include "itemSystem.h"
 
 #define E_MAGE_ASSET_ADDR "Assets/e_mage.png"
 

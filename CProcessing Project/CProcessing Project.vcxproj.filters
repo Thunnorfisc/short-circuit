@@ -63,6 +63,10 @@
       <Filter>Battle Systems</Filter>
     </ClCompile>
     <ClCompile Include="tutorial.c">
+    <ClCompile Include="battleWon.c">
+      <Filter>Battle Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="battleLost.c">
       <Filter>Battle Systems</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,6 +135,10 @@
       <Filter>Battle Systems</Filter>
     </ClInclude>
     <ClInclude Include="tutorial.h">
+    <ClInclude Include="battleLost.h">
+      <Filter>Battle Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="battleWon.h">
       <Filter>Battle Systems</Filter>
     </ClInclude>
   </ItemGroup>

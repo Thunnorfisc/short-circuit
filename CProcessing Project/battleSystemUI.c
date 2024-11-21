@@ -26,7 +26,8 @@ void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3],
 					//Display Health of Enemy Stats
 					CP_Settings_Fill(HP_COLOR);
 					CP_Settings_RectMode(CP_POSITION_CORNER);
-					CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2 * WINDOW_RATIO, ui.pos.y, hp_width * enemies[i].healthbar / original_enemies[j].healthbar, hp_height);
+					// scaled healthbar
+					CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2 * WINDOW_RATIO, ui.pos.y - 30.0f * WINDOW_RATIO, hp_width * enemies[i].healthbar / original_enemies[j].healthbar, hp_height);
 					break;
 				}
 			}
@@ -35,12 +36,26 @@ void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3],
 			//draw enemy data
 			float y_pos_elements = ui.pos.y + ui.height / 2 - WEAKNESS_UI_SIZE/2.f - BUFFER * WINDOW_RATIO;
 
-			if (enemies[i].weakness != 0) CP_Image_Draw(weakness[enemies[i].weakness - 1], ui.pos.x - WEAKNESS_UI_SIZE/2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
+			if (enemies[i].weakness != 0) {
+				CP_Image_Draw(weakness[enemies[i].weakness - 1], ui.pos.x - WEAKNESS_UI_SIZE / 2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
+				// Hard coded - need to be changed
+				CP_Image crit_weakness_img;
+				crit_weakness_img = CP_Image_Load(CRIT_WEAKNESS);
+				CP_Image_Draw(crit_weakness_img, ui.pos.x - WEAKNESS_UI_SIZE - 0.25f / 2.f, y_pos_elements - 20.f, WEAKNESS_UI_SIZE * 0.5f, WEAKNESS_UI_SIZE * 0.5f, DEFAULT_ALPHA);
+			}
+			
+			// Draw weakness text
+			CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+			CP_Settings_TextSize(text_size - 30.f * WINDOW_RATIO);
+			CP_Font_DrawText("Weakness", ui.pos.x - WEAKNESS_UI_SIZE / 2.f, y_pos_elements - 80.f * WINDOW_RATIO);
+
+			// Draw resistance text
+			CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+			CP_Settings_TextSize(text_size - 30.f * WINDOW_RATIO);
+			CP_Font_DrawText("Resistance", ui.pos.x + WEAKNESS_UI_SIZE / 2.f, y_pos_elements - 80.f * WINDOW_RATIO);
 
 			if (enemies[i].resistance != 0) {
 				CP_Image_Draw(weakness[enemies[i].resistance - 1], ui.pos.x + WEAKNESS_UI_SIZE/2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
-				CP_Settings_Fill(CP_Color_Create(129, 0, 0, DEFAULT_ALPHA / 2));
-				CP_Graphics_DrawCircle(ui.pos.x + WEAKNESS_UI_SIZE/2.f + 2 * WINDOW_RATIO, y_pos_elements - 2 * WINDOW_RATIO, WEAKNESS_UI_SIZE);
 			}
 
 			if (CP_Input_MouseClicked()) {
@@ -68,18 +83,33 @@ void Display_Boss_Hover(Boss boss, CP_Image const weakness[3], BossPart const or
 			//Display Health of Enemy
 			CP_Settings_Fill(HP_COLOR);
 			CP_Settings_RectMode(CP_POSITION_CORNER);
-			CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2.f * WINDOW_RATIO, ui.pos.y, hp_width * boss.parts[i].healthbar / original_bp[boss.parts[i].id].healthbar, hp_height);
+			// Scaled healthbar
+			CP_Graphics_DrawRect(ui.pos.x - ui.width / 2.f + BUFFER * 2.f * WINDOW_RATIO, ui.pos.y - 30.0f * WINDOW_RATIO, hp_width * boss.parts[i].healthbar / original_bp[boss.parts[i].id].healthbar, hp_height);
 			CP_Settings_RectMode(CP_POSITION_CENTER);
 			
 			//Draw Boss Weakness
 			float y_pos_elements = ui.pos.y + ui.height / 2 - WEAKNESS_UI_SIZE/2.f - BUFFER * WINDOW_RATIO;
-			if(boss.parts[i].weakness != 0) CP_Image_Draw(weakness[boss.parts[i].weakness - 1], ui.pos.x - WEAKNESS_UI_SIZE / 2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
+			if (boss.parts[i].weakness != 0){
+				CP_Image_Draw(weakness[boss.parts[i].weakness - 1], ui.pos.x - WEAKNESS_UI_SIZE / 2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
+				
+				// Hard coded - need to be changed
+				CP_Image crit_weakness_img;
+				crit_weakness_img = CP_Image_Load(CRIT_WEAKNESS);
+				CP_Image_Draw(crit_weakness_img, ui.pos.x - WEAKNESS_UI_SIZE - 0.25f / 2.f, y_pos_elements - 20.f, WEAKNESS_UI_SIZE * 0.5f, WEAKNESS_UI_SIZE * 0.5f, DEFAULT_ALPHA);
+
+				// Draw weakness text
+				CP_Settings_Fill(CP_Color_Create(255, 0, 0, 255));
+				CP_Settings_TextSize(text_size - 30.f * WINDOW_RATIO);
+				CP_Font_DrawText("Weakness", ui.pos.x - WEAKNESS_UI_SIZE / 2.f, y_pos_elements - 80.f * WINDOW_RATIO);
+			};
 
 			//Draw Boss Resistance
 			if (boss.parts[i].resistance != 0) {
+				// Draw resistance text
+				CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
+				CP_Settings_TextSize(text_size - 30.f * WINDOW_RATIO);
+				CP_Font_DrawText("Resistance", ui.pos.x + WEAKNESS_UI_SIZE / 2.f, y_pos_elements - 80.f * WINDOW_RATIO);
 				CP_Image_Draw(weakness[boss.parts[i].resistance - 1], ui.pos.x + WEAKNESS_UI_SIZE/2.f, y_pos_elements, WEAKNESS_UI_SIZE, WEAKNESS_UI_SIZE, DEFAULT_ALPHA);
-				CP_Settings_Fill(CP_Color_Create(129,0,0,DEFAULT_ALPHA/2));
-				CP_Graphics_DrawCircle(ui.pos.x + WEAKNESS_UI_SIZE/2.f + 2 * WINDOW_RATIO, y_pos_elements - 2 * WINDOW_RATIO, WEAKNESS_UI_SIZE);
 			}
 			break;
 		}
@@ -173,10 +203,15 @@ void Display_UI(BattleUI ui[UI_COUNT], Player player, float original_health, int
 	CP_Settings_Fill(COLOR_WHITE(124));
 	CP_Graphics_DrawRect(ui[2].pos.x, ui[2].pos.y, ui[2].width, ui[2].height);
 
-	char s_count_str[3];
-	sprintf_s(s_count_str,sizeof(s_count_str),"x%d",s_count);
+	// To display count of straight pipes
+	char s_count_str[40];
+	sprintf_s(s_count_str,sizeof(s_count_str),"(Vertical/Horizontal): %d Left",s_count);
 	CP_Settings_Fill(COLOR_WHITE(255));
-	CP_Font_DrawText(s_count_str, ui[2].pos.x + ui[2].width/2 + BUFFER * 3 * WINDOW_RATIO, ui[2].pos.y);
+	// Hardcode first
+	int straight_text_y_pos = ui[2].pos.y - 80.0f * WINDOW_RATIO;
+	int straight_text_x_pos = ui[2].pos.x - 150.0f * WINDOW_RATIO;
+	CP_Settings_TextSize(text_size - 38.0f * WINDOW_RATIO);
+	CP_Font_DrawText(s_count_str, straight_text_x_pos + ui[2].width/2 + BUFFER * 3 * WINDOW_RATIO, straight_text_y_pos);
 
 	for (int i = 0; i < UI_COUNT - 1; ++i) {
 		if (ui[i].width == 0) break;

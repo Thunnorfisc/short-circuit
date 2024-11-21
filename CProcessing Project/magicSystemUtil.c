@@ -236,7 +236,7 @@ Parameters : void
 Return	   : float (new size of the cell)
 */
 float Calculate_Cell_Size() {
-	float original_cell_size = 128;
+	float original_cell_size = 128.f;
 	return (WINDOW_RATIO * original_cell_size);
 }
 

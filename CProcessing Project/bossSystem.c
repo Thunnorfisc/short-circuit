@@ -8,6 +8,8 @@
 #include "TEST_playerUtil.h"
 #include "battleSystemUI.h"
 #include "battleSystem.h"
+#include "battleLost.h"
+#include "battleWon.h"
 // Variables for Battle System UI
 BattleUI boss_battle_ui[UI_COUNT];
 CP_Image boss_background;
@@ -152,16 +154,18 @@ void Boss_System_Update()
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 	}*/
 
-	if (enrage >= boss.enrage_time || player_boss.health <=0) {
-		World_Reset();
-		Reset_Initialize(&initialize_player_b);
-		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-	}
 
 	//Load Elemental Circuits
 	if (load_elements_b) {
 		Set_Elemental_Circuits(circuit_list, elemental_circuit_images);
 		load_elements_b = 0;
+	}
+
+	// Check if player's health is lesser than or equal to 0 or when player did not manage to clear enrage round that is set within the file
+	if (enrage >= boss.enrage_time || player_boss.health <= 0) {
+		initialize_player_b = 1;
+		// Go to battleLost screen when player die
+		CP_Engine_SetNextGameState(BattleLost_Initialize, BattleLost_Update, BattleLost_Exit);
 	}
 
 	//Check if the enemies died
@@ -217,7 +221,14 @@ void Boss_System_Update()
 		default:
 			break;
 		}
-		if (!boss.num_of_bp) {
+
+		// Check if it is the main boss as main boss ID is 2
+		// Also check if number of boss body part is equal to zero
+		if ((boss.boss_id % 2 == 0) && (boss.num_of_bp == 0)) {
+			CP_Engine_SetNextGameState(BattleWon_Initialize, BattleWon_Update, BattleWon_Exit);
+		}
+
+		else if (!boss.num_of_bp) {
 			World_UpdateCurrency(250);
 			CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
 		}

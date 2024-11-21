@@ -80,6 +80,7 @@ World World_Generate_Dynamic(int world_number) {
 		if (event.bound.x == EVENT_BOUND_X && ++special_bound) event.type = BOSS_BATTLE;
 		else if (event.bound.x == (int)(EVENT_BOUND_X / 2) && ++special_bound) event.type = MIDBOSS_BATTLE;
 		else if (event.bound.x == 1 && ++special_bound) event.type = STARTING_NODE;
+		else if (event.bound.x == 2 && ++special_bound) event.type = BATTLE;
 		else event.type = World_GetRandom_EventType(type_map);
 		event.event_sprite = World_SetNodeSprite(event.type);
 		// printf_s("ID: %d, Type: %d, [%d,%d]\n", event.id, event.type, (int)event.bound.x, (int)event.bound.y);
@@ -92,7 +93,7 @@ World World_Generate_Dynamic(int world_number) {
 	printf("\nAVERAGE: %ud\n", avg_events_per_bound);
 	// More events for regular bounds
 	for (int bound = 1; bound <= EVENT_BOUND_X; ++bound) {
-		if (bound == EVENT_BOUND_X || bound == (int)(EVENT_BOUND_X / 2) || bound == 1) continue;
+		if (bound == EVENT_BOUND_X || bound == (int)(EVENT_BOUND_X / 2) || bound == 1 || bound == 2) continue;
 		extra_events = avg_events_per_bound + CP_Random_RangeInt(MIN_EXTRA_BOUND_EVENTS, MAX_EXTRA_BOUND_EVENTS);
 		extra_events = extra_events > total_events ? total_events : extra_events;
 		extra_events = ((bound == EVENT_BOUND_X - 1) && (total_events > extra_events)) ? total_events : extra_events;
@@ -178,7 +179,7 @@ World World_Generate_Dynamic(int world_number) {
 				}
 				break;
 		}
-		if (x == EVENT_BOUND_X || x == (int)(EVENT_BOUND_X / 2) || x == 1) continue;
+		if (x == EVENT_BOUND_X || x == (int)(EVENT_BOUND_X / 2) || x == 1 || x == 2) continue;
 		if (world.event_list[i].next_nodes.length == 0) {
 			if (adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 0)) {
 				world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
@@ -324,7 +325,7 @@ void World_Save(World world, WorldMaster master, Item* item_list, int item_list_
 	fclose(file);
 }
 
-void World_Load(World* world, WorldMaster* master, Item* item_list, int *item_list_size)
+int World_Load(World* world, WorldMaster* master, Item* item_list, int *item_list_size)
 {
 	char end = 0;
 	int node = 0;
@@ -334,7 +335,7 @@ void World_Load(World* world, WorldMaster* master, Item* item_list, int *item_li
 	FILE* file;
 	if (fopen_s(&file, world_addr, "r") != 0) {
 		printf("Failed to open world file\n");
-		return;
+		return 0;
 	};
 	// Put in general player information
 	fscanf_s(file, " World: %d, Node: %d, Money: %d\n", &master->current_world, &master->current_event, &master->currency);
@@ -371,6 +372,7 @@ void World_Load(World* world, WorldMaster* master, Item* item_list, int *item_li
 	printf_s("Succcesful Reading");
 	world->is_generated = 1;
 	fclose(file);
+	return 1;
 }
 
 /* ============= HELPER FUNCTIONS ============= */

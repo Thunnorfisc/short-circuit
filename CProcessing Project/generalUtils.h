@@ -33,6 +33,12 @@ NOTE!!! Do not edit these names or values without consulting the team
 //Use to get the half the width of the window
 #define WINDOW_WIDTH_HALF (float)WINDOW_WIDTH / 2.f
 
+//Use to get 1/5 of the height of the window
+#define WINDOW_HEIGHT_1_5 (float)WINDOW_HEIGHT * 1/5.f
+
+//Use to get 1/5 of the height of the window
+#define WINDOW_WIDTH_1_5 (float)WINDOW_WIDTH * 1/5.f
+
 //Use to get the ratio of the asset display
 #define WINDOW_RATIO (float)WINDOW_HEIGHT / 1080.f
 
@@ -87,3 +93,7 @@ if(IsAreaClicked){ ... }
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y);
 
 int Exist_In_Array(void* const value_to_check, void* const array, TYPES_OF_ARRAYS type_of_array, int size_of_array);
+
+int Draw_TextBoxAdvanced(const char* text, float textSize, float x, float y,
+	float w, float h, float y_scale, CP_Color box_color, CP_Color text_color,
+	CP_POSITION_MODE mode);
