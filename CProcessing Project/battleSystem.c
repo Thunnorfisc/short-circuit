@@ -206,9 +206,9 @@ void Battle_System_Update()
 	}
 
 	// DEBUG: Go Back to Map System
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}
+	}*/
 	// Load player_battle Stats
 	if (initialize_player) {
 		PlayerStats_ReadFile(&player_battle);

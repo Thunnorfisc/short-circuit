@@ -150,24 +150,19 @@ void Boss_System_Update()
 	mouse_position_b = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 	//DEBUG: Go Back to Map System
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}
+	}*/
 
-	if (enrage >= boss.enrage_time || player_boss.health <=0) {
-		World_Reset();
-		Reset_Initialize(&initialize_player_b);
-		CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
-	}
 
 	//Load Elemental Circuits
 	if (load_elements_b) {
 		Set_Elemental_Circuits(circuit_list, elemental_circuit_images);
 		load_elements_b = 0;
 	}
-	// TO CHECK WITH JASON
-	// Check if player's health is lesser than or equal to 0
-	if (player_boss.health <= 0) {
+
+	// Check if player's health is lesser than or equal to 0 or when player did not manage to clear enrage round that is set within the file
+	if (enrage >= boss.enrage_time || player_boss.health <= 0) {
 		initialize_player_b = 1;
 		// Go to battleLost screen when player die
 		CP_Engine_SetNextGameState(BattleLost_Initialize, BattleLost_Update, BattleLost_Exit);
