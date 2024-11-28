@@ -1,3 +1,15 @@
+/*
+@file creditScreen.c
+@author Lim Yan De (l.yande)
+@course CSD1401
+@section b
+@Project Short Circuit Game
+@date 26/11/2024
+@brief Implements the credits screen functionality for the Short Circuit game.
+This file manages the display of game credits, including team members,
+instructors, and special acknowledgments. It handles the rendering of
+credit categories, animations, and navigation back to the main menu.
+*/
 #include "creditScreen.h"
 #include "cprocessing.h"
 #include "mainMenuSystem.h"

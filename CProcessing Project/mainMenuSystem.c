@@ -1,3 +1,16 @@
+/*
+@file mainMenuSystem.c
+@author Lim Yan De (l.yande)
+@course CSD1401
+@section b
+@Project Short Circuit Game
+@date 26/11/2024
+@brief This file implements the main menu system and pause menu functionality for
+the Short Circuit game. It handles the splash screen, main menu interface,
+pause menu controls, and transitions between different game states. The file
+manages UI elements like buttons, logo display, copyright information, and
+screen transitions while providing fullscreen toggle capability.
+*/
 #include <stdio.h>
 #include "cprocessing.h"
 #include "mainMenuSystem.h"

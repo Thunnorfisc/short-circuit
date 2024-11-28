@@ -74,7 +74,29 @@ typedef struct Button {
 }Button;
 
 //For drawing buttons
+/*
+@author Lim Yan De (l.yande)
+@brief Creates an interactive button with text.
+@param text - const char* specifying the button label text
+@param x - float specifying the x-coordinate of button center
+@param y - float specifying the y-coordinate of button center
+@param width - float specifying the button width
+@param height - float specifying the button height
+@return int - returns 1 if button was clicked, 0 otherwise
+*/
 int Draw_Button(const char* text, float x, float y, float width, float height);
+
+/*
+@author Lim Yan De (l.yande)
+@brief Creates an interactive button with both image and text.
+@param image - CP_Image specifying the button background image
+@param text - const char* specifying the button label text
+@param x - float specifying the x-coordinate of button center
+@param y - float specifying the y-coordinate of button center
+@param width - float specifying the button width
+@param height - float specifying the button height
+@return int - returns 1 if button was clicked, 0 otherwise
+*/
 int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, float width, float height);
 
 /*
