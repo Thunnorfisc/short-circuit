@@ -128,15 +128,18 @@ int Exist_In_Array(void* const value_to_check,void* const array, TYPES_OF_ARRAYS
 	return 0;
 }
 
-//this function is used to draw a button - yande
+//this function is used to draw a button using rectangle - yande
 int Draw_Button(const char* text, float x, float y, float width, float height)
 {	
 	CP_Settings_Save();
 
 	CP_Settings_TextAlignment(CP_TEXT_ALIGN_H_CENTER, CP_TEXT_ALIGN_V_MIDDLE);
 
+	// Draw rectangle
 	CP_Settings_Fill(CP_Color_Create(200, 200, 200, 255));
 	CP_Graphics_DrawRect(x, y, width, height);
+
+	// Draw text
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 255));
 	CP_Font_DrawText(text, x, y);
 
@@ -147,12 +150,14 @@ int Draw_Button(const char* text, float x, float y, float width, float height)
 	float click_y = CP_Input_GetMouseY();
 
 	if (IsAreaClicked(x, y, width, height, click_x, click_y) && CP_Input_MouseClicked()) {
+		//small changes apply to the reactangle to make it look like it is clicked
 		CP_Graphics_DrawRect(x, y, width - 10, height - 10);
 		return 1;
 	}
 	return 0;
 }
 
+//this function is used to draw a button using an image - yande
 int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, float width, float height) {
 	CP_Settings_Save();
 
@@ -173,12 +178,14 @@ int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, f
 	float click_y = CP_Input_GetMouseY();
 
 	if (IsAreaClicked(x, y, width, height, click_x, click_y) && CP_Input_MouseClicked()) {
+		//small changes apply to the image to make it look like it is clicked
 		CP_Image_DrawAdvanced(image, x, y, width-10, height-10, 255, 0.0f);
 		return 1;
 	}
 	return 0;
 }
 
+// This is to draw a hover over textbox with padding slightly ajusted to fit the words to be centered in the textbox
 int Draw_TextBoxAdvanced(const char* text, float textSize, float x, float y,
 	float w, float h, float y_scale, CP_Color box_color, CP_Color text_color,
 	CP_POSITION_MODE mode) {

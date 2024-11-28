@@ -1,6 +1,7 @@
 /*
 File: bossSystem.h
 Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub-Author: KELLY CHIANG KAR YAN (chiang.k)
 Description:
 This file contains the define values and the decalaration of the runtim functions for the battle system:
  - void Battle_System_Init;

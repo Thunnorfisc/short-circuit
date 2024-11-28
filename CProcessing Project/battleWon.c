@@ -1,3 +1,12 @@
+/*!
+@file battleWon.c
+@author KELLY CHIANG KAR YAN (chiang.k)
+@course CSD1401
+@section B
+@brief
+This battleWon.c file handle the "Battle Won" state in the game, managing what happens when the player wins a battle.
+*/
+
 #include <stdio.h>
 #include "worldSystem.h"
 #include "battleLost.h"

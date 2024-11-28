@@ -46,10 +46,9 @@ screen transitions while providing fullscreen toggle capability.
 #define PAUSE_BUTTON_W    0.3f
 #define PAUSE_BUTTON_H    0.1f
 
-int drawPlayerStatus = 0;
 int isFullscreen = 0;
 
-// Structure definitions
+// Structure definitions for UI elements
 typedef struct {
     struct {
         float width;
@@ -92,6 +91,7 @@ typedef struct {
     } button;
 } UI;
 
+// Setup for menu states
 typedef enum {
     SPLASH_SCREEN,
     MAIN_MENU
@@ -139,6 +139,7 @@ void Main_Menu_Exit(void)
     CP_Image_Free(&logo);
 }
 
+// Handles the pause menu when pressing ESC while in game
 void Handle_Pause_Menu(int* MenuOpen)
 {
     // Toggle menu with escape key
@@ -178,6 +179,7 @@ void Handle_Pause_Menu(int* MenuOpen)
     }
 }
 
+// Handles fullscreen toggle
 void Handle_Fullscreen(int* fullscreen) {
     if (CP_Input_KeyTriggered(KEY_F)) {
         *fullscreen = !(*fullscreen);
@@ -191,6 +193,7 @@ void Handle_Fullscreen(int* fullscreen) {
     }
 }
 
+// Draws the splash screen
 void Draw_Splash_Screen()
 {
     CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
@@ -221,6 +224,7 @@ void Draw_Splash_Screen()
     }
 }
 
+//Draws the main menu
 void Draw_Main_Menu()
 {
     CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
@@ -270,6 +274,7 @@ void Draw_Main_Menu()
     Draw_Copyright();
 }
 
+//Prints the copyright text
 void Draw_Copyright(){
     CP_Settings_Fill(COLOR_WHITE(255));
     UI ui = {

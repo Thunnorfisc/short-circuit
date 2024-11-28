@@ -1,6 +1,7 @@
 /*
 File: bossSystemUI.h
 Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub-Author: KELLY CHIANG KAR YAN (chiang.k)
 Description:
 This file contains the define values and declaration of the functions for the creation of the battle system UI:
  - void Display_Enemy_Hover
