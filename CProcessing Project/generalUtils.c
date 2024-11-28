@@ -53,9 +53,16 @@ int AreCirclesIntersecting(float c1_x, float c1_y, float r1, float c2_x, float c
 	return 0;
 }
 
+/*
+Function   : Exist_In_Array
+Description: Used to determine if a value exists in the array that is passed through to the function
+Parameters : void* const value_to_check,void* const array, TYPES_OF_ARRAYS type_of_array, int size_of_array
+Return	   : int (true/false if it exists)
+*/
 int Exist_In_Array(void* const value_to_check,void* const array, TYPES_OF_ARRAYS type_of_array, int size_of_array) {
 	switch (type_of_array)
 	{
+	//Check Int Array
 	case(1):
 	{
 		//Write code to check if variables exist in int array
@@ -84,6 +91,7 @@ int Exist_In_Array(void* const value_to_check,void* const array, TYPES_OF_ARRAYS
 		return 0;
 		break;
 	}
+	//Check CP_Vector Array
 	case(4):	
 	{
 		//Write code to check if variables exist in CP_Vector array
@@ -99,7 +107,8 @@ int Exist_In_Array(void* const value_to_check,void* const array, TYPES_OF_ARRAYS
 		return 0;
 		break;
 	}
-	case(5):	
+	// Check CircuitPiece Array
+	case(5): 
 	{
 		//Write code to check if variables exist is CircuitPiece array
 		CircuitPiece* array_casted = (CircuitPiece*)array;

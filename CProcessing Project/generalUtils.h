@@ -49,6 +49,7 @@ NOTE!!! Do not edit these names or values without consulting the team
 //Used to get the delta time of the program
 #define DELTA_TIME CP_System_GetDt()
 /*
+Enum to contain the arrays that can be used to check with Exist_In_Array Function
 A_INT = 1,
 A_FLOAT = 2,
 A_DOUBLE = 3,
@@ -114,6 +115,12 @@ if(IsAreaClicked){ ... }
 */
 int IsAreaClicked(float area_center_x, float area_center_y, float area_width, float area_height, float click_x, float click_y);
 
+/*
+Function   : Exist_In_Array
+Description: Used to determine if a value exists in the array that is passed through to the function
+Parameters : void* const value_to_check,void* const array, TYPES_OF_ARRAYS type_of_array, int size_of_array
+Return	   : int (true/false if it exists)
+*/
 int Exist_In_Array(void* const value_to_check, void* const array, TYPES_OF_ARRAYS type_of_array, int size_of_array);
 
 int Draw_TextBoxAdvanced(const char* text, float textSize, float x, float y,

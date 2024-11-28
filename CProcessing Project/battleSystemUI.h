@@ -1,3 +1,15 @@
+/*
+File: bossSystemUI.h
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Description:
+This file contains the define values and declaration of the functions for the creation of the battle system UI:
+ - void Display_Enemy_Hover
+ - void Display_Boss_Hover
+ - BattleUI UI_Component_Create
+ - void UI_Initialize
+ - void Display_UI
+*/
+
 #pragma once
 #include "TEST_playerStruct.h"
 #include "enemyStructs.h"
@@ -44,10 +56,34 @@ Return	   : void
 */
 void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3], Enemy const original_enemies[ENEMY_COUNT], CP_Vector mouse_pos, BattleUI ui);
 
+/*
+Function   : Display_Boss_Hover
+Description: sed to display the Boss Part Stats by hovering over the Boss Part
+Parameters : Boss boss, CP_Image const weakness[3], BossPart const original_bp[], CP_Vector mouse_pos, BattleUI ui, int count
+Return	   : BattleUI
+*/
 void Display_Boss_Hover(Boss boss, CP_Image const weakness[3], BossPart const original_bp[], CP_Vector mouse_pos, BattleUI ui, int count);
 
+/*
+Function   : UI_Component_Create
+Description: Initialize each UI Components
+Parameters : CP_Image img, CP_Vector pos, float width, float height
+Return	   : BattleUI
+*/
 BattleUI UI_Component_Create(CP_Image img, CP_Vector pos, float width, float height);
 
+/*
+Function   : UI_Initialize
+Description: Initialize all UI Components
+Parameters : BattleUI ui[UI_COUNT]
+Return	   : void
+*/
 void UI_Initialize(BattleUI ui[UI_COUNT]);
 
+/*
+Function   : Display_UI
+Description: Display all UI Components
+Parameters : BattleUI const ui[UI_COUNT], Player player, float original_health
+Return	   : void
+*/
 void Display_UI(BattleUI ui[UI_COUNT], Player player, float original_health, int s_count);

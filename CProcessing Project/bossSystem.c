@@ -1,3 +1,14 @@
+/*
+File: bossSystem.c
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Description:
+This file contains the definition runtime functions for the Boss System that will display everything related to the boss fight
+ - void Boss_System_Init
+ - void Boss_System_Update
+ - void Boss_System_Exit
+*/
+
+//Header files for the bossSystem
 #include <stdio.h>
 #include "worldSystem.h"
 #include "bossSystem.h"
@@ -10,24 +21,25 @@
 #include "battleSystem.h"
 #include "battleLost.h"
 #include "battleWon.h"
+
 // Variables for Battle System UI
 BattleUI boss_battle_ui[UI_COUNT];
 CP_Image boss_background;
 CP_Image boss_weakness_ui[3];
 
-// an array of Enemy structures called enemies with a size of ENEMY_COUNT
+// An array of Enemy structures called enemies with a size of ENEMY_COUNT
 Boss boss;
 int check_if_boss_died = 0;
 int enrage = 0;
 BossPart original_bp[GRID_DIMENSIONS * GRID_DIMENSIONS];
 int gate_core_initialize = 1;
 
-//player_boss object to calculate the damage to be done. Damage taken from a temp file
+// Player_boss object to calculate the damage to be done. Damage taken from a temp file
 int initialize_player_b = 1;
 Player player_boss;
 float player_original_health;
 
-/* Circuits--------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------- Setting Variables for Circuits -----------------------------------------------------*/
 //Image of the circuit pieces
 CP_Image circuit_image_corner, circuit_image_straight;
 
@@ -56,14 +68,13 @@ CP_Image elemental_circuit_images[4];
 
 //bool to check if the elemental pipes have been shuffled for the current turn
 int load_elements_b = 1;
-/*-------------------------------------------------------------------------------------------------------------------------*/
+/*----------------------------------------------- END Setting Variables for Circuits -----------------------------------------------------*/
 
 //Grids that will be used to display the enemy
 CP_Vector grid_squares[GRID_DIMENSIONS][GRID_DIMENSIONS];
 
 //Button Variables
 Button button_submit;
-
 
 void Boss_System_Init()
 {
