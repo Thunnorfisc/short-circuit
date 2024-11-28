@@ -1,3 +1,13 @@
+/*!
+@file battleSystemUI.c
+@author JASON (jasonjunhao.teo)
+@sub-author KELLY CHIANG KAR YAN (chiang.k)
+@course CSD1401
+@section B
+@brief
+This battleSystemUI.c file contains the implementation of the user interfaces in battle system.
+*/
+
 #include "battleSystemUI.h"
 #include "generalUtils.h"
 /*

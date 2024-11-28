@@ -1,3 +1,13 @@
+/*!
+@file enemyStructs.c
+@author JASON (jasonjunhao.teo)
+@sub-author KELLY CHIANG KAR YAN (chiang.k)
+@course CSD1401
+@section B
+@brief
+This enemyStructs.c handles the initialization and management of enemy entities in the game
+*/
+
 #include "enemyStructs.h"
 #include <stdlib.h>
 #include <time.h>

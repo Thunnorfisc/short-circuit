@@ -1,3 +1,11 @@
+/*!
+@file battleSystem.h
+@author JASON (jasonjunhao.teo)
+@course CSD1401
+@section B
+@brief
+This battleSystem.h file serves as the header for the implementation of the battle system for our game.
+*/
 #pragma once
 #include "generalUtils.h"
 #include "enemyStructs.h"

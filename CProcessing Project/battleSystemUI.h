@@ -1,3 +1,12 @@
+/*!
+@file battleSystemUI.h
+@author JASON (jasonjunhao.teo)
+@course CSD1401
+@section B
+@brief
+This battleSystemUI.h file serves as the header for the implementation of the user interfaces in battle system
+*/
+
 #pragma once
 #include "TEST_playerStruct.h"
 #include "enemyStructs.h"

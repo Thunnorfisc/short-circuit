@@ -30,7 +30,7 @@ credit categories, animations, and navigation back to the main menu.
 void Credits_Init(void) {}
 
 void Credits_Update(void) {
-    // Define credit categories and their members
+    // Define credit categories and members
     CreditCategory credits[] = {
         {
             .category = "President",
@@ -98,6 +98,7 @@ void Credits_Update(void) {
 
 void Credits_Exit(void) {}
 
+//Print credit text
 void PrintCredit(const CreditCategory* category, float windowWidth, float* currentY) {
     float windowHeight = (float)CP_System_GetWindowHeight();
 
