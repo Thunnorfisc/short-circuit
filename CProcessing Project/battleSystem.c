@@ -1,3 +1,13 @@
+/*!
+@file battleSystem.c
+@author JASON (jasonjunhao.teo)
+@sub-author KELLY CHIANG KAR YAN (chiang.k)
+@course CSD1401
+@section B
+@brief
+This battleSystem.c file contains the implementation of the battle system for our game.
+*/
+
 #include <stdio.h>
 #include "worldSystem.h"
 #include "battleSystem.h"
@@ -144,9 +154,6 @@ void Battle_System_Init()
 
 	// Randomly generate the number of enemies to be spawned
 	random_enemy_count = CP_Random_RangeInt(1, ENEMY_COUNT);
-	
-	
-	
 	("Number of enemies to be generated: %d\n", random_enemy_count);
 
 	// Randomly generate unique enemy positions
