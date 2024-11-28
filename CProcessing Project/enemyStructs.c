@@ -13,6 +13,13 @@ This enemyStructs.c handles the initialization and management of enemy entities 
 #include <time.h>
 
 //Change this to read from file and add int initiative code
+
+/*
+Function   : Enemy_Arr_Initialize
+Description: To initialise the values of attack, weakness, healthbar, resistance, resistance multiplier, name of thedifferent type of the enemies 
+Parameters : The different enemy type for normal enemies and their positioning(x, y) on the grid
+Return	   : Enemy
+*/
 Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
     Enemy enemy = {.enemy_type = type, .position = v };
     
@@ -52,6 +59,12 @@ Enemy Enemy_Arr_Initialize(EnemyTypes type, CP_Vector v) {
     return enemy;
 }
 
+/*
+Function   : Enemy_Initialize_Array
+Description: To store the enemy positioning in an array and randomise the different type of enemies that will appear on the grid
+Parameters : the total count of enemies, their positioning of x and y on the grid, the number of times generate and do randomisation of enemies
+Return	   : void
+*/
 void Enemy_Initialize_Array(Enemy enemies[ENEMY_COUNT], CP_Vector gridLocation[GRID_DIMENSIONS][GRID_DIMENSIONS], int num_to_generate, int do_randomise_enemies) {
     
     CP_Vector generated_vectors[ENEMY_COUNT] = { 0 };  // Array to store positions that are already generated

@@ -176,6 +176,7 @@ int Draw_Button_With_Image(CP_Image image, const char* text, float x, float y, f
 	return 0;
 }
 
+// This is to draw a hover over textbox with padding slightly ajusted to fit the words to be centered in the textbox
 int Draw_TextBoxAdvanced(const char* text, float textSize, float x, float y,
 	float w, float h, float y_scale, CP_Color box_color, CP_Color text_color,
 	CP_POSITION_MODE mode) {
