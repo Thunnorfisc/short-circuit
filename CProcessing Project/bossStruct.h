@@ -1,3 +1,12 @@
+/*
+File: bossStruct.h
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Description:
+This file contains the structs for creating the boss fights:
+ - struct BossParts
+ - struct Boss
+*/
+
 #pragma once
 
 #include "cprocessing.h"

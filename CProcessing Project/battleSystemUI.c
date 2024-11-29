@@ -1,12 +1,27 @@
+/*
+File: bossSystemUI.c
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub-Author: KELLY CHIANG KAR YAN (chiang.k)
+Description:
+This file contains the definition of the functions for the creation of the battle system UI:
+ - void Display_Enemy_Hover
+ - void Display_Boss_Hover
+ - BattleUI UI_Component_Create
+ - void UI_Initialize
+ - void Display_UI
+*/
+
 #include "battleSystemUI.h"
 #include "generalUtils.h"
+
+int Enemy_Hovered = 0;
+
 /*
 Function   : Display_Enemy_Hover
 Description: Used to display the Enemy Stats by hovering over the Enemy
 Parameters : Enemy enemies[ENEMY_COUNT], CP_Vector mouse_pos
 Return	   : void
 */
-int Enemy_Hovered = 0;
 void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3], Enemy const original_enemies[ENEMY_COUNT], CP_Vector mouse_pos, BattleUI ui) {
 	float text_size = TEXT_SIZE * WINDOW_RATIO;
 	float hp_width = ui.width - BUFFER * 4 * WINDOW_RATIO;
@@ -66,6 +81,12 @@ void Display_Enemy_Hover(Enemy enemies[ENEMY_COUNT], CP_Image const weakness[3],
 	}
 }
 
+/*
+Function   : Display_Boss_Hover
+Description: sed to display the Boss Part Stats by hovering over the Boss Part
+Parameters : Boss boss, CP_Image const weakness[3], BossPart const original_bp[], CP_Vector mouse_pos, BattleUI ui, int count
+Return	   : BattleUI
+*/
 void Display_Boss_Hover(Boss boss, CP_Image const weakness[3], BossPart const original_bp[], CP_Vector mouse_pos, BattleUI ui, int count) {
 	float text_size = TEXT_SIZE * WINDOW_RATIO;
 	float hp_width = ui.width - BUFFER * 4 * WINDOW_RATIO;

@@ -199,7 +199,7 @@ void World_Update(void)
 				
 			}
 		}
-		// Update Player
+		// Update Player when going to inventory screen
 		if (CP_Input_KeyTriggered(KEY_TAB)) {
 				PlayerStats_Calculate(item_list, player);	
 		}

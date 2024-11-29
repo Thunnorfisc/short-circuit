@@ -1,3 +1,15 @@
+/*
+File: bossSystem.h
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub Author: KELLY CHIANG KAR YAN (chiang.k)
+Description:
+This file contains the definition of the runtim functions for the battle system:
+ - void Battle_System_Init;
+ - void Battle_System_Update;
+ - void Battle_System_Exit;
+ - void Reset_Initialize;
+*/
+
 #include <stdio.h>
 #include "worldSystem.h"
 #include "battleSystem.h"
@@ -144,9 +156,6 @@ void Battle_System_Init()
 
 	// Randomly generate the number of enemies to be spawned
 	random_enemy_count = CP_Random_RangeInt(1, ENEMY_COUNT);
-	
-	
-	
 	("Number of enemies to be generated: %d\n", random_enemy_count);
 
 	// Randomly generate unique enemy positions
@@ -215,9 +224,9 @@ void Battle_System_Update()
 	}
 
 	// DEBUG: Go Back to Map System
-	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}*/
+	}
 	// Load player_battle Stats
 	if (initialize_player) {
 		PlayerStats_ReadFile(&player_battle);
@@ -225,6 +234,7 @@ void Battle_System_Update()
 		total_s_pieces = player_battle.s_mana;
 	}
 
+	//Check if the player health is at 0 or less
 	if (player_battle.health <= 0) {
 		initialize_player = 1;
 		// Go to battleLost screen when player health is lesser than or equal to 0
@@ -313,6 +323,7 @@ void Battle_System_Update()
 	// Draw UI
 	Display_UI(battle_ui, player_battle, original_health, total_s_pieces);
 
+	// Draw Hover UI for Enemy Stats
 	Display_Enemy_Hover(enemies, weakness_ui, original_enemy_arr, mouse_position, battle_ui[3]);
 
 	// Draw grid
@@ -390,6 +401,12 @@ void Battle_System_Exit()
 	initialize_player = 1;
 }
 
+/*
+Function   : Reset_Initialize (Deprecated)
+Description: Used to reset the flags to allow the program to re-initialize the player and bosses
+Parameters : int* boss_initialize
+Return	   : void
+*/
 void Reset_Initialize(int* boss_initialize) {
 	initialize_player = 1;
 	*boss_initialize = 1;

@@ -1,3 +1,16 @@
+/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+@file tutorial.c
+@author Lim Yan De (l.yande)
+@course CSD1401  
+@section b
+@Project Short Circuit Game
+@date 26/11/2024
+@brief Implements the in-game tutorial system for Short Circuit.
+This file manages the step-by-step tutorial sequence that teaches
+players game mechanics including battle systems, enemy interaction,
+and puzzle mechanics. It handles tutorial state progression, UI
+display, and completion checking for each tutorial step.
+*/
 #include <stdio.h>
 #include "cprocessing.h"
 #include "tutorial.h"
@@ -69,7 +82,7 @@ static const TutorialStep tutorial_steps[] = {
         "Left icon shows weakness\n"
         "Right icon (with red overlay) shows resistance\n"
         "Click on the enemy to proceed.",
-        0, 
+        0, //player has to hover over an enemy to complete the check
         Check_Enemy_Hovered
     },
     [TUTORIAL_BATTLE_DRAG_PIECE] = {
@@ -92,7 +105,7 @@ static const TutorialStep tutorial_steps[] = {
 };
 
 void Tutorial_Update(void) {
-    if (!showing_tutorial) return;
+    if (showing_tutorial == 0) return;
 
     // Handle click to continue if required
     if (tutorial_steps[current_state].requires_click) {
