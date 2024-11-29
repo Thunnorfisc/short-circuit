@@ -1,3 +1,9 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains the shop system
+* @file		shopSystem.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
 #include "itemSystem.h"
 #include "shopSystem.h"
 #include "worldSystem.h"

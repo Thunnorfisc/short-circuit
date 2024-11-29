@@ -1,3 +1,10 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains the item system
+* @file		itemSystem.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "worldSystem.h"

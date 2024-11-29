@@ -249,7 +249,7 @@ Return	   : void
 void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image elemental_image_list[4]) {
 	srand((unsigned int)time(NULL));
 	int random_index, random_element;
-	int random_index_arr[4];
+	int random_index_arr[4] = { -1, -1, -1, -1 };
 
 	//Choosing which circuit piece to change the element
 	for (int i = 0; i < 4;) {
@@ -261,7 +261,7 @@ void Set_Elemental_Circuits(CircuitPiece pieces_ui[NUM_OF_L_PIECE], CP_Image ele
 	}
 
 	ElementType elements[] = { Element_Grass,Element_Water,Element_Fire};
-	int random_element_arr[3];
+	int random_element_arr[3] = { -1, -1 , -1 };
 
 	for (int i = 0; i < NUM_OF_L_PIECE;) {
 		random_element = CP_Random_RangeInt(0, 2);

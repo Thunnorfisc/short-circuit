@@ -1,3 +1,9 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains individual event functions
+* @file		worldEvent.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
 #include "worldEvent.h"
 
 EventNode Event_Initialize(int id, EventType type, float location_x, float location_y, float bound_x, float bound_y)

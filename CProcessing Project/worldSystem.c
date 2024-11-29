@@ -1,7 +1,16 @@
-#include <stdlib.h>
-#include <stdio.h>
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains the world scene and the global variables realted to world and player
+* @file		worldSystem.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
+
+// Standard library
+#include <stdlib.h> // memset(), strcpy()
+#include <stdio.h>  // remove()
 #include <time.h>
 
+// Project files
 #include "worldSystem.h"
 #include "inventorySystem.h"
 #include "itemSystem.h"
@@ -12,6 +21,7 @@
 #include "cprocessing.h"
 #include "TEST_playerUtil.h"
 
+// Offset for each bound
 #define OFFSET_X WINDOW_WIDTH/EVENT_BOUND_X
 #define OFFSET_Y WINDOW_HEIGHT/EVENT_BOUND_Y
 
@@ -20,6 +30,7 @@
 #define NODE_RECT_WIDTH (WINDOW_WIDTH / EVENT_NUMBER / 1.6f) * NODE_SCALE
 #define NODE_RECT_HEIGHT (WINDOW_HEIGHT / EVENT_NUMBER / 0.9f) * NODE_SCALE
 
+// Number of events types of nodes
 #define NODE_TYPES_NUMBER (NON_SPECIAL_TYPE_END - 1) + (SPECIAL_END - SPECIAL_START - 1)
 
 // Hover over text length for each node
@@ -75,17 +86,28 @@ int fullscreen = 0;
 int menu_open = 0;
 
 /* ============= PRIVATE FUNCTIONS DECLARATIONS ============= */
+
 /*
-	Switches Scene from world based on the event type
+* Switches Scene from world based on the event type
 */
 void World_SwitchScene(EventType type);
+/*
+* Changes base node color whether selected or not
+*/
 CP_Image World_SelectBaseNode(int event_id);
+/* @author: Kelly
+* Decides the color of line based on adjancency
+*/
 CP_Color World_LineColor(int event);
+/*! @author: Kelly
+* When you hover over, decides the name of the event in the textbox
+*/
 void World_EventTypeName(char* str, size_t size, EventType type);
 
 /* ============= GAME SCENE FUNCTIONS ============= */
 void World_Init(void)
 {
+	// If World load flag is activated
 	if (load_world_flag) {
 		if (!World_Load(&world, &master, item_list, &current_inventory_size)) {
 			world = World_Generate_Dynamic(master.current_world);
@@ -95,13 +117,17 @@ void World_Init(void)
 		selected_node_sprite = CP_Image_Load("Assets/Selected Node.png");
 		load_world_flag = 0;
 	}
+
+	// If world is not generated
 	if (!world.is_generated) { 
 		world = World_Generate_Dynamic(master.current_world); 
 		currency_sprite = CP_Image_Load("Assets/Crystal.png");
 		base_node_sprite = CP_Image_Load("Assets/Node.png");
 		selected_node_sprite = CP_Image_Load("Assets/Selected Node.png");
 	}
+	// Save world everytime the player comes back to world scene
 	World_Save(world, master, item_list, current_inventory_size);
+
 	world_bg = CP_Image_Load("Assets/world bg.png");
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 }
@@ -117,12 +143,14 @@ void World_Update(void)
 	// Handle Inventory Screen
 	Handle_Inventory();
 
+	// Handle background
 	CP_Graphics_ClearBackground(CP_Color_Create(0, 0, 0, 255));
 	CP_Settings_RectMode(CP_POSITION_CENTER);
 	CP_Settings_Fill(CP_Color_Create(0, 0, 0, 128));
 	CP_Graphics_DrawRect(WINDOW_WIDTH_HALF, WINDOW_HEIGHT_HALF, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT);
 	CP_Image_Draw(world_bg, WINDOW_WIDTH_HALF, WINDOW_HEIGHT_HALF, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 128);
 	CP_Settings_Stroke(CP_Color_Create(255, 255, 255, 255));
+
 	if (!menu_open) {
 		// Render Nodes
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
@@ -176,6 +204,7 @@ void World_Update(void)
 				PlayerStats_Calculate(item_list, player);	
 		}
 		
+		// Draw UI
 		World_PlayerUI();
 	}
 }
@@ -229,6 +258,7 @@ void World_SwitchScene(EventType type) {
 		CP_Engine_SetNextGameState(Boss_System_Init, Boss_System_Update, Boss_System_Exit);
 		break;
 	case BOSS_BATTLE:
+		// Reset everything and increment current world ID
 		for (int i = 0; i < EVENT_NUMBER; ++i) {
 			if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 			CP_Image_Free(&world.event_list[i].event_sprite);
@@ -307,9 +337,11 @@ void World_PlayerUI()
 	CP_Settings_TextSize(name_size);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
 	float imgSize = 128;
+	// Draw the items inside the player's inventory
 	for (int i = 0; i < current_inventory_size; ++i) {
 		CP_Image_Draw(item_list[i].image, (WINDOW_WIDTH / 64.0f) + (i * (WINDOW_WIDTH / 32.0f)), WINDOW_HEIGHT / 36.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);
 	}
+	// Draw the textbox describing item when hovering over
 	for(int i = 0; i < current_inventory_size; ++i) {
 		if (IsAreaClicked((WINDOW_WIDTH / 64.0f) + (i * (WINDOW_WIDTH / 32.0f)),
 			WINDOW_HEIGHT / 48.0f, WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
@@ -323,6 +355,7 @@ void World_PlayerUI()
 	}
 	CP_Settings_TextSize(name_size);
 	CP_Settings_Fill(CP_Color_Create(255, 255, 255, 255));
+
 	// master.currency
 	CP_Image_Draw(currency_sprite, WINDOW_WIDTH - WINDOW_WIDTH / 36.0f - WINDOW_HEIGHT / 18.0f, WINDOW_HEIGHT / 36.0f,
 		WINDOW_HEIGHT / 24.0f, WINDOW_HEIGHT / 24.0f, 255);

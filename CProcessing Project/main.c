@@ -12,6 +12,6 @@ int main(void)
 	CP_System_SetWindowSize(1280, 720);
 	CP_Engine_SetNextGameState(Main_Menu_Init, Main_Menu_Update, Main_Menu_Exit);
 	CP_System_SetFrameRate(144.0f);
-	CP_Engine_Run(1);
+	CP_Engine_Run(0);
 	return 0;
 }

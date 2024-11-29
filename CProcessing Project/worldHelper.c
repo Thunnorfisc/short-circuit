@@ -1,23 +1,33 @@
 /*
-* Author: William Wibisana Dumnanauw (williamwibisana.d)
-* Brief: The file contains functions necessary to the world system.
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains the implemnetation of functions necessary to the world system.
+* @note		Related to World System, World Event
+* @file		worldHelper.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
+
+// Project files
 #include "linkedlist.h"
 #include "generalUtils.h"
 #include "worldEvent.h"
 #include "worldHelper.h"
 #include "itemSystem.h"
-#include "cprocessing.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
 
-//File Addresses
+// CProcessing Library
+#include "cprocessing.h"
+
+// Standard Library
+#include <stdlib.h>			// srand(), rand()
+#include <stdio.h>			// printf(), fprintf(), fscanf(), fflush(), fopen(), fclose()
+#include <time.h>			// time()
+
+// File Addresses
 const char* map_addr = "Assets/Event_Chains/Preset/map-1.txt";
 const char* event_type_addr = "Assets/Event_Chains/event-types.txt";
 const char* world_addr = "Assets/world.txt";
 
 /* ============= PRIVATE FUNCTIONS DECLARATIONS ============= */
+
 /*
 	This functions gets a random non-special event type
 	and helps to decrement the number in event type map.
@@ -44,18 +54,29 @@ CP_Image World_SetNodeSprite(EventType type);
 
 /* ============= WORLD FUNCTIONS ============= */
 World World_Generate_Dynamic(int world_number) {
-	srand((unsigned int)time(NULL));
+	srand((unsigned int)time(NULL));		// Set randomization seed
+	/*!========== Local Variables ==========!*/
+	/* World variable; ->return value<- */
 	World world = { 0 };
 	world.id = world_number;
 	world.is_generated = 0;
+	// One Event Node, used for setting each event and putting into bound_event_arr and World.event_list
 	EventNode event = { 0 };
+	// Maps the number of event possible per type
 	EventTypeMap type_map[NON_SPECIAL_TYPE_END - 1];
+	// Total number of events, used as a decrementer
 	unsigned int total_events = EVENT_NUMBER;
+	// 2D array for events in their bound
 	int bound_event_arr[EVENT_BOUND_Y][EVENT_BOUND_X] = { 0 };
-	int event_linkage[EVENT_NUMBER] = { 0 }; // Bool Array to check whether the event has at least one linkage from the back
+	// Array to check whether all events has at least one linkage from the backp
+	int event_linkage[EVENT_NUMBER] = { 0 };
+	// The y-bound for each event
 	int event_y = 0;
+	// The average number of events per normal bound
 	unsigned int avg_events_per_bound = 0;
+	// The number extra numbers per bound
 	unsigned int extra_events = 0;
+	// The number of special bounds
 	int special_bound = 0;
 
 	// Event Type Map File
@@ -71,6 +92,7 @@ World World_Generate_Dynamic(int world_number) {
 		printf_s("Type: %d,Number: %d\n", type_map[i].type, type_map[i].number);
 	};
 
+	/* GENERATION OF FIRST EVENTS IN EACH BOUND */
 	// Set up the one event node per x bound, randomized y bound
 	for (event.bound.x = 1; event.bound.x <= EVENT_BOUND_X; ++event.bound.x) {
 		event.id = (int)event.bound.x;
@@ -89,14 +111,24 @@ World World_Generate_Dynamic(int world_number) {
 		printf_s("ID: %d, Type: %d, [%d,%d]\n", world.event_list[event.id - 1].id, world.event_list[event.id - 1].type, (int)event.bound.x, (int)event.bound.y);
 	}
 
+	// Get the average number of events per bound
 	avg_events_per_bound = (unsigned int)((EVENT_NUMBER - special_bound) / (EVENT_BOUND_X - special_bound)) - 1;
-	printf("\nAVERAGE: %ud\n", avg_events_per_bound);
+	// printf("\nAVERAGE: %ud\n", avg_events_per_bound);
+	
+	/* GENERATION OF EXTRA EVENTS */
 	// More events for regular bounds
 	for (int bound = 1; bound <= EVENT_BOUND_X; ++bound) {
+		// If special event, SKIP
 		if (bound == EVENT_BOUND_X || bound == (int)(EVENT_BOUND_X / 2) || bound == 1 || bound == 2) continue;
+
+		// Randomize the number of extra events
 		extra_events = avg_events_per_bound + CP_Random_RangeInt(MIN_EXTRA_BOUND_EVENTS, MAX_EXTRA_BOUND_EVENTS);
+		// Check if extra events goes over the limit
 		extra_events = extra_events > total_events ? total_events : extra_events;
+		// Check if this is penultimate bound and check if extra bounds does not reach total bounds
 		extra_events = ((bound == EVENT_BOUND_X - 1) && (total_events > extra_events)) ? total_events : extra_events;
+
+		// Generate the extra events
 		for (unsigned int j = 0; j < extra_events; ++j) {
 			++event.id;
 			event.bound.x = (float)bound;
@@ -114,7 +146,8 @@ World World_Generate_Dynamic(int world_number) {
 			world.event_list[event.id - 1] = event;
 		}
 	}
-	// Linkage
+
+	/* LINKAGE GENERATION */
 	// Search for the closest node next x-bound and connect to it
 	// Meanwhile check for backmarking to see if the node has
 	// previous connections
@@ -122,9 +155,11 @@ World World_Generate_Dynamic(int world_number) {
 		i < EVENT_NUMBER;
 		++i, x = (int)world.event_list[i].bound.x, y = (int)world.event_list[i].bound.y) {
 		int adjancent_bound = 0;
+		// Bounds connected to special boundsd
 		if (x == EVENT_BOUND_X - 1 || x == (int)(EVENT_BOUND_X / 2) - 1) continue;
+		// Special Bounds Cases
 		switch (x) {
-		case 1:
+		case 1:							// First bound, connect to all to of next boundw
 			for (int j = 0; j < EVENT_BOUND_Y; ++j) {
 				if (bound_event_arr[j][x]) {
 					if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(bound_event_arr[j][x]);
@@ -133,53 +168,55 @@ World World_Generate_Dynamic(int world_number) {
 				}
 			}
 			break;
-			case (int)(EVENT_BOUND_X / 2) :
-				for (int j = 0; j < EVENT_BOUND_Y; ++j) {
-					if (bound_event_arr[j][x]) {
-						if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(bound_event_arr[j][x]);
-						else List_Insert_End(&world.event_list[i].next_nodes, bound_event_arr[j][x]);
-						++event_linkage[bound_event_arr[j][x] - 1];
-					}
-					if (bound_event_arr[j][x - 2]) {
-						if (world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes.length == 0) world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes = List_Initialize(i + 1);
-						++event_linkage[i];
-					}
+		case (int)(EVENT_BOUND_X / 2) : // Middle bound for midboss, connect to all previous and next bound events
+			for (int j = 0; j < EVENT_BOUND_Y; ++j) {
+				if (bound_event_arr[j][x]) {
+					if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(bound_event_arr[j][x]);
+					else List_Insert_End(&world.event_list[i].next_nodes, bound_event_arr[j][x]);
+					++event_linkage[bound_event_arr[j][x] - 1];
 				}
-			case EVENT_BOUND_X:
-				for (int j = 0; j < EVENT_BOUND_Y; ++j) {
-					if (bound_event_arr[j][x - 2]) {
-						if (world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes.length == 0) world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes = List_Initialize(i + 1);
-						++event_linkage[i];
-					}
+				if (bound_event_arr[j][x - 2]) {
+					if (world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes.length == 0) world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes = List_Initialize(i + 1);
+					++event_linkage[i];
 				}
-				break;
-			default:
-				adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 0);
-				// Find the next node with the same y bound but next 
-				if (CP_Random_GetBool() && adjancent_bound) {
-					world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
-					++event_linkage[adjancent_bound - 1];
+			}
+		case EVENT_BOUND_X:				// Last bound for final boss, connect to all previous bound events
+			for (int j = 0; j < EVENT_BOUND_Y; ++j) {
+				if (bound_event_arr[j][x - 2]) {
+					if (world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes.length == 0) world.event_list[bound_event_arr[j][x - 2] - 1].next_nodes = List_Initialize(i + 1);
+					++event_linkage[i];
 				}
-				// If true, find the nearest node in the next bound below it's y-bound
-				// If this is still 0, iterate till non-zero
-				adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 1);
-				if (CP_Random_GetBool() && adjancent_bound) {
-					if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
-					else List_Insert_End(&world.event_list[i].next_nodes, adjancent_bound);
-					++event_linkage[adjancent_bound - 1];
-				}
+			}
+			break;
+		default:
+			adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 0);
+			// Find the next node with the same y bound but next 
+			if (CP_Random_GetBool() && adjancent_bound) {
+				world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
+				++event_linkage[adjancent_bound - 1];
+			}
+			// If true, find the nearest node in the next bound below it's y-bound
+			// If this is still 0, iterate till non-zero
+			adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 1);
+			if (CP_Random_GetBool() && adjancent_bound) {
+				if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
+				else List_Insert_End(&world.event_list[i].next_nodes, adjancent_bound);
+				++event_linkage[adjancent_bound - 1];
+			}
 
-				// If true, find the nearest node in the next bound above it's y-bound
-				// If this is still 0, iterate till non-zero
-				adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 2);
-				if (CP_Random_GetBool() && adjancent_bound) {
-					if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
-					else List_Insert_End(&world.event_list[i].next_nodes, adjancent_bound);
-					++event_linkage[adjancent_bound - 1];
-				}
-				break;
+			// If true, find the nearest node in the next bound above it's y-bound
+			// If this is still 0, iterate till non-zero
+			adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 2);
+			if (CP_Random_GetBool() && adjancent_bound) {
+				if (world.event_list[i].next_nodes.length == 0) world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
+				else List_Insert_End(&world.event_list[i].next_nodes, adjancent_bound);
+				++event_linkage[adjancent_bound - 1];
+			}
+			break;
 		}
 		if (x == EVENT_BOUND_X || x == (int)(EVENT_BOUND_X / 2) || x == 1 || x == 2) continue;
+
+		/*  If there is linkage, force one */
 		if (world.event_list[i].next_nodes.length == 0) {
 			if (adjancent_bound = World_FindNextBoundNodes(&bound_event_arr[0][0], y - 1, x, 0)) {
 				world.event_list[i].next_nodes = List_Initialize(adjancent_bound);
@@ -197,7 +234,8 @@ World World_Generate_Dynamic(int world_number) {
 			}
 		}
 	}
-	// Check for back linkage
+
+	/* If there is nothing linking to it, force linkage from one of previous bound event */
 	for (int i = 1, x = (int)world.event_list[i].bound.x, y = (int)world.event_list[i].bound.y - 1;
 		i < EVENT_NUMBER;
 		++i, x = (int)world.event_list[i].bound.x, y = (int)world.event_list[i].bound.y) {
@@ -210,10 +248,12 @@ World World_Generate_Dynamic(int world_number) {
 		}
 	}
 
+	// Set flag for generated world
 	world.is_generated = 1;
 	return world;
 }
 
+/* !!!! DEPRECATED !!!!*/
 void Generate_World(int world_number)
 {
 	// Random seed
@@ -376,10 +416,10 @@ int World_Load(World* world, WorldMaster* master, Item* item_list, int *item_lis
 }
 
 /* ============= HELPER FUNCTIONS ============= */
-
 EventType World_GetRandom_EventType(EventTypeMap* type_map)
 {
 	EventType type = CP_Random_RangeInt(START + 1, NON_SPECIAL_TYPE_END - 1);
+	// If ran out of number of particular event type, cycle until there is one
 	while (type_map[type - 1].number == 0) {
 		++type;
 		if (type == NON_SPECIAL_TYPE_END) type = START + 1;
@@ -396,12 +436,14 @@ int World_FindNextBoundNodes(int* event_matrix, int y, int next_x, int direction
 {
 	int find_node = 1;
 	int event = 0;
+	// Check for next x bound, switch case depending on y-bound
 	switch (direction) {
-	case 0:
+	case 0: // Equal y-bound
+		// if event_matrix[y][next_x] is not 0, return it
 		if (*(event_matrix + y * EVENT_BOUND_X + next_x) != 0) return *(event_matrix + y * EVENT_BOUND_X + next_x);
 		else return 0;
 		break;
-	case 1:
+	case 1: // Higher y-bound events
 		while (*(event_matrix + (y - find_node) * EVENT_BOUND_X + next_x) == 0) {
 			if (y - find_node <= 0) break;
 			++find_node;
@@ -410,7 +452,7 @@ int World_FindNextBoundNodes(int* event_matrix, int y, int next_x, int direction
 			return *(event_matrix + (y - find_node) * EVENT_BOUND_X + next_x);
 		else return 0;
 		break;
-	case 2:
+	case 2:  // Lower y-bound events
 		while (*(event_matrix + (y + find_node) * EVENT_BOUND_X + next_x) == 0) {
 			if (y + find_node >= EVENT_BOUND_X - 1) break;
 			++find_node;

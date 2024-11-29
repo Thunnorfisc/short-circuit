@@ -1,3 +1,9 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains a linked list data structure and it's functions
+* @file		linkedlist.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include "linkedlist.h"

@@ -1,5 +1,13 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains a linked list data structure
+* @file		linkedlist.h
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
 #pragma once
-// This is a node
+/*
+* One node, contains data as well as the next and previous nodes
+*/
 typedef struct Node
 {
 	int data;
@@ -8,7 +16,7 @@ typedef struct Node
 } Node;
 
 /*
-* 
+* The entire linked list, containing the length of it, as well as the head node and the tail node
 */
 struct LinkedList {
 	int length;
@@ -19,7 +27,6 @@ struct LinkedList {
 /*
 This is a doubly linked list.
 It is a pointer to the struct linkedlist.
-Access to it's members are allowed but not recommended to be directly acceesed.
 Use the functions starting with List_ to modify or access the list.
 */
 typedef struct LinkedList LinkedList;

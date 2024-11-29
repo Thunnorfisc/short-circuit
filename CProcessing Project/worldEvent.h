@@ -1,3 +1,9 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains individual event related structs and enums
+* @file		worldEvent.h
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
 #pragma once
 #include "cprocessing.h"
 #include "linkedlist.h"

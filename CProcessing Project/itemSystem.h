@@ -1,3 +1,9 @@
+/*
+* @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @brief	The file contains the item system
+* @file		itemSystem.h
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
 #pragma once
 #include "cprocessing.h"
 
@@ -24,6 +30,7 @@ typedef struct Item {
 	CP_Image image;
 } Item;
 
+// Scene Functions
 void ItemEvent_Init(void);
 void ItemEvent_Update(void);
 void ItemEvent_Exit(void);
