@@ -1,4 +1,4 @@
-/*
+/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 @file creditScreen.h
 @author Lim Yan De (l.yande)
 @course CSD1401
