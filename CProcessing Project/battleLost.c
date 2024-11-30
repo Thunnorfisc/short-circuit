@@ -1,11 +1,10 @@
-/*!
-@file battleLost.c
-@author KELLY CHIANG KAR YAN (chiang.k)
-@course CSD1401
-@section B
-@brief
-This battleLost.c file handle the "Battle Lost" state in the game, managing what happens when the player loses a battle. 
+/*
+* @author	Kelly Chiang Kar Yan (chiang.k)
+* @brief	The file contains a lost battle screen and a button to navigate back to main menu
+* @file		battleLost.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
+
 
 #include <stdio.h>
 #include "worldSystem.h"

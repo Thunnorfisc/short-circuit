@@ -3,11 +3,13 @@ File: bossSystem.h
 Author: Jason Teo Jun Hao (jasonjunhao.teo)
 Sub-Author: KELLY CHIANG KAR YAN (chiang.k)
 Description:
-This file contains the define values and the decalaration of the runtim functions for the battle system:
+This file contains the define values and the declaration of the runtime functions for the battle system:
  - void Battle_System_Init;
- - void Battle_System_Update;
+ - void Battle_System_Update; (Kelly)
  - void Battle_System_Exit;
  - void Reset_Initialize;
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #pragma once

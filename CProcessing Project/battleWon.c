@@ -1,10 +1,8 @@
-/*!
-@file battleWon.c
-@author KELLY CHIANG KAR YAN (chiang.k)
-@course CSD1401
-@section B
-@brief
-This battleWon.c file handle the "Battle Won" state in the game, managing what happens when the player wins a battle.
+/*
+* @author	Kelly Chiang Kar Yan (chiang.k)
+* @brief	The file contains a win battle screen and a button to navigate back to main menu
+* @file		battleWon.c
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #include <stdio.h>

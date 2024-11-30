@@ -1,11 +1,17 @@
-/*!
-@file enemyStructs.c
-@author JASON (jasonjunhao.teo)
-@sub-author KELLY CHIANG KAR YAN (chiang.k)
-@course CSD1401
-@section B
-@brief
-This enemyStructs.c handles the initialization and management of enemy entities in the game
+/*
+File: enemyStructs.c
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub Author: KELLY CHIANG KAR YAN (chiang.k)
+Description:
+This file contains the definition of the functions for the enemy structs:
+ - Enemy Enemy_Arr_Initialize (Kelly)
+ - Void Enemy_Initialize_Array (Kelly)
+ - Void Check_Enemy_Hit
+ - Void Enemy_Calculate_Damage
+ - Void Enemy_Damage_Player
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+
 */
 
 #include "enemyStructs.h"

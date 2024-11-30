@@ -1,4 +1,4 @@
-/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+/*
 @file tutorial.h
 @author Lim Yan De (l.yande)
 @course CSD1401 Software 
@@ -9,6 +9,8 @@
 Contains definitions for tutorial states, structures, and function
 declarations needed to manage the game's tutorial sequence and
 progression tracking.
+
+All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 #pragma once
 

@@ -1,4 +1,4 @@
-/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+/*
 @file mainMenuSystem.h
 @author Lim Yan De (l.yande)
 @course CSD1401
@@ -10,6 +10,8 @@ This file provides the interface for initializing, updating, and managing the
 main menu, splash screen, pause menu, and related UI functionality for the
 Short Circuit game. It declares core menu system functions and screen management
 capabilities.
+
+All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 #pragma once
 /*

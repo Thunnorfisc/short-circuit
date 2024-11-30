@@ -1,10 +1,8 @@
-/*!
-@file battleLost.h
-@author KELLY CHIANG KAR YAN (chiang.k)
-@course CSD1401
-@section B
-@brief
-This battleLost.h file serves as the header for the BattleLost module, providing declarations and dependencies needed for its functionality
+/*
+* @author	Kelly Chiang Kar Yan (chiang.k)
+* @brief	The file contains declarations and dependencies needed for battleLost.c
+* @file		battleLost.h
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #pragma once

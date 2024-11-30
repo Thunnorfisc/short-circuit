@@ -1,4 +1,4 @@
-/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+/*
 @file creditScreen.h
 @author Lim Yan De (l.yande)
 @course CSD1401
@@ -9,6 +9,9 @@
 functions needed to display and manage the game's credits sequence.
 Includes definitions for credit categories, display parameters, and
 the interface for credit screen initialization and management.
+
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+
 */
 #pragma once
 

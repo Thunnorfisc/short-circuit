@@ -9,6 +9,8 @@ This file contains the define values and declaration of the functions for the cr
  - BattleUI UI_Component_Create
  - void UI_Initialize
  - void Display_UI
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #pragma once

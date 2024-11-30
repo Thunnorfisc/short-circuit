@@ -1,3 +1,18 @@
+/*
+File: main.c
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub-Authors: 
+Kelly Chiang Kar Yan (chiang.k)
+William Wibisana Dumnanauw (williamwibisana.d)
+Lim Yan De (l.yande)
+Wei Song (weisong.ong@digipen.edu)
+
+Description:
+This file is the main file of the game
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
+
 #include "cprocessing.h"
 #include "mainMenuSystem.h"
 

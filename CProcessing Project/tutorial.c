@@ -1,4 +1,4 @@
-/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+/*
 @file tutorial.c
 @author Lim Yan De (l.yande)
 @course CSD1401  
@@ -10,6 +10,8 @@ This file manages the step-by-step tutorial sequence that teaches
 players game mechanics including battle systems, enemy interaction,
 and puzzle mechanics. It handles tutorial state progression, UI
 display, and completion checking for each tutorial step.
+
+All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 #include <stdio.h>
 #include "cprocessing.h"

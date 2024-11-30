@@ -1,4 +1,4 @@
-/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+/*
 @file mainMenuSystem.c
 @author Lim Yan De (l.yande)
 @course CSD1401
@@ -10,6 +10,8 @@ the Short Circuit game. It handles the splash screen, main menu interface,
 pause menu controls, and transitions between different game states. The file
 manages UI elements like buttons, logo display, copyright information, and
 screen transitions while providing fullscreen toggle capability.
+
+All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 #include <stdio.h>
 #include "cprocessing.h"

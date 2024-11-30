@@ -1,7 +1,20 @@
 /*
 File: enemyStructs.h
-Description: This will be the file that holds the structs that will be used to generate enemies that
-will be used in the game
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub Author: KELLY CHIANG KAR YAN (chiang.k)
+Description:
+This will be the file that holds the structs that will be used to generate enemies that
+will be used in the game:
+ - typedef enum (Kelly)
+ - typedef struct (Kelly)
+ - Enemy Enemy_Arr_Initialize (Kelly)
+ - Void Enemy_Initialize_Array (Kelly)
+ - Void Check_Enemy_Hit
+ - Void Enemy_Calculate_Damage
+ - Void Enemy_Damage_Player
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+
 */
 
 #pragma once

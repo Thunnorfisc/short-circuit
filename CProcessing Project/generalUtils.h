@@ -1,3 +1,23 @@
+/*
+File: generalUtils.h
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Sub Author:
+KELLY CHIANG KAR YAN (chiang.k)
+
+Description:
+This file contains the definitions of general usage of functions that can be used across all files:
+ - int IsAreaClicked
+ - int IsCircleClicked
+ - int AreCirclesIntersecting
+ - int Exist_In_Array
+ - int Draw_Button (Yande)
+ - int Draw_Button_With_Image (Yande)
+ - int Draw_TextBoxAdvanced (Kelly)
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+
+*/
+
 #pragma once
 #include "cprocessing.h"
 #include "magicStructs.h"

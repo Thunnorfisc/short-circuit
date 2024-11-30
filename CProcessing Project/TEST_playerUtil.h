@@ -1,3 +1,16 @@
+/*
+File: TEST_playerUtil.h
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Description:
+This file is the declarations to test the player utils
+- void PlayerStats_Calculate
+- void PlayerStats_Create_Temp
+- int PlayerStats_ReadFile
+- int PlayerStats_ReadFile
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/
+
 #pragma once
 #include "TEST_playerStruct.h"
 #include "itemSystem.h"

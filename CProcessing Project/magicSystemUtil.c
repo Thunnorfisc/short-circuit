@@ -11,6 +11,8 @@ int Is_Closed_Circuit
 float Calculate_Cell_Size
 void Set_Elemental_Circuits
 void Add_To_Index_Array
+
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #include "magicSystemUtil.h"

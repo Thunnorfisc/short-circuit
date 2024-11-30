@@ -7,6 +7,8 @@ This file contains the declaration of runtime functions for the Boss System that
  - void Boss_System_Update
  - void Boss_System_Exit
 
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+
 */
 #pragma once
 

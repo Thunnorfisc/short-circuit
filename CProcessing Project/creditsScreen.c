@@ -1,4 +1,4 @@
-/*All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+/*
 @file creditScreen.c
 @author Lim Yan De (l.yande)
 @course CSD1401
@@ -9,6 +9,8 @@
 This file manages the display of game credits, including team members,
 instructors, and special acknowledgments. It handles the rendering of
 credit categories, animations, and navigation back to the main menu.
+
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 #include "creditScreen.h"
 #include "cprocessing.h"

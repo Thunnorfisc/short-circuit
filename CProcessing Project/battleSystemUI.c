@@ -4,11 +4,13 @@ Author: Jason Teo Jun Hao (jasonjunhao.teo)
 Sub-Author: KELLY CHIANG KAR YAN (chiang.k)
 Description:
 This file contains the definition of the functions for the creation of the battle system UI:
- - void Display_Enemy_Hover
- - void Display_Boss_Hover
+ - void Display_Enemy_Hover (Kelly)
+ - void Display_Boss_Hover (Kelly)
  - BattleUI UI_Component_Create
  - void UI_Initialize
  - void Display_UI
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #include "battleSystemUI.h"

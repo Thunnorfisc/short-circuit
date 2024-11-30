@@ -11,6 +11,8 @@ This file will contain definition of the initialize functions that will be used 
  - void Boss_Randomise_Position
  - void Gatekeeper_Mechanics
  - void GateCore_Mechanics
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #include "bossUtils.h"

@@ -1,4 +1,11 @@
-#pragma once
+/*
+File: TEST_playerStruct.h
+Author: Jason Teo Jun Hao (jasonjunhao.teo)
+Description:
+This file is to test the player structs
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+*/#pragma once
 
 /*
 int health; health will be used to calculate how much damage the player can take

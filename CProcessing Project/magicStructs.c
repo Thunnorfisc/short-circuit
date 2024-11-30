@@ -5,6 +5,8 @@ Description:
 This file will contain definition of the "get, set" functions that will be used for the struct CircuitPiece in Magic System:
 CircuitPiece New_Circuit_Piece
 void Set_Circuit_Element
+
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #include "magicStructs.h"

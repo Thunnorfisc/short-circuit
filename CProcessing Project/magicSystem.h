@@ -7,6 +7,8 @@ void Draw_UI_CircuitPiece
 void Draw_SelectedCircuitPieces
 void Grid_Display
 void Grid_Initialize
+
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #pragma once

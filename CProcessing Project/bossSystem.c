@@ -6,6 +6,8 @@ This file contains the definition runtime functions for the Boss System that wil
  - void Boss_System_Init
  - void Boss_System_Update
  - void Boss_System_Exit
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 //Header files for the bossSystem
@@ -161,9 +163,9 @@ void Boss_System_Update()
 	mouse_position_b = CP_Vector_Set(CP_Input_GetMouseX(), CP_Input_GetMouseY());
 
 	//DEBUG: Go Back to Map System
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}
+	}*/
 
 
 	//Load Elemental Circuits

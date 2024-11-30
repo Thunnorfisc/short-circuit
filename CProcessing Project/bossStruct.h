@@ -5,6 +5,8 @@ Description:
 This file contains the structs for creating the boss fights:
  - struct BossParts
  - struct Boss
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #pragma once

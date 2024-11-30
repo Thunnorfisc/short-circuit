@@ -7,6 +7,8 @@ and the struct CircuitPiece and enums for the CircuitType and CircuitElement in 
 
 CircuitPiece New_Circuit_Piece
 void Set_Circuit_Element
+
+* All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
 #pragma once

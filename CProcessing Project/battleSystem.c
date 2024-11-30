@@ -3,11 +3,14 @@ File: bossSystem.h
 Author: Jason Teo Jun Hao (jasonjunhao.teo)
 Sub Author: KELLY CHIANG KAR YAN (chiang.k)
 Description:
-This file contains the definition of the runtim functions for the battle system:
+This file contains the definition of the runtime functions for the battle system:
  - void Battle_System_Init;
- - void Battle_System_Update;
+ - void Battle_System_Update; (Kelly)
  - void Battle_System_Exit;
  - void Reset_Initialize;
+
+ * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
+
 */
 
 #include <stdio.h>
@@ -224,9 +227,9 @@ void Battle_System_Update()
 	}
 
 	// DEBUG: Go Back to Map System
-	if (CP_Input_KeyDown(KEY_ESCAPE)) {
+	/*if (CP_Input_KeyDown(KEY_ESCAPE)) {
 		CP_Engine_SetNextGameState(World_Init, World_Update, World_Exit);
-	}
+	}*/
 	// Load player_battle Stats
 	if (initialize_player) {
 		PlayerStats_ReadFile(&player_battle);
