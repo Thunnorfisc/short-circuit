@@ -1,5 +1,12 @@
 /*
 * @author	William Wibisana Dumnanauw (williamwibisana.d)
+* @author   Sub-Author: KELLY CHIANG KAR YAN (chiang.k)
+*			Sub-Author Contributions:
+*				- World_LineColor
+*				- World_EventTypeName
+*				- GameReset Function
+*				- Changing colour of line when it is an adjancent node
+*				- Displaying hover over specific node textbox
 * @brief	The file contains the world scene and the global variables realted to world and player
 * @file		worldSystem.c
 * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
@@ -165,9 +172,11 @@ void World_Update(void)
 				if (next_id <= 0) break;
 				CP_Settings_StrokeWeight(WINDOW_WIDTH / 360.0f);
 
+				/* KELLY BLOCK */
 				// Color the line
 				// Data type is CP_Color
 				CP_Settings_Stroke(World_LineColor(i));
+				/* END BLOCK */
 
 				CP_Graphics_DrawLine(world.event_list[i].location.x + NODE_RECT_WIDTH / 2,
 					world.event_list[i].location.y,
@@ -192,11 +201,12 @@ void World_Update(void)
 						}
 					}
 				}
+				/* KELLY BLOCK */
 				// If mouse is just hovered
 				World_EventTypeName(type_str, TYPE_NAME_STR_LEN, world.event_list[i].type);
 				Draw_TextBoxAdvanced(type_str, 20.0f * WINDOW_RATIO, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
 					WINDOW_WIDTH * 0.10f, WINDOW_HEIGHT * 0.15f, 2.5f/7.f, CP_Color_Create(255, 255, 255, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
-				
+				/* END BLOCK */
 			}
 		}
 		// Update Player when going to inventory screen
@@ -214,18 +224,24 @@ void World_Exit(void)
 	CP_Image_Free(&world_bg);
 }
 
+/* ============= OTHER FUNCTION DEFINITIONS ============= */
 void World_Reset() {
+	// Free images
 	for (int i = 0; i < EVENT_NUMBER; ++i) {
 		if (world.event_list[i].next_nodes.length) List_Free(&world.event_list[i].next_nodes);
 		CP_Image_Free(&world.event_list[i].event_sprite);
 	}
+	// Free memory of items and reset size
 	memset(item_list, 0, sizeof item_list);
 	current_inventory_size = 0;
+	// Reset run related variables
 	master.current_event = 0;
 	world.is_generated = 0;
+	// Free any other images
 	CP_Image_Free(&currency_sprite);
 	CP_Image_Free(&base_node_sprite);
 	CP_Image_Free(&selected_node_sprite);
+	// Reset world
 	master.current_world = 0;
 }
 
@@ -365,7 +381,7 @@ void World_PlayerUI()
 
 // To reset 
 // boss id when player die/ player wins the game
-// currency back to base 150
+// Currency back to base 150
 void ResetGame() {
 	boss_id = 0;
 	master.currency = 150;

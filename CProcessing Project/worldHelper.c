@@ -333,9 +333,11 @@ void World_Save(World world, WorldMaster master, Item* item_list, int item_list_
 		printf("Failed to open world map file\n");
 		return;
 	};
+
 	// Put in general player information
 	fprintf_s(file, "World: %d, Node: %d, Money: %d\n", master.current_world, master.current_event, master.currency);
 	fprintf_s(file, "Items: {\n");
+	// Put in inventory items
 	if (item_list_size != 0) {
 		for (int i = 0; i < item_list_size; ++i) {
 			fprintf_s(file, "%d, %s, %d, %lf, %s| %d\n", item_list[i].id,
@@ -343,6 +345,8 @@ void World_Save(World world, WorldMaster master, Item* item_list, int item_list_
 				item_list[i].description, item_list[i].price);
 		}
 	}
+	// If there's no items in inventory, put NULL dummy item in.
+	// Needed to prevent fscanf from misaligning in load
 	else {
 		fprintf_s(file, "%d, %s, %d, %lf, %s| %d\n", 0, "NULL", 0, 0.0, "NULL", 0);
 	}

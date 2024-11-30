@@ -1,3 +1,10 @@
+/* .--------------------------------------------------------------. */
+/* |   _____ __               __     _______                 _ __ | */
+/* |  / ___// /_  ____  _____/ /_   / ____(_)___________  __(_) /_| */
+/* |  \__ \/ __ \/ __ \/ ___/ __/  / /   / / ___/ ___/ / / / / __/| */
+/* | ___/ / / / / /_/ / /  / /_   / /___/ / /  / /__/ /_/ / / /_  | */
+/* |/____/_/ /_/\____/_/   \__/   \____/_/_/   \___/\__,_/_/\__/  | */
+/* '--------------------------------------------------------------' */
 /*
 File: main.c
 Author: Jason Teo Jun Hao (jasonjunhao.teo)
@@ -5,7 +12,7 @@ Sub-Authors:
 Kelly Chiang Kar Yan (chiang.k)
 William Wibisana Dumnanauw (williamwibisana.d)
 Lim Yan De (l.yande)
-Wei Song (weisong.ong@digipen.edu)
+Ong Wei Song (weisong.ong)
 
 Description:
 This file is the main file of the game
@@ -18,9 +25,9 @@ This file is the main file of the game
 
 /*
 * ---------------------------------
-     ! NOT TO BE TOUCHED !
-Inform the team if need to change
------------------------------------
+*      ! NOT TO BE TOUCHED !
+* Inform the team if need to change
+* ---------------------------------
 */
 int main(void)
 {

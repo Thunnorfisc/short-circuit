@@ -1,11 +1,10 @@
 /*
 File: inventorySystem.c
-Author: William Wibisana Dumnanauw (williamwibisana.d)
-Sub-Author: Wei Song (weisong.ong@digipen.edu)
+Author: Wei Song (weisong.ong@digipen.edu)
 Description:
 This file contains the define values and declaration of the functions for the inventory system:
  - void Inventory_Init
- - void Inventory_Update (Wei Song)
+ - void Inventory_Update
  - void Inventory_Exit
  - void Handle_Inventory
 

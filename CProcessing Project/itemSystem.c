@@ -5,37 +5,52 @@
 * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
 
-#include <stdio.h>
-#include <stdlib.h>
+// Standard Library
+#include <stdio.h>  // printf(), fopen(), snprintf()
+#include <stdlib.h> // rand()
+#include <string.h> // strcpy()
+
+// Project Files
 #include "worldSystem.h"
 #include "itemSystem.h"
 #include "generalUtils.h"
-#include <string.h>
 
-#define NO_OF_ITEMS 3
-#define ADDR_LENGTH 51
+#define NO_OF_ITEMS 3  // Number of items in event
+#define ADDR_LENGTH 51 // Maximum length of address
 
+// General Item Variables
 Item items[20] = { 0 };
 Item random_items[NO_OF_ITEMS] = { 0 };
 int total_items = 0;
 int half_num = 0;
 int list_generated = 0;
-CP_Font exo2;
+
+// Star animation related variables
 CP_Image star_effects;
 float star_effects_rot = 0.0f;
+
+// Font related variables
+CP_Font exo2;
 float nameSize = 0.0f;
+
+// Addresses
 char const* item_addr = "Assets/Item_List.txt";
 char art_addr[ADDR_LENGTH] = { 0 };
-
-/* FUNCTION DECLARATION */
 
 
 /* FUNCTION DEFINITION */
 void ItemEvent_Init(void)
 {
+	// If item list is not generated, generate the all item list
 	if (!list_generated) list_generated = Item_Generate_List();
+
+	// Load rotating star image
 	star_effects = CP_Image_Load("Assets/Item_Art/Star Effects.png");
+
+	// Randomize items into random item array
 	Item_RandomItemGenerator(random_items,  NO_OF_ITEMS);
+
+	// Settings for the event
 	exo2 = CP_Font_Load("Assets/Exo2-Regular.ttf");
 	CP_Font_Set(exo2);
 	half_num = (NO_OF_ITEMS % 2 == 0) ? NO_OF_ITEMS / 2 : NO_OF_ITEMS / 2;
@@ -47,11 +62,11 @@ void ItemEvent_Update(void)
 {
 	CP_Graphics_ClearBackground(BACKGROUND_COLOR);
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
-		/*if (Draw_Textbox(random_items[i].name, nameSize, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
-			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
-			CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CENTER))*/
+		// Draw the item sprite
 		CP_Image_Draw(random_items[i].image, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 255);
+
+		// If player clicked on item, update inventory
 		if (CP_Input_MouseClicked() && IsAreaClicked(WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f,
 			CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
@@ -60,21 +75,26 @@ void ItemEvent_Update(void)
 		}
 		
 	}
+	// For hovering
 	for (int i = 0; i < NO_OF_ITEMS; ++i) {
 		if (IsAreaClicked(WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 			WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.3f, 
 			CP_Input_GetMouseX(), CP_Input_GetMouseY())) {
+			// Rotating Star Animation
 			CP_Image_DrawAdvanced(star_effects, WINDOW_WIDTH_HALF + ((i - half_num) * WINDOW_WIDTH_HALF * 0.5f),
 				WINDOW_HEIGHT_HALF, WINDOW_WIDTH * 0.3f, WINDOW_WIDTH * 0.3f, 255, star_effects_rot * DELTA_TIME);
 			star_effects_rot -= 5.0f;
+			// Name of item
 			Draw_Textbox(random_items[i].name, nameSize, CP_Input_GetMouseX(), CP_Input_GetMouseY(),
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
+			// Description of item
 			Draw_Textbox(random_items[i].description, nameSize / 2, CP_Input_GetMouseX(), CP_Input_GetMouseY() + WINDOW_HEIGHT * 0.1f,
 				WINDOW_WIDTH * 0.2f, WINDOW_HEIGHT * 0.1f,
 				CP_Color_Create(200, 200, 200, 255), CP_Color_Create(0, 0, 0, 255), CP_POSITION_CORNER);
 		}
 	}
+	// Draw player UI for inventory and currency
 	World_PlayerUI();
 }
 
@@ -88,6 +108,7 @@ void Item_RandomItemGenerator(Item *random_items, int num_items)
 	total_items = Item_ListCount();
 	int id = 0;
 	for (int i = 0; i < num_items; ++i) {
+		// Rand from 0 - total_items
 		id = rand() % total_items + 1;
 		random_items[i] = items[id - 1];
 		printf("ID: %d\n", random_items[i].id);
@@ -104,7 +125,7 @@ int Item_Generate_List()
 		return 0;
 	};
 	int i = 0;
-	
+	// Scan each line and put into items array
 	while (fscanf_s(item_file, "%d, %[^,], %d, %lf, %[^|]| %d\n", &item.id,
 		item.name, (unsigned int)sizeof(item.name), &item.type, &item.modifier,
 		&item.description, (unsigned int)_countof(item.description), &item.price) == 6) {
@@ -126,11 +147,13 @@ int Item_ListCount() {
 int Draw_Textbox(const char* text, float textSize, float x, float y, 
 	float w, float h, CP_Color box_color, CP_Color text_color, 
 	CP_POSITION_MODE mode) {
+	// Settings for text box
 	CP_Settings_RectMode(mode);
 	CP_Settings_Fill(box_color);
 	CP_Graphics_DrawRect(x, y, w, h);
 	CP_Settings_TextSize(textSize);
 	CP_Settings_Fill(text_color);
+	// Make sure the the text is at the middle of the box
 	if (mode == CP_POSITION_CENTER) CP_Font_DrawTextBox(text, x - (w / 2), y, w); 
 	else CP_Font_DrawTextBox(text, x, y + (h/2), w);
 	if (IsAreaClicked(x, y, w, h, CP_Input_GetMouseX(), CP_Input_GetMouseY())) {

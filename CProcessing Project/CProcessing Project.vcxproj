@@ -116,7 +116,6 @@ xcopy "$(SolutionDir)Extern\CProcessing\lib\x64\fmod.dll" "$(OutDir)" /s /r /y /
     <ClCompile Include="shopSystem.c" />
     <ClCompile Include="TEST_playerUtil.c" />
     <ClCompile Include="tutorial.c" />
-    <ClCompile Include="worldEvent.c" />
     <ClCompile Include="worldHelper.c" />
     <ClCompile Include="worldSystem.c" />
     <ClCompile Include="generalUtils.c" />

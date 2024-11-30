@@ -26,7 +26,17 @@ typedef enum EventType {
 	SPECIAL_END
 } EventType;
 
-// The node for events
+/*!
+* @struct This is an individual Event Node
+* @brief This struct is designed to be one event node
+* @param id				int				The identifier for the node
+* @param type			EventType		The type of event the node has
+* @param location		CP_Vector		The x and y coordinates of it's actual location on screen
+* @param bound			CP_Vector		The x and y bound the node is located in
+* @param event_sprite	CP_Vector		The sprite used for the event, depending on type
+* @param next_nodes		LinkedList		The list of IDs of nodes connected to this node
+*										on the next x bound
+*/
 typedef struct EventNode {
 	int id;
 	EventType type;
@@ -36,11 +46,13 @@ typedef struct EventNode {
 	LinkedList next_nodes;
 } EventNode;
 
-// Event Type Map
-// Maps a number of events based on the event type
+/*!
+* @struct This is an Event Type Map
+* @brief This struct is for making sure the number of events are balanced in the world map
+* @param type			EventType		The type of event
+* @param number			int				The number of event allowed for each type
+*/
 typedef struct EventTypeMap {
 	EventType type;
 	int number;
 } EventTypeMap;
-
-EventNode Event_Initialize(int id, EventType type, float location_x, float location_y, float bound_x, float bound_y);

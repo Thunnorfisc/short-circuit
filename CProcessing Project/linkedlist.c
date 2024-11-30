@@ -4,8 +4,9 @@
 * @file		linkedlist.c
 * All content © 2024 DigiPen Institute of Technology Singapore, all rights reserved.
 */
-#include <stdlib.h>
-#include <stdio.h>
+#include <stdlib.h> // malloc(), free()
+#include <stdio.h>	// printf()
+
 #include "linkedlist.h"
 
 typedef struct LinkedList LinkedList;
@@ -30,6 +31,7 @@ LinkedList List_Initialize_Array(int* array, int size)
 	list.head = new_node;
 	list.tail = new_node;
 	list.length = 1;
+	// Set each element up
 	for (int i = 1; i < size; i++)
 	{
 		old_node = list.tail;
@@ -63,6 +65,7 @@ LinkedList List_Initialize(int value)
 void List_Traverse(LinkedList list)
 {
 	Node* current = list.head;
+	// Print each value and increment through
 	while (current != NULL)
 	{
 		printf("%d ", current->data);
@@ -75,6 +78,7 @@ int List_GetLength(LinkedList list)
 	return list.length;
 }
 
+// AKA PUSH
 void List_Insert_Start(LinkedList* list, int value)
 {
 	Node* new_node = create_node(value);
@@ -94,6 +98,7 @@ void List_Insert_Index(LinkedList* list, int index, int value)
 		printf("Error: Invalid index\n");
 		return;
 	}
+	// If index is first or last, just call insert start or end
 	if (index == 0) return List_Insert_Start(list, value);
 	if (index == list->length) return List_Insert_End(&list, value);
 	Node* new_node = create_node(value);
@@ -108,6 +113,7 @@ void List_Insert_Index(LinkedList* list, int index, int value)
 	list->length++;
 }
 
+// AKA ENQUEUE
 void List_Insert_End(LinkedList* list, int value)
 {
 	Node* new_node = create_node(value);
@@ -171,6 +177,7 @@ int List_GetAtIndex(LinkedList list, int index)
 void List_Free(LinkedList* list) {
 	Node* current = list->head;
 	Node* next = current->next;
+	// Free each node, it is malloced after all
 	while (current != NULL) {
 		next = current->next;
 		free(current);
