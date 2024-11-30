@@ -125,10 +125,7 @@ void Inventory_Update(void) {
 }
 
 void Inventory_Exit(void) {
-	// Free the item images
-	for (int i = 0; i < current_inventory_size; ++i) {
-		CP_Image_Free(item_list[i].image);
-	}
+	
 }
 
 // Go to inventory screen
