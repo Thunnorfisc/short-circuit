@@ -1,7 +1,7 @@
 /*
 @file tutorial.h
 @author Lim Yan De (l.yande)
-@course CSD1401 Software 
+@course CSD1401  
 @section b
 @Project Short Circuit Game
 @date 26/11/2024
